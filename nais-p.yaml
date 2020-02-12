@@ -1,0 +1,33 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: bidrag-beregn-forskudd
+  labels:
+    team: bidrag
+spec:
+  image: repo.adeo.no:5443/bidrag-beregn-forskudd:{{version}}
+  port: 8080
+  liveness:
+    path: /bidrag-beregn-forskudd/actuator/health
+    initialDelay: 20
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /bidrag-beregn-forskudd/actuator/health
+    initialDelay: 20
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /bidrag-beregn-forskudd/actuator/prometheus
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  ingresses:
+    - https://bidrag-beregn-forskudd.nais.adeo.no/
+  vault:
+    enabled: false
