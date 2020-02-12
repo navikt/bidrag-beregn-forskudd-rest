@@ -1,8 +1,8 @@
-package no.nav.bidrag.beregning.forskudd.dto.http
+package no.nav.bidrag.beregn.forskudd.dto.http
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import no.nav.bidrag.beregning.forskudd.dto.BeregnForskuddDto
+import no.nav.bidrag.beregn.forskudd.dto.BeregnForskuddDto
 
 @ApiModel(value = "Grunnlaget til en forskuddsberegning")
 data class BeregnForskuddGrunnlag(

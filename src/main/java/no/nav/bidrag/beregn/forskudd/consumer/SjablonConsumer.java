@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregning.forskudd.consumer;
+package no.nav.bidrag.beregn.forskudd.consumer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregning.forskudd;
+package no.nav.bidrag.beregn.forskudd;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,7 +1,7 @@
-package no.nav.bidrag.beregning.forskudd.service;
+package no.nav.bidrag.beregn.forskudd.service;
 
-import no.nav.bidrag.beregning.forskudd.consumer.SjablonConsumer;
-import no.nav.bidrag.beregning.forskudd.dto.BeregnForskuddDto;
+import no.nav.bidrag.beregn.forskudd.consumer.SjablonConsumer;
+import no.nav.bidrag.beregn.forskudd.dto.BeregnForskuddDto;
 import org.springframework.stereotype.Service;
 
 @Service

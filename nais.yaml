@@ -2,11 +2,11 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: bidrag-beregn-forskudd
+  namespace: {{ namespace }}
   labels:
     team: bidrag
 spec:
-  image: repo.adeo.no:5443/bidrag-beregn-forskudd:{{version}}
-  port: 8080
+  image: {{ image }}
   liveness:
     path: /bidrag-beregn-forskudd/actuator/health
     initialDelay: 20
@@ -28,6 +28,6 @@ spec:
       cpu: 500m
       memory: 512Mi
   ingresses:
-    - {{ingress}}
+    - {{ ingress }}
   vault:
-    enabled: false
+    enabled: true

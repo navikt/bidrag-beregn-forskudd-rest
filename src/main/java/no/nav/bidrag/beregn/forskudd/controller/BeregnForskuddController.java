@@ -1,8 +1,8 @@
-package no.nav.bidrag.beregning.forskudd.controller;
+package no.nav.bidrag.beregn.forskudd.controller;
 
-import no.nav.bidrag.beregning.forskudd.dto.http.BeregnForskuddGrunnlag;
-import no.nav.bidrag.beregning.forskudd.dto.http.BeregnForskuddResultat;
-import no.nav.bidrag.beregning.forskudd.service.BeregnService;
+import no.nav.bidrag.beregn.forskudd.service.BeregnService;
+import no.nav.bidrag.beregn.forskudd.dto.http.BeregnForskuddGrunnlag;
+import no.nav.bidrag.beregn.forskudd.dto.http.BeregnForskuddResultat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

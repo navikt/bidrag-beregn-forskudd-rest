@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregning.forskudd;
+package no.nav.bidrag.beregn.forskudd;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
