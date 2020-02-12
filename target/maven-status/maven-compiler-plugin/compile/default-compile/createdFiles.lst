@@ -1,0 +1,5 @@
+no/nav/bidrag/beregning/forskudd/controller/BeregnForskuddController.class
+no/nav/bidrag/beregning/forskudd/BidragBeregningForskuddRestApplication.class
+no/nav/bidrag/beregning/forskudd/RestTemplateConfiguration.class
+no/nav/bidrag/beregning/forskudd/consumer/SjablonConsumer.class
+no/nav/bidrag/beregning/forskudd/service/BeregnService.class
