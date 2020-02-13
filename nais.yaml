@@ -30,4 +30,4 @@ spec:
   ingresses:
     - {{ ingress }}
   vault:
-    enabled: true
+    enabled: false
