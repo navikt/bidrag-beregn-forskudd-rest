@@ -14,13 +14,28 @@ data class BeregnForskuddGrunnlag(
         @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
         @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
         @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe> = emptyList()
-)
+) {
+    fun hentCore() = BeregnForskuddDto(
+            beregnDatoFra = beregnDatoFra,
+            beregnDatoTil = beregnDatoTil,
+            soknadBarn = soknadBarn.map { it.hentCore() },
+            bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it.hentCore() },
+            bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.hentCore() },
+            bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.hentCore() }
+    )
+}
 
 @ApiModel(value = "Søknadsbarnets fødselsdato og bostatus")
 data class SoknadBarn (
         @ApiModelProperty(value = "Søknadsbarnets fødselsdato") var soknadBarnFodselsdato: LocalDate? = null,
         @ApiModelProperty(value = "Periodisert liste over søknadsbarnets bostatus") var bostatusPeriode: List<BostatusPeriode?> = emptyList()
-)
+) {
+    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.SoknadBarn(
+            soknadBarnFodselsdato = soknadBarnFodselsdato,
+            bostatusPeriode = bostatusPeriode.map { it.hentCore() }
+    )
+}
+
 @ApiModel(value = "Periodisert liste over søknadsbarnets bostatus")
 data class BostatusPeriode (
         @ApiModelProperty(value = "Bostatus fra-dato") var datoFra: LocalDate? = null,
@@ -46,16 +61,8 @@ data class BidragMottakerSivilstandPeriodeListe(
 data class BidragMottakerBarnPeriodeListe(
         @ApiModelProperty(value = "Barn i husholdning fra-dato") var datoFra: LocalDate? = null,
         @ApiModelProperty(value = "Barn i husholdning til-dato") var datoTil: LocalDate? = null
-)
-
-
-{
-
-    fun hentCore(): BeregnForskuddDto {
-        val beregnForskuddDto = BeregnForskuddDto()
-        beregnForskuddDto.beregnDatoFra  =
-        return beregnForskuddDto
-    }
+) {
+    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(datoFra = datoFra, datoTil = datoTil)
 }
 
 data class BeregnForskuddResultat(
