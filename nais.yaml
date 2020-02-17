@@ -7,7 +7,6 @@ metadata:
     team: bidrag
 spec:
   image: {{ image }}
-  port: 8080
   liveness:
     path: /bidrag-beregn-forskudd-rest/actuator/health
     initialDelay: 20
