@@ -1,0 +1,11 @@
+ISSO_ISSUER_URL: https://isso-q.adeo.no:443/isso/oauth2
+SECURITY_TOKEN_URL: https://security-token-service-nais-preprod.local
+
+server:
+  servlet:
+    context-path: /bidrag-beregn-forskudd-rest
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
