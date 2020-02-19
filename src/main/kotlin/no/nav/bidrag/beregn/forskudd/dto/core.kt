@@ -5,15 +5,15 @@ import java.time.LocalDate
 
 data class BeregnForskuddDto(var beregnDatoFra: LocalDate? = null,
                              var beregnDatoTil: LocalDate? = null,
-                             var soknadBarn: List<SoknadBarn> = emptyList(),
-                             var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
-                             var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
-                             var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe> = emptyList()
+                             var soknadBarn: List<SoknadBarn?> = emptyList(),
+                             var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe?> = emptyList(),
+                             var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe?> = emptyList(),
+                             var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList()
 )
 
 data class SoknadBarn(
         var soknadBarnFodselsdato: LocalDate? = null,
-        var bostatusPeriode: List<BostatusPeriode> = emptyList()
+        var bostatusPeriode: List<BostatusPeriode?> = emptyList()
 )
 data class BostatusPeriode(
         var datoFra: LocalDate? = null,

@@ -19,9 +19,9 @@ data class BeregnForskuddGrunnlag(
             beregnDatoFra = beregnDatoFra,
             beregnDatoTil = beregnDatoTil,
             soknadBarn = soknadBarn.map { it.hentCore() },
-            bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it.hentCore() },
             bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.hentCore() },
-            bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.hentCore() }
+            bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.hentCore() },
+            bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it.hentCore() }
     )
 }
 
@@ -32,7 +32,7 @@ data class SoknadBarn (
 ) {
     fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.SoknadBarn(
             soknadBarnFodselsdato = soknadBarnFodselsdato,
-            bostatusPeriode = bostatusPeriode.map { it.hentCore() }
+            bostatusPeriode = bostatusPeriode.map { it?.hentCore() }
     )
 }
 
@@ -41,28 +41,49 @@ data class BostatusPeriode (
         @ApiModelProperty(value = "Bostatus fra-dato") var datoFra: LocalDate? = null,
         @ApiModelProperty(value = "Bostatus til-dato") var datoTil: LocalDate? = null,
         @ApiModelProperty(value = "Bostedsstatuskode") var bostedStatusKode: String? = null
-)
+) {
+    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BostatusPeriode(
+            datoFra = datoFra,
+            datoTil = datoTil,
+            bostedStatusKode = bostedStatusKode
+    )
+}
 
 @ApiModel(value = "Periodisert liste over bidragsmottakers inntekt")
 data class BidragMottakerInntektPeriodeListe(
         @ApiModelProperty(value = "Bidragsmottaker inntekt fra-dato") var datoFra: LocalDate? = null,
         @ApiModelProperty(value = "Bidragsmottaker inntekt til-dato") var datoTil: LocalDate? = null,
         @ApiModelProperty(value = "Bidragsmottaker inntekt") var belop: BigDecimal? = null
-)
+) {
+    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerInntektPeriodeListe(
+            datoFra = datoFra,
+            datoTil = datoTil,
+            belop = belop
+    )
+}
 
 @ApiModel(value = "Periodisert liste over bidragsmottakers sivilstand")
 data class BidragMottakerSivilstandPeriodeListe(
         @ApiModelProperty(value = "Sivilstand fra-dato") var datoFra: LocalDate? = null,
         @ApiModelProperty(value = "Sivilstand til-dato") var datoTil: LocalDate? = null,
         @ApiModelProperty(value = "Sivilstand") var sivilstandKode: String? = null
-)
+) {
+    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerSivilstandPeriodeListe(
+            datoFra = datoFra,
+            datoTil = datoTil,
+            sivilstandKode = sivilstandKode
+    )
+}
 
 @ApiModel(value = "Periodisert liste over barn i bidragsmottakers husholdning")
 data class BidragMottakerBarnPeriodeListe(
         @ApiModelProperty(value = "Barn i husholdning fra-dato") var datoFra: LocalDate? = null,
         @ApiModelProperty(value = "Barn i husholdning til-dato") var datoTil: LocalDate? = null
 ) {
-    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(datoFra = datoFra, datoTil = datoTil)
+    fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
+            datoFra = datoFra,
+            datoTil = datoTil
+    )
 }
 
 data class BeregnForskuddResultat(
