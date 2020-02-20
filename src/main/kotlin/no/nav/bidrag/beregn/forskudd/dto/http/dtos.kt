@@ -13,7 +13,7 @@ data class BeregnForskuddGrunnlag(
         @ApiModelProperty(value = "Søknadsbarnets fødselsdato og liste over bostatus") var soknadBarn: List<SoknadBarn> = emptyList(),
         @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
         @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
-        @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe> = emptyList()
+        @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList()
 ) {
     fun hentCore() = BeregnForskuddDto(
             beregnDatoFra = beregnDatoFra,
@@ -21,7 +21,7 @@ data class BeregnForskuddGrunnlag(
             soknadBarn = soknadBarn.map { it.hentCore() },
             bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.hentCore() },
             bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.hentCore() },
-            bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it.hentCore() }
+            bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it?.hentCore() }
     )
 }
 
