@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /bidrag-beregn-forskudd-rest
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
