@@ -23,7 +23,7 @@
 
     <!-- dependencies -->
     <bidrag-commons.version>0.3.0</bidrag-commons.version>
-    <bidrag-beregn-forskudd-core.version>0.0.1-SNAPSHOT</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-forskudd-core.version>0.0.2-SNAPSHOT</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
