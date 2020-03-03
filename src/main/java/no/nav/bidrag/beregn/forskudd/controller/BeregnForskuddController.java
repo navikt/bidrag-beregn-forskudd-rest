@@ -20,9 +20,9 @@ public class BeregnForskuddController {
     this.beregnService = beregnService;
   }
 
-  @GetMapping(path = "/forskudd")
-  public ResponseEntity<BeregnForskuddResultat> get(@RequestBody BeregnForskuddGrunnlag beregnForskuddGrunnlag) {
-    beregnService.beregn(beregnForskuddGrunnlag.hentCore());
-    return new ResponseEntity<>(new BeregnForskuddResultat("Hello world"), HttpStatus.OK);
+  @RequestMapping(path = "/forskudd")
+  public ResponseEntity<BeregnForskuddResultat> beregnForskudd(@RequestBody BeregnForskuddGrunnlag beregnForskuddGrunnlag) {
+    BeregnForskuddResultat resultat = beregnService.beregn(beregnForskuddGrunnlag.hentCore());
+    return new ResponseEntity<>(new BeregnForskuddResultat(), HttpStatus.OK);
   }
 }

@@ -17,7 +17,7 @@ public class SwaggerContext {
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
-        .apis(RequestHandlerSelectors.basePackage(BidragBeregningForskuddRestApplication.class.getPackage().getName()))
+        .apis(RequestHandlerSelectors.basePackage(BidragBeregnForskudd.class.getPackage().getName()))
         .paths(regex("/beregn/forskudd" + ".*"))
         .build();
   }
