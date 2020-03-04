@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd;
+package no.nav.bidrag.beregn.forskudd.rest;
 
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 

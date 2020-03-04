@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd;
+package no.nav.bidrag.beregn.forskudd.rest;
 
 import no.nav.bidrag.commons.web.CorrelationIdFilter;
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate;
