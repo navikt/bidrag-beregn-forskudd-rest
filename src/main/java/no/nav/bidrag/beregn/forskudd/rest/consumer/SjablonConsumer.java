@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Component
 public class SjablonConsumer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SjablonConsumer.class);
