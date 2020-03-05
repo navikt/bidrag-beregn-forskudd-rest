@@ -33,4 +33,4 @@ spec:
     enabled: false
   env:
     - name: SJABLON_URL
-      value: https://bidrag-sjablon{{ bidragurlns }}.nais.preprod.local/bidrag-sjablon
+      value: {{ sjablonurl }}
