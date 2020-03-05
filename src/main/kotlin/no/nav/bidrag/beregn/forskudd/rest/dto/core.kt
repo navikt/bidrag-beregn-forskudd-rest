@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd.dto
+package no.nav.bidrag.beregn.forskudd.rest.dto
 
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -8,7 +8,8 @@ data class BeregnForskuddGrunnlagDto(var beregnDatoFra: LocalDate? = null,
                                      var soknadBarn: List<SoknadBarn> = emptyList(),
                                      var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
                                      var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
-                                     var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList()
+                                     var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList(),
+                                     var sjablonVerdiListe: List<SjablontallCore> = emptyList()
 )
 
 data class SoknadBarn(
@@ -37,6 +38,13 @@ data class BidragMottakerSivilstandPeriodeListe(
 data class BidragMottakerBarnPeriodeListe(
     var datoFra: LocalDate? = null,
     var datoTil: LocalDate? = null
+)
+
+data class SjablontallCore(
+    var typeSjablon: String,
+    var datoFom: LocalDate,
+    var datoTom: LocalDate,
+    var verdi: BigDecimal
 )
 
 data class BeregnForskuddResultatDto(

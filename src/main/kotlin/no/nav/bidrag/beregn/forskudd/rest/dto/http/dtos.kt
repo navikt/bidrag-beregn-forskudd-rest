@@ -1,8 +1,9 @@
-package no.nav.bidrag.beregn.forskudd.dto.http
+package no.nav.bidrag.beregn.forskudd.rest.dto.http
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import no.nav.bidrag.beregn.forskudd.dto.BeregnForskuddGrunnlagDto
+import no.nav.bidrag.beregn.forskudd.rest.dto.BeregnForskuddGrunnlagDto
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -30,7 +31,7 @@ data class SoknadBarn(
     @ApiModelProperty(value = "Søknadsbarnets fødselsdato") var soknadBarnFodselsdato: LocalDate? = null,
     @ApiModelProperty(value = "Periodisert liste over søknadsbarnets bostatus") var bostatusPeriode: List<BostatusPeriode?> = emptyList()
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.SoknadBarn(
+  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.SoknadBarn(
       soknadBarnFodselsdato = soknadBarnFodselsdato,
       bostatusPeriode = bostatusPeriode.map { it?.hentCore() }
   )
@@ -42,7 +43,7 @@ data class BostatusPeriode(
     @ApiModelProperty(value = "Bostatus til-dato") var datoTil: LocalDate? = null,
     @ApiModelProperty(value = "Bostedsstatuskode") var bostedStatusKode: String? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BostatusPeriode(
+  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BostatusPeriode(
       datoFra = datoFra,
       datoTil = datoTil,
       bostedStatusKode = bostedStatusKode
@@ -55,7 +56,7 @@ data class BidragMottakerInntektPeriodeListe(
     @ApiModelProperty(value = "Bidragsmottaker inntekt til-dato") var datoTil: LocalDate? = null,
     @ApiModelProperty(value = "Bidragsmottaker inntekt") var belop: BigDecimal? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerInntektPeriodeListe(
+  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BidragMottakerInntektPeriodeListe(
       datoFra = datoFra,
       datoTil = datoTil,
       belop = belop
@@ -68,7 +69,7 @@ data class BidragMottakerSivilstandPeriodeListe(
     @ApiModelProperty(value = "Sivilstand til-dato") var datoTil: LocalDate? = null,
     @ApiModelProperty(value = "Sivilstand") var sivilstandKode: String? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerSivilstandPeriodeListe(
+  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BidragMottakerSivilstandPeriodeListe(
       datoFra = datoFra,
       datoTil = datoTil,
       sivilstandKode = sivilstandKode
@@ -80,7 +81,7 @@ data class BidragMottakerBarnPeriodeListe(
     @ApiModelProperty(value = "Barn i husholdning fra-dato") var datoFra: LocalDate? = null,
     @ApiModelProperty(value = "Barn i husholdning til-dato") var datoTil: LocalDate? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
+  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BidragMottakerBarnPeriodeListe(
       datoFra = datoFra,
       datoTil = datoTil
   )
@@ -119,4 +120,19 @@ data class ForskuddBeregningResultat(
 //  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
 //      datoFra = datoFra,
 //      datoTil = datoTil
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Sjablontall(
+    var typeSjablon: String,
+    var datoFom: LocalDate,
+    var datoTom: LocalDate,
+    var verdi: BigDecimal
+) {
+  fun erGyldigSjablon(): Boolean {
+    return when (typeSjablon) {
+      "0005", "0013", "0033", "0034", "0035", "0036" -> true
+      else -> false
+    }
+  }
 }

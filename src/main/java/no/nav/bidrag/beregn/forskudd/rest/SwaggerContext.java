@@ -1,4 +1,4 @@
-package no.nav.bidrag.beregn.forskudd;
+package no.nav.bidrag.beregn.forskudd.rest;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
