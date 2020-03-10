@@ -21,7 +21,7 @@ public class BeregnForskuddController {
 
   @RequestMapping(path = "/forskudd")
   public ResponseEntity<BeregnForskuddResultat> beregnForskudd(@RequestBody BeregnForskuddGrunnlag beregnForskuddGrunnlag) {
-    BeregnForskuddResultat resultat = beregnService.beregn(beregnForskuddGrunnlag.hentCore());
+    BeregnForskuddResultat resultat = beregnService.beregn(beregnForskuddGrunnlag.tilCore());
     return new ResponseEntity<>(resultat, HttpStatus.OK);
   }
 }

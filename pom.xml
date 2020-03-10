@@ -23,7 +23,7 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.3.2</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
-    <bidrag-beregn-forskudd-core.version>0.0.1</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-forskudd-core.version>0.0.2</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
@@ -105,9 +105,21 @@
     </dependency>
 
     <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>${springfox-swagger.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>26.0-jre</version>
+      <version>28.1-jre</version>
     </dependency>
 
     <!-- avhengigheter for lokal kjøring -->

@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.forskudd.rest.dto.http
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import no.nav.bidrag.beregn.forskudd.rest.dto.BeregnForskuddGrunnlagDto
+import no.nav.bidrag.beregn.forskudd.core.dto.*
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -11,116 +11,111 @@ import java.time.LocalDate
 data class BeregnForskuddGrunnlag(
     @ApiModelProperty(value = "Beregn forskudd fra-dato") var beregnDatoFra: LocalDate? = null,
     @ApiModelProperty(value = "Beregn forskudd til-dato") var beregnDatoTil: LocalDate? = null,
-    @ApiModelProperty(value = "Søknadsbarnets fødselsdato og liste over bostatus") var soknadBarn: List<SoknadBarn> = emptyList(),
-    @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriodeListe> = emptyList(),
-    @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriodeListe> = emptyList(),
-    @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<BidragMottakerBarnPeriodeListe?> = emptyList()
+    @ApiModelProperty(value = "Søknadsbarnets fødselsdato og liste over bostatus") var soknadBarn: SoknadBarn? = null,
+    @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriode> = emptyList(),
+    @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriode> = emptyList(),
+    @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<Periode?> = emptyList()
 ) {
-  fun hentCore() = BeregnForskuddGrunnlagDto(
+  fun tilCore() = ForskuddPeriodeGrunnlagDto(
       beregnDatoFra = beregnDatoFra,
       beregnDatoTil = beregnDatoTil,
-      soknadBarn = soknadBarn.map { it.hentCore() },
-      bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.hentCore() },
-      bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.hentCore() },
-      bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it?.hentCore() }
+      soknadBarn = soknadBarn?.tilCore(),
+      bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.tilCore() },
+      bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.tilCore() },
+      bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it?.tilCore() }
   )
 }
 
 @ApiModel(value = "Søknadsbarnets fødselsdato og bostatus")
 data class SoknadBarn(
-    @ApiModelProperty(value = "Søknadsbarnets fødselsdato") var soknadBarnFodselsdato: LocalDate? = null,
+    @ApiModelProperty(value = "Søknadsbarn fødselsdato") var soknadBarnFodselsdato: LocalDate? = null,
     @ApiModelProperty(value = "Periodisert liste over søknadsbarnets bostatus") var bostatusPeriode: List<BostatusPeriode?> = emptyList()
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.SoknadBarn(
+  fun tilCore() = SoknadBarnDto(
       soknadBarnFodselsdato = soknadBarnFodselsdato,
-      bostatusPeriode = bostatusPeriode.map { it?.hentCore() }
+      bostatusPeriode = bostatusPeriode.map { it?.tilCore() }
   )
 }
 
-@ApiModel(value = "Periodisert liste over søknadsbarnets bostatus")
+@ApiModel(value = "Søknadsbarnets bostatus")
 data class BostatusPeriode(
-    @ApiModelProperty(value = "Bostatus fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Bostatus til-dato") var datoTil: LocalDate? = null,
-    @ApiModelProperty(value = "Bostedsstatuskode") var bostedStatusKode: String? = null
+    @ApiModelProperty(value = "Søknadsbarn bostedstatus fra-til-dato") var datoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Søknadsbarn bostedsstatuskode") var bostedStatusKode: String? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BostatusPeriode(
-      datoFra = datoFra,
-      datoTil = datoTil,
+  fun tilCore() = BostatusPeriodeDto(
+      datoFraTil = datoFraTil?.tilCore(),
       bostedStatusKode = bostedStatusKode
   )
 }
 
-@ApiModel(value = "Periodisert liste over bidragsmottakers inntekt")
-data class BidragMottakerInntektPeriodeListe(
-    @ApiModelProperty(value = "Bidragsmottaker inntekt fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Bidragsmottaker inntekt til-dato") var datoTil: LocalDate? = null,
+@ApiModel(value = "Bidragsmottakers inntekt")
+data class BidragMottakerInntektPeriode(
+    @ApiModelProperty(value = "Bidragsmottaker inntekt fra-til-dato") var datoFraTil: Periode? = null,
     @ApiModelProperty(value = "Bidragsmottaker inntekt") var belop: BigDecimal? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BidragMottakerInntektPeriodeListe(
-      datoFra = datoFra,
-      datoTil = datoTil,
+  fun tilCore() = BidragMottakerInntektPeriodeDto(
+      datoFraTil = datoFraTil?.tilCore(),
       belop = belop
   )
 }
 
-@ApiModel(value = "Periodisert liste over bidragsmottakers sivilstand")
-data class BidragMottakerSivilstandPeriodeListe(
-    @ApiModelProperty(value = "Sivilstand fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Sivilstand til-dato") var datoTil: LocalDate? = null,
-    @ApiModelProperty(value = "Sivilstand") var sivilstandKode: String? = null
+@ApiModel(value = "Bidragsmottakers sivilstand")
+data class BidragMottakerSivilstandPeriode(
+    @ApiModelProperty(value = "Bidragsmottaker sivilstand fra-til-dato") var datoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Bidragsmottaker sivilstand") var sivilstandKode: String? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BidragMottakerSivilstandPeriodeListe(
-      datoFra = datoFra,
-      datoTil = datoTil,
+  fun tilCore() = BidragMottakerSivilstandPeriodeDto(
+      datoFraTil = datoFraTil?.tilCore(),
       sivilstandKode = sivilstandKode
   )
 }
 
-@ApiModel(value = "Periodisert liste over barn i bidragsmottakers husholdning")
-data class BidragMottakerBarnPeriodeListe(
-    @ApiModelProperty(value = "Barn i husholdning fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Barn i husholdning til-dato") var datoTil: LocalDate? = null
+@ApiModel(value = "Periode (fra-til dato)")
+data class Periode(
+    @ApiModelProperty(value = "Fra-dato") var datoFra: LocalDate? = null,
+    @ApiModelProperty(value = "Til-dato") var datoTil: LocalDate? = null
 ) {
-  fun hentCore() = no.nav.bidrag.beregn.forskudd.rest.dto.BidragMottakerBarnPeriodeListe(
+  fun tilCore() = PeriodeDto(
       datoFra = datoFra,
       datoTil = datoTil
   )
 }
 
+
 @ApiModel(value = "Resultatet av en forskuddsberegning")
 data class BeregnForskuddResultat(
-    @ApiModelProperty(value = "Periodisert liste over resultat av forskuddsberegning") var bidragPeriodeResultatListe: List<BidragPeriodeResultat?> = emptyList()
+//    @ApiModelProperty(value = "Periodisert liste over resultat av forskuddsberegning") var bidragPeriodeResultatListe: List<BidragPeriodeResultat?> = emptyList()
+    @ApiModelProperty(value = "Periodisert liste over resultat av forskuddsberegning") var bidragPeriodeResultatListe: String = "Hello world"
 ) {
 //  fun fraCore() = BeregnForskuddResultatDto(
 //      beregnDatoFra = beregnDatoFra,
 //      beregnDatoTil = beregnDatoTil,
-//      soknadBarn = soknadBarn.map { it.hentCore() },
-//      bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.hentCore() },
-//      bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.hentCore() },
-//      bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it?.hentCore() }
+//      soknadBarn = soknadBarn.map { it.tilCore() },
+//      bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.tilCore() },
+//      bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.tilCore() },
+//      bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it?.tilCore() }
 }
 
-@ApiModel(value = "Periodisert liste over barn i bidragsmottakers husholdning")
-data class BidragPeriodeResultat(
-    @ApiModelProperty(value = "Periode fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Periode til-dato") var datoTil: LocalDate? = null,
-    @ApiModelProperty(value = "Beregning resultat") var forskuddBeregningResultat: ForskuddBeregningResultat? = null
-) {
-//  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
+//@ApiModel(value = "Resultat av forskuddsberegning")
+//data class BidragPeriodeResultat(
+//    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var datoFraTil: Periode? = null,
+//    @ApiModelProperty(value = "Beregning resultat") var forskuddBeregningResultat: ForskuddBeregningResultat? = null
+//) {
+//  fun tilCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
 //      datoFra = datoFra,
 //      datoTil = datoTil
-}
-
-@ApiModel(value = "Periodisert liste over barn i bidragsmottakers husholdning")
-data class ForskuddBeregningResultat(
-    @ApiModelProperty(value = "Beløp") var belop: BigDecimal? = null,
-    @ApiModelProperty(value = "Resultatkode") var resultatKode: String? = null,
-    @ApiModelProperty(value = "Resultatbeskrivelse") var resultatBeskrivelse: String? = null
-) {
-//  fun hentCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
+//}
+//
+//@ApiModel(value = "Beregning resultat beløp, resultatkode og beskrivelse")
+//data class ForskuddBeregningResultat(
+//    @ApiModelProperty(value = "Beløp") var belop: BigDecimal? = null,
+//    @ApiModelProperty(value = "Resultatkode") var resultatKode: String? = null,
+//    @ApiModelProperty(value = "Resultatbeskrivelse") var resultatBeskrivelse: String? = null
+//) {
+//  fun tilCore() = no.nav.bidrag.beregn.forskudd.dto.BidragMottakerBarnPeriodeListe(
 //      datoFra = datoFra,
 //      datoTil = datoTil
-}
+//}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Sjablontall(

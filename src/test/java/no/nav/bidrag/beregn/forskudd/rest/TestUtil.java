@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import no.nav.bidrag.beregn.forskudd.rest.dto.BeregnForskuddGrunnlagDto;
+import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlagDto;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BidragPeriodeResultat;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.Sjablontall;
 
 public class TestUtil {
@@ -22,8 +21,8 @@ public class TestUtil {
   }
 
   // Bygger opp BeregnForskuddGrunnlagDto
-  public static BeregnForskuddGrunnlagDto dummyForskuddGrunnlagDto() {
-    var forskuddGrunnlagDto = new BeregnForskuddGrunnlagDto();
+  public static ForskuddPeriodeGrunnlagDto dummyForskuddGrunnlagDto() {
+    var forskuddGrunnlagDto = new ForskuddPeriodeGrunnlagDto();
     forskuddGrunnlagDto.setBeregnDatoFra(LocalDate.MIN);
     forskuddGrunnlagDto.setBeregnDatoTil(LocalDate.MAX);
     return forskuddGrunnlagDto;
@@ -40,8 +39,8 @@ public class TestUtil {
   // Bygger opp BeregnForskuddResultat
   public static BeregnForskuddResultat dummyForskuddResultat() {
     var forskuddResultat = new BeregnForskuddResultat();
-    var bidragPeriodeResultatListe = new ArrayList<BidragPeriodeResultat>();
-    forskuddResultat.setBidragPeriodeResultatListe(bidragPeriodeResultatListe);
+//    var bidragPeriodeResultatListe = new ArrayList<BidragPeriodeResultat>();
+//    forskuddResultat.setBidragPeriodeResultatListe(bidragPeriodeResultatListe);
     return forskuddResultat;
   }
 }
