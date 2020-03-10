@@ -32,3 +32,6 @@ spec:
     - https://bidrag-beregn-forskudd-rest.nais.adeo.no/
   vault:
     enabled: false
+  env:
+    - name: SJABLON_URL
+      value: https://bidrag-sjablon.nais.adeo.no/bidrag-sjablon
