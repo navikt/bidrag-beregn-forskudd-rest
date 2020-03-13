@@ -21,7 +21,7 @@ public class BeregnService {
     var sjablonResponse = sjablonConsumer.hentSjablontall();
 //    coreDto.setSjablonVerdiListe(mapSjablonVerdier(sjablonResponse.getBody()));
     var resultatFraCore = forskuddCore.beregnForskudd(coreDto);
-    return new BeregnForskuddResultat();
+    return new BeregnForskuddResultat(resultatFraCore);
   }
 
 //  private List<SjablontallCore> mapSjablonVerdier(List<Sjablontall> sjablontallListe) {
