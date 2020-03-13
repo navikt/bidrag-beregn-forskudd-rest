@@ -6,9 +6,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.Optional;
+import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlagDto;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.forskudd.rest.dto.BeregnForskuddGrunnlagDto;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnService;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
@@ -38,7 +38,7 @@ class BeregnForskuddControllerTest {
   @DisplayName("skal hente mock data")
   void skalHenteMockData() {
 
-    when(beregnServiceMock.beregn(any(BeregnForskuddGrunnlagDto.class))).thenReturn(TestUtil.dummyForskuddResultat());
+    when(beregnServiceMock.beregn(any(ForskuddPeriodeGrunnlagDto.class))).thenReturn(TestUtil.dummyForskuddResultat());
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
     var request = initHttpEntity(TestUtil.dummyForskuddGrunnlag());

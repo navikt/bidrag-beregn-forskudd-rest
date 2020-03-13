@@ -1,7 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest;
 
-import no.nav.bidrag.beregn.forskudd.periode.ForskuddPeriode;
-import no.nav.bidrag.beregn.forskudd.periode.ForskuddPeriodeImpl;
+import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
+import no.nav.bidrag.beregn.forskudd.core.ForskuddCoreImpl;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -14,8 +14,8 @@ import org.springframework.web.client.RestTemplate;
 public class BidragBeregnForskudd {
 
   @Bean
-  public ForskuddPeriode forskuddPeriode() {
-    return new ForskuddPeriodeImpl();
+  public ForskuddCore forskuddCore() {
+    return new ForskuddCoreImpl();
   }
 
   @Bean
