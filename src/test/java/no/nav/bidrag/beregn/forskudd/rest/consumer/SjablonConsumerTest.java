@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.Sjablontall;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

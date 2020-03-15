@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 import no.nav.bidrag.beregn.forskudd.core.dto.ForskuddPeriodeGrunnlagDto;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
@@ -45,12 +47,16 @@ class BeregnForskuddControllerTest {
 
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnForskuddResultat.class);
 
+    //TODO Optional.get() without isPresent() check
     var forskuddResultat = Optional.ofNullable(responseEntity.getBody());
     assertThat(responseEntity.getStatusCode()).as("status").isEqualTo(OK);
     assertThat(forskuddResultat).isNotNull();
-//    assertThat(forskuddResultat).hasValueSatisfying(resultat -> assertAll(
-//        () -> assertThat(resultat).extracting(BeregnForskuddResultat::getBidragPeriodeResultatListe).as("test").isEqualTo("Hello world")
-//    ));
+    assertThat(forskuddResultat.get().getPeriodeResultatListe().size()).isEqualTo(1);
+    assertThat(forskuddResultat.get().getPeriodeResultatListe().get(0).getDatoFraTil().getDatoFra()).isEqualTo(LocalDate.parse("2017-01-01"));
+    assertThat(forskuddResultat.get().getPeriodeResultatListe().get(0).getDatoFraTil().getDatoTil()).isEqualTo(LocalDate.parse("2019-01-01"));
+    assertThat(forskuddResultat.get().getPeriodeResultatListe().get(0).getForskuddBeregningResultat().getBelop()).isEqualTo(BigDecimal.valueOf((100)));
+    assertThat(forskuddResultat.get().getPeriodeResultatListe().get(0).getForskuddBeregningResultat().getResultatKode()).isEqualTo("INNVILGET_100_PROSENT");
+    assertThat(forskuddResultat.get().getPeriodeResultatListe().get(0).getForskuddBeregningResultat().getResultatBeskrivelse()).isEqualTo("REGEL 1");
   }
 
   private <T> HttpEntity<T> initHttpEntity(T body) {
