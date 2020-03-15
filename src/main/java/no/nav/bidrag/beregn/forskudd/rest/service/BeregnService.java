@@ -31,7 +31,9 @@ public class BeregnService {
   }
 
   private List<SjablontallDto> mapSjablonVerdier(List<Sjablontall> sjablontallListe) {
-    return sjablontallListe.stream().filter(Sjablontall::erGyldigSjablon)
+    return sjablontallListe
+        .stream()
+        .filter(Sjablontall::erGyldigSjablon)
         .map(sTL -> new SjablontallDto(sTL.getTypeSjablon(), new PeriodeDto(sTL.getDatoFom(), sTL.getDatoTom()), sTL.getVerdi()))
         .collect(toList());
   }
