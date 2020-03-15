@@ -12,6 +12,9 @@ public class Sjablontall {
   private LocalDate datoTom;
   private BigDecimal verdi;
 
+  protected Sjablontall() {
+  }
+
   public Sjablontall(String typeSjablon, LocalDate datoFom, LocalDate datoTom, BigDecimal verdi) {
     this.typeSjablon = typeSjablon;
     this.datoFom = datoFom;
