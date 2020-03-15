@@ -1,6 +1,5 @@
 package no.nav.bidrag.beregn.forskudd.rest.dto.http
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.beregn.forskudd.core.dto.*
@@ -14,7 +13,7 @@ data class BeregnForskuddGrunnlag(
     @ApiModelProperty(value = "Søknadsbarnets fødselsdato og liste over bostatus") var soknadBarn: SoknadBarn? = null,
     @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriode> = emptyList(),
     @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriode> = emptyList(),
-    @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<ResultatPeriode?> = emptyList()
+    @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<Periode?> = emptyList()
 ) {
   fun tilCore() = ForskuddPeriodeGrunnlagDto(
       beregnDatoFra = beregnDatoFra,
@@ -39,7 +38,7 @@ data class SoknadBarn(
 
 @ApiModel(value = "Søknadsbarnets bostatus")
 data class BostatusPeriode(
-    @ApiModelProperty(value = "Søknadsbarn bostedstatus fra-til-dato") var datoFraTil: ResultatPeriode? = null,
+    @ApiModelProperty(value = "Søknadsbarn bostedstatus fra-til-dato") var datoFraTil: Periode? = null,
     @ApiModelProperty(value = "Søknadsbarn bostedsstatuskode") var bostedStatusKode: String? = null
 ) {
   fun tilCore() = BostatusPeriodeDto(
@@ -50,7 +49,7 @@ data class BostatusPeriode(
 
 @ApiModel(value = "Bidragsmottakers inntekt")
 data class BidragMottakerInntektPeriode(
-    @ApiModelProperty(value = "Bidragsmottaker inntekt fra-til-dato") var datoFraTil: ResultatPeriode? = null,
+    @ApiModelProperty(value = "Bidragsmottaker inntekt fra-til-dato") var datoFraTil: Periode? = null,
     @ApiModelProperty(value = "Bidragsmottaker inntekt") var belop: BigDecimal? = null
 ) {
   fun tilCore() = BidragMottakerInntektPeriodeDto(
@@ -61,7 +60,7 @@ data class BidragMottakerInntektPeriode(
 
 @ApiModel(value = "Bidragsmottakers sivilstand")
 data class BidragMottakerSivilstandPeriode(
-    @ApiModelProperty(value = "Bidragsmottaker sivilstand fra-til-dato") var datoFraTil: ResultatPeriode? = null,
+    @ApiModelProperty(value = "Bidragsmottaker sivilstand fra-til-dato") var datoFraTil: Periode? = null,
     @ApiModelProperty(value = "Bidragsmottaker sivilstand") var sivilstandKode: String? = null
 ) {
   fun tilCore() = BidragMottakerSivilstandPeriodeDto(
@@ -87,14 +86,11 @@ data class Periode(
 data class BeregnForskuddResultat(
     @ApiModelProperty(value = "Periodisert liste over resultat av forskuddsberegning") var periodeResultatListe: List<BidragPeriodeResultat> = emptyList()
 ) {
-//  constructor(beregnForskuddResultatDto: ForskuddPeriodeResultatDto) : this(
   constructor(forskuddPeriodeResultatDto: ForskuddPeriodeResultatDto) : this(
       periodeResultatListe = forskuddPeriodeResultatDto.periodeResultatListe.map { BidragPeriodeResultat(it) }
   )
-  fun fraCore() = ForskuddPeriodeResultatDto(
-      periodeResultatListe = periodeResultatListe.map { it.tilCore() }
-  )
 }
+
 @ApiModel(value = "Perioderesultat av forskuddsberegning")
 data class BidragPeriodeResultat(
     @ApiModelProperty(value = "Beregning resultat fra-til-dato") var datoFraTil: ResultatPeriode? = null,
@@ -104,11 +100,8 @@ data class BidragPeriodeResultat(
       datoFraTil = ResultatPeriode(periodeResultatDto.datoFraTil),
       forskuddBeregningResultat = ForskuddBeregningResultat(periodeResultatDto.forskuddBeregningResultat)
   )
-  fun tilCore() = PeriodeResultatDto(
-      datoFraTil = datoFraTil?.tilCore(),
-      forskuddBeregningResultat = forskuddBeregningResultat.tilCore()
-  )
 }
+
 @ApiModel(value = "Periode (fra-til dato)")
 data class ResultatPeriode(
     @ApiModelProperty(value = "Fra-dato") var datoFra: LocalDate? = null,
@@ -118,11 +111,8 @@ data class ResultatPeriode(
       datoFra = periodeDto?.datoFra,
       datoTil = periodeDto?.datoTil
   )
-  fun tilCore() = PeriodeDto(
-      datoFra = datoFra,
-      datoTil = datoTil
-  )
 }
+
 @ApiModel(value = "Beregning resultat beløp, resultatkode og beskrivelse")
 data class ForskuddBeregningResultat(
     @ApiModelProperty(value = "Beløp") var belop: BigDecimal? = null,
@@ -134,24 +124,4 @@ data class ForskuddBeregningResultat(
       resultatKode = forskuddBeregningResultatDto.resultatKode,
       resultatBeskrivelse = forskuddBeregningResultatDto.resultatBeskrivelse
   )
-  fun tilCore() = ForskuddBeregningResultatDto(
-      belop = belop,
-      resultatKode = resultatKode,
-      resultatBeskrivelse = resultatBeskrivelse
-  )
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Sjablontall(
-    var typeSjablon: String,
-    var datoFom: LocalDate,
-    var datoTom: LocalDate,
-    var verdi: BigDecimal
-) {
-  fun erGyldigSjablon(): Boolean {
-    return when (typeSjablon) {
-      "0005", "0013", "0033", "0034", "0035", "0036" -> true
-      else -> false
-    }
-  }
 }

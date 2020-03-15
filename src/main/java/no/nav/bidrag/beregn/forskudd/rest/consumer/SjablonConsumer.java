@@ -1,7 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.rest.consumer;
 
 import java.util.List;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.Sjablontall;
 import no.nav.bidrag.commons.web.HttpStatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +24,7 @@ public class SjablonConsumer {
   public HttpStatusResponse<List<Sjablontall>> hentSjablontall() {
     var sjablonResponse = restTemplate.exchange("/sjablontall/all", HttpMethod.GET, null, SJABLONTALL_LISTE);
 
+    //TODO Endre denne testen, den slår alltid til
     if (sjablonResponse != null) {
       LOGGER.info("Status ({}) for hent sjablontall: {}", sjablonResponse.getStatusCode(), sjablonResponse.getBody());
     } else {
