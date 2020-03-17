@@ -16,13 +16,15 @@ public class SjablonConsumer {
   };
 
   private final RestTemplate restTemplate;
+  private final String sjablonUrl;
 
-  public SjablonConsumer(RestTemplate restTemplate) {
+  public SjablonConsumer(RestTemplate restTemplate, String sjablonBaseUrl) {
     this.restTemplate = restTemplate;
+    this.sjablonUrl = sjablonBaseUrl + "/sjablontall/all";
   }
 
   public HttpStatusResponse<List<Sjablontall>> hentSjablontall() {
-    var sjablonResponse = restTemplate.exchange("/sjablontall/all", HttpMethod.GET, null, SJABLONTALL_LISTE);
+    var sjablonResponse = restTemplate.exchange(sjablonUrl, HttpMethod.GET, null, SJABLONTALL_LISTE);
 
     //TODO Endre denne testen, den slår alltid til
     if (sjablonResponse != null) {
