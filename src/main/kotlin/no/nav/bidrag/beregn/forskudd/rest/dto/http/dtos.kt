@@ -6,122 +6,137 @@ import no.nav.bidrag.beregn.forskudd.core.dto.*
 import java.math.BigDecimal
 import java.time.LocalDate
 
+
+// Grunnlag
 @ApiModel(value = "Grunnlaget for en forskuddsberegning")
 data class BeregnForskuddGrunnlag(
     @ApiModelProperty(value = "Beregn forskudd fra-dato") var beregnDatoFra: LocalDate? = null,
     @ApiModelProperty(value = "Beregn forskudd til-dato") var beregnDatoTil: LocalDate? = null,
-    @ApiModelProperty(value = "Søknadsbarnets fødselsdato og liste over bostatus") var soknadBarn: SoknadBarn? = null,
-    @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerInntektPeriodeListe: List<BidragMottakerInntektPeriode> = emptyList(),
-    @ApiModelProperty(value = "Periodisert liste over bidragmottakers inntekter") var bidragMottakerSivilstandPeriodeListe: List<BidragMottakerSivilstandPeriode> = emptyList(),
-    @ApiModelProperty(value = "Periodisert liste over barn i bidragsmottakers husholdning") var bidragMottakerBarnPeriodeListe: List<Periode?> = emptyList()
+    @ApiModelProperty(value = "Informasjon om søknadsbarnet") var soknadBarn: SoknadBarn? = null,
+    @ApiModelProperty(
+        value = "Periodisert liste over bidragmottakers inntekter") val bidragMottakerInntektPeriodeListe: List<InntektPeriode>? = null,
+    @ApiModelProperty(
+        value = "Periodisert liste over bidragmottakers sivilstand") val bidragMottakerSivilstandPeriodeListe: List<SivilstandPeriode>? = null,
+    @ApiModelProperty(
+        value = "Periodisert liste over barn i bidragsmottakers husholdning") val bidragMottakerBarnPeriodeListe: List<Periode>? = null
 ) {
-  fun tilCore() = ForskuddPeriodeGrunnlagDto(
-      beregnDatoFra = beregnDatoFra,
-      beregnDatoTil = beregnDatoTil,
-      soknadBarn = soknadBarn?.tilCore(),
-      bidragMottakerInntektPeriodeListe = bidragMottakerInntektPeriodeListe.map { it.tilCore() },
-      bidragMottakerSivilstandPeriodeListe = bidragMottakerSivilstandPeriodeListe.map { it.tilCore() },
-      bidragMottakerBarnPeriodeListe = bidragMottakerBarnPeriodeListe.map { it?.tilCore() }
+  fun tilCore() = BeregnForskuddGrunnlagCore(
+      beregnDatoFra = if (beregnDatoFra != null) beregnDatoFra!! else throw IllegalArgumentException("beregnDatoFra kan ikke være null"),
+      beregnDatoTil = if (beregnDatoTil != null) beregnDatoTil!! else throw IllegalArgumentException("beregnDatoTil kan ikke være null"),
+      soknadBarn = if (soknadBarn != null) soknadBarn!!.tilCore() else throw IllegalArgumentException("soknadBarn kan ikke være null"),
+
+      bidragMottakerInntektPeriodeListe = if (bidragMottakerInntektPeriodeListe != null) bidragMottakerInntektPeriodeListe.map { it.tilCore() }
+      else throw IllegalArgumentException("bidragMottakerInntektPeriodeListe kan ikke være null"),
+
+      bidragMottakerSivilstandPeriodeListe = if (bidragMottakerSivilstandPeriodeListe != null) bidragMottakerSivilstandPeriodeListe.map { it.tilCore() }
+      else throw IllegalArgumentException("bidragMottakerSivilstandPeriodeListe kan ikke være null"),
+
+      bidragMottakerBarnPeriodeListe = if (bidragMottakerBarnPeriodeListe != null) bidragMottakerBarnPeriodeListe.map { it.tilCore() } else emptyList(),
+
+      sjablonPeriodeListe = emptyList()
   )
 }
 
 @ApiModel(value = "Søknadsbarnets fødselsdato og bostatus")
 data class SoknadBarn(
-    @ApiModelProperty(value = "Søknadsbarn fødselsdato") var soknadBarnFodselsdato: LocalDate? = null,
-    @ApiModelProperty(value = "Periodisert liste over søknadsbarnets bostatus") var bostatusPeriode: List<BostatusPeriode?> = emptyList()
+    @ApiModelProperty(value = "Søknadsbarnets fødselsdato") var soknadBarnFodselsdato: LocalDate? = null,
+    @ApiModelProperty(value = "Periodisert liste over søknadsbarnets bostatus") val soknadBarnBostatusPeriodeListe: List<BostatusPeriode>? = null
 ) {
-  fun tilCore() = SoknadBarnDto(
-      soknadBarnFodselsdato = soknadBarnFodselsdato,
-      bostatusPeriode = bostatusPeriode.map { it?.tilCore() }
+  fun tilCore() = SoknadBarnCore(
+      soknadBarnFodselsdato = if (soknadBarnFodselsdato != null) soknadBarnFodselsdato!!
+      else throw IllegalArgumentException("soknadBarnFodselsdato kan ikke være null"),
+
+      soknadBarnBostatusPeriodeListe = if (soknadBarnBostatusPeriodeListe != null) soknadBarnBostatusPeriodeListe.map { it.tilCore() }
+      else throw IllegalArgumentException("soknadBarnBostatusPeriodeListe kan ikke være null")
   )
 }
 
 @ApiModel(value = "Søknadsbarnets bostatus")
 data class BostatusPeriode(
-    @ApiModelProperty(value = "Søknadsbarn bostedstatus fra-til-dato") var datoFraTil: Periode? = null,
-    @ApiModelProperty(value = "Søknadsbarn bostedsstatuskode") var bostedStatusKode: String? = null
+    @ApiModelProperty(value = "Søknadsbarnets bostatus fra-til-dato") var bostatusDatoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Søknadsbarnets bostatuskode") var bostatusKode: String? = null
 ) {
-  fun tilCore() = BostatusPeriodeDto(
-      datoFraTil = datoFraTil?.tilCore(),
-      bostedStatusKode = bostedStatusKode
+  fun tilCore() = BostatusPeriodeCore(
+      bostatusDatoFraTil = if (bostatusDatoFraTil != null) bostatusDatoFraTil!!.tilCore() else throw IllegalArgumentException(
+          "bostatusDatoFraTil kan ikke være null"),
+      bostatusKode = if (bostatusKode != null) bostatusKode!! else throw IllegalArgumentException("bostatusKode kan ikke være null")
   )
 }
 
 @ApiModel(value = "Bidragsmottakers inntekt")
-data class BidragMottakerInntektPeriode(
-    @ApiModelProperty(value = "Bidragsmottaker inntekt fra-til-dato") var datoFraTil: Periode? = null,
-    @ApiModelProperty(value = "Bidragsmottaker inntekt") var belop: BigDecimal? = null
+data class InntektPeriode(
+    @ApiModelProperty(value = "Bidragsmottakers inntekt fra-til-dato") var inntektDatoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Bidragsmottakers inntekt beløp") var inntektBelop: BigDecimal? = null
 ) {
-  fun tilCore() = BidragMottakerInntektPeriodeDto(
-      datoFraTil = datoFraTil?.tilCore(),
-      belop = belop
+  fun tilCore() = InntektPeriodeCore(
+      inntektDatoFraTil = if (inntektDatoFraTil != null) inntektDatoFraTil!!.tilCore() else throw IllegalArgumentException(
+          "inntektDatoFraTil kan ikke være null"),
+      inntektBelop = if (inntektBelop != null) inntektBelop!! else throw IllegalArgumentException("inntektBelop kan ikke være null")
   )
 }
 
 @ApiModel(value = "Bidragsmottakers sivilstand")
-data class BidragMottakerSivilstandPeriode(
-    @ApiModelProperty(value = "Bidragsmottaker sivilstand fra-til-dato") var datoFraTil: Periode? = null,
-    @ApiModelProperty(value = "Bidragsmottaker sivilstand") var sivilstandKode: String? = null
+data class SivilstandPeriode(
+    @ApiModelProperty(value = "Bidragsmottakers sivilstand fra-til-dato") var sivilstandDatoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Bidragsmottakers sivilstandkode") var sivilstandKode: String? = null
 ) {
-  fun tilCore() = BidragMottakerSivilstandPeriodeDto(
-      datoFraTil = datoFraTil?.tilCore(),
-      sivilstandKode = sivilstandKode
-  )
-}
-
-@ApiModel(value = "Periode (fra-til dato)")
-data class Periode(
-    @ApiModelProperty(value = "Fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Til-dato") var datoTil: LocalDate? = null
-) {
-  fun tilCore() = PeriodeDto(
-      datoFra = datoFra,
-      datoTil = datoTil
+  fun tilCore() = SivilstandPeriodeCore(
+      sivilstandDatoFraTil = if (sivilstandDatoFraTil != null) sivilstandDatoFraTil!!.tilCore() else throw IllegalArgumentException(
+          "sivilstandDatoFraTil kan ikke være null"),
+      sivilstandKode = if (sivilstandKode != null) sivilstandKode!! else throw IllegalArgumentException("sivilstandKode kan ikke være null")
   )
 }
 
 
 // Resultat
-@ApiModel(value = "Liste med resultat av en forskuddsberegning")
+@ApiModel(value = "Resultatet av en forskuddsberegning")
 data class BeregnForskuddResultat(
-    @ApiModelProperty(value = "Periodisert liste over resultat av forskuddsberegning") var periodeResultatListe: List<BidragPeriodeResultat> = emptyList()
+    @ApiModelProperty(
+        value = "Periodisert liste over resultat av forskuddsberegning") var resultatPeriodeListe: List<ResultatPeriode> = emptyList()
 ) {
-  constructor(forskuddPeriodeResultatDto: ForskuddPeriodeResultatDto) : this(
-      periodeResultatListe = forskuddPeriodeResultatDto.periodeResultatListe.map { BidragPeriodeResultat(it) }
+  constructor(beregnForskuddResultat: BeregnForskuddResultatCore) : this(
+      resultatPeriodeListe = beregnForskuddResultat.resultatPeriodeListe.map { ResultatPeriode(it) }
   )
 }
 
-@ApiModel(value = "Perioderesultat av forskuddsberegning")
-data class BidragPeriodeResultat(
-    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var datoFraTil: ResultatPeriode? = null,
-    @ApiModelProperty(value = "Beregning resultat") var forskuddBeregningResultat: ForskuddBeregningResultat
-) {
-  constructor(periodeResultatDto: PeriodeResultatDto) : this(
-      datoFraTil = ResultatPeriode(periodeResultatDto.datoFraTil),
-      forskuddBeregningResultat = ForskuddBeregningResultat(periodeResultatDto.forskuddBeregningResultat)
-  )
-}
-
-@ApiModel(value = "Periode (fra-til dato)")
+@ApiModel(value = "Resultatet av en beregning for en gitt periode")
 data class ResultatPeriode(
-    @ApiModelProperty(value = "Fra-dato") var datoFra: LocalDate? = null,
-    @ApiModelProperty(value = "Til-dato") var datoTil: LocalDate? = null
+    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
+    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregning
 ) {
-  constructor(periodeDto : PeriodeDto?) : this (
-      datoFra = periodeDto?.datoFra,
-      datoTil = periodeDto?.datoTil
+  constructor(resultatPeriode: ResultatPeriodeCore) : this(
+      resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
+      resultatBeregning = ResultatBeregning(resultatPeriode.resultatBeregning)
   )
 }
 
-@ApiModel(value = "Beregning resultat beløp, resultatkode og beskrivelse")
-data class ForskuddBeregningResultat(
-    @ApiModelProperty(value = "Beløp") var belop: BigDecimal? = null,
-    @ApiModelProperty(value = "Resultatkode") var resultatKode: String? = null,
-    @ApiModelProperty(value = "Resultatbeskrivelse") var resultatBeskrivelse: String? = null
+@ApiModel(value = "Resultatet av en beregning")
+data class ResultatBeregning(
+    @ApiModelProperty(value = "Resultatbeløp") var resultatBelop: BigDecimal,
+    @ApiModelProperty(value = "Resultatkode") var resultatKode: String,
+    @ApiModelProperty(value = "Resultatbeskrivelse") var resultatBeskrivelse: String
 ) {
-  constructor(forskuddBeregningResultatDto: ForskuddBeregningResultatDto) : this(
-      belop = forskuddBeregningResultatDto.belop,
-      resultatKode = forskuddBeregningResultatDto.resultatKode,
-      resultatBeskrivelse = forskuddBeregningResultatDto.resultatBeskrivelse
+  constructor(resultatBeregning: ResultatBeregningCore) : this(
+      resultatBelop = resultatBeregning.resultatBelop,
+      resultatKode = resultatBeregning.resultatKode,
+      resultatBeskrivelse = resultatBeregning.resultatBeskrivelse
+  )
+}
+
+
+// Felles
+@ApiModel(value = "Periode (fra-til dato)")
+data class Periode(
+    @ApiModelProperty(value = "Fra-dato") var periodeDatoFra: LocalDate? = null,
+    @ApiModelProperty(value = "Til-dato") var periodeDatoTil: LocalDate? = null
+) {
+  constructor(periode: PeriodeCore) : this(
+      periodeDatoFra = periode.periodeDatoFra,
+      periodeDatoTil = periode.periodeDatoTil
+  )
+
+  fun tilCore() = PeriodeCore(
+      periodeDatoFra = if (periodeDatoFra != null) periodeDatoFra!! else throw IllegalArgumentException("periodeDatoFra kan ikke være null"),
+      periodeDatoTil = if (periodeDatoTil != null) periodeDatoTil!! else throw IllegalArgumentException("periodeDatoTil kan ikke være null")
   )
 }
