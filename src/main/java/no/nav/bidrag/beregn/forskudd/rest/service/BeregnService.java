@@ -45,8 +45,8 @@ public class BeregnService {
 
     grunnlagTilCore.setSjablonPeriodeListe(mapSjablonVerdier(sjablonResponse.getBody()));
     var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
-    LOGGER.info("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
-    LOGGER.info("Forskudd - resultat av beregning: {}", resultatFraCore);
+    LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
+    LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore);
     return new HttpStatusResponse(HttpStatus.OK, new BeregnForskuddResultat(resultatFraCore));
   }
 

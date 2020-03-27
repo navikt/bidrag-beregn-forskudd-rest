@@ -26,7 +26,7 @@ public class SjablonConsumer {
     var sjablonResponse = restTemplate.exchange(sjablonUrl, HttpMethod.GET, null, SJABLONTALL_LISTE);
 
     if (sjablonResponse != null) {
-      LOGGER.info("Status ({}) for hent sjablontall: {}", sjablonResponse.getStatusCode(), sjablonResponse.getBody());
+      LOGGER.info("Status ({}) for hent sjablontall: ", sjablonResponse.getStatusCode());
     } else {
       return null;
     }
