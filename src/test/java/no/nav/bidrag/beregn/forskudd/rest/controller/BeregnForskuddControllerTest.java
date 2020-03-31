@@ -4,8 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
-import no.nav.bidrag.beregn.forskudd.rest.service.BeregnService;
+import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService;
 import no.nav.bidrag.commons.web.HttpStatusResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ class BeregnForskuddControllerTest {
   @LocalServerPort
   private int port;
   @MockBean
-  private BeregnService beregnServiceMock;
+  private BeregnForskuddService beregnForskuddServiceMock;
 
   @BeforeEach
   void initMocks() {
@@ -49,7 +50,7 @@ class BeregnForskuddControllerTest {
   @DisplayName("Skal returnere forskudd resultat")
   void skalReturnereForskuddResultat() {
 
-    when(beregnServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
+    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
         .thenReturn(new HttpStatusResponse(OK, TestUtil.dummyForskuddResultat()));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
@@ -75,11 +76,24 @@ class BeregnForskuddControllerTest {
   }
 
   @Test
-  @DisplayName("Skal returnere feil")
-  void skalReturnereFeil() {
+  @DisplayName("Skal returnere 400 Bad Request")
+  void skalReturnere400BadRequest() {
 
-    when(beregnServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
-        .thenReturn(new HttpStatusResponse(SERVICE_UNAVAILABLE, null));
+    var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
+    var request = initHttpEntity(TestUtil.byggForskuddGrunnlagUtenBostatusKode());
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnForskuddResultat.class);
+
+    assertAll(
+        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST)
+    );
+  }
+
+  @Test
+  @DisplayName("Skal returnere 500 Internal Server Error")
+  void skalReturnere500InternalServerError() {
+
+    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
+        .thenReturn(new HttpStatusResponse(INTERNAL_SERVER_ERROR, null));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggForskuddGrunnlag());
@@ -87,7 +101,7 @@ class BeregnForskuddControllerTest {
     var forskuddResultat = responseEntity.getBody();
 
     assertAll(
-        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(SERVICE_UNAVAILABLE),
+        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR),
         () -> assertThat(forskuddResultat).isNull()
     );
   }

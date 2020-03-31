@@ -1,13 +1,17 @@
 package no.nav.bidrag.beregn.forskudd.rest.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
+import no.nav.bidrag.beregn.forskudd.rest.exception.SjablonConsumerException;
 import no.nav.bidrag.commons.web.HttpStatusResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,11 +22,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("BeregnServiceTest")
-class BeregnServiceTest {
+@DisplayName("BeregnForskuddServiceTest")
+class BeregnForskuddServiceTest {
 
   @InjectMocks
-  private BeregnService beregnService;
+  private BeregnForskuddService beregnForskuddService;
 
   @Mock
   private SjablonConsumer sjablonConsumerMock;
@@ -41,7 +45,7 @@ class BeregnServiceTest {
     when(sjablonConsumerMock.hentSjablontall()).thenReturn(new HttpStatusResponse<>(HttpStatus.OK, TestUtil.dummySjablonListe()));
     when(forskuddCoreMock.beregnForskudd(grunnlagTilCoreCaptor.capture())).thenReturn(TestUtil.dummyForskuddResultatCore());
 
-    var beregnForskuddResultat = beregnService.beregn(TestUtil.dummyForskuddGrunnlagCore());
+    var beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore());
     var grunnlagTilCore = grunnlagTilCoreCaptor.getValue();
 
     assertAll(
@@ -59,24 +63,22 @@ class BeregnServiceTest {
   void nullReturFraSjablonConsumer() {
     when(sjablonConsumerMock.hentSjablontall()).thenReturn(null);
 
-    var beregnForskuddResultat = beregnService.beregn(TestUtil.dummyForskuddGrunnlagCore());
-
-    assertAll(
-        () -> assertThat(beregnForskuddResultat.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT),
-        () -> assertThat(beregnForskuddResultat.getBody()).isNull()
-    );
+    assertThatExceptionOfType(SjablonConsumerException.class)
+        .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore()))
+        .withMessage("Feil ved kall av bidrag-sjablon. Ingen respons");
   }
 
   @Test
   @DisplayName("Feil retur fra SjablonConsumer")
   void feilReturFraSjablonConsumer() {
-    when(sjablonConsumerMock.hentSjablontall()).thenReturn(new HttpStatusResponse<>(HttpStatus.SERVICE_UNAVAILABLE, null));
+    Map<String, String> body = new HashMap<>();
+    body.put("error code", "204");
+    body.put("error msg", "NO_CONTENT");
+    body.put("error text", "Ingen sjablonverdier funnet");
+    when(sjablonConsumerMock.hentSjablontall()).thenReturn(new HttpStatusResponse(HttpStatus.SERVICE_UNAVAILABLE, body.toString()));
 
-    var beregnForskuddResultat = beregnService.beregn(TestUtil.dummyForskuddGrunnlagCore());
-
-    assertAll(
-        () -> assertThat(beregnForskuddResultat.getHttpStatus()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE),
-        () -> assertThat(beregnForskuddResultat.getBody()).isNull()
-    );
+    assertThatExceptionOfType(SjablonConsumerException.class)
+        .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore()))
+        .withMessageContaining ("Feil ved kall av bidrag-sjablon. Status: " + HttpStatus.SERVICE_UNAVAILABLE + " Melding: ");
   }
 }

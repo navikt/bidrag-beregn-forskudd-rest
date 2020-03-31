@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.forskudd.rest.dto.http
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.beregn.forskudd.core.dto.*
+import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -21,15 +22,15 @@ data class BeregnForskuddGrunnlag(
         value = "Periodisert liste over barn i bidragsmottakers husholdning") val bidragMottakerBarnPeriodeListe: List<Periode>? = null
 ) {
   fun tilCore() = BeregnForskuddGrunnlagCore(
-      beregnDatoFra = if (beregnDatoFra != null) beregnDatoFra!! else throw IllegalArgumentException("beregnDatoFra kan ikke være null"),
-      beregnDatoTil = if (beregnDatoTil != null) beregnDatoTil!! else throw IllegalArgumentException("beregnDatoTil kan ikke være null"),
-      soknadBarn = if (soknadBarn != null) soknadBarn!!.tilCore() else throw IllegalArgumentException("soknadBarn kan ikke være null"),
+      beregnDatoFra = if (beregnDatoFra != null) beregnDatoFra!! else throw UgyldigInputException("beregnDatoFra kan ikke være null"),
+      beregnDatoTil = if (beregnDatoTil != null) beregnDatoTil!! else throw UgyldigInputException("beregnDatoTil kan ikke være null"),
+      soknadBarn = if (soknadBarn != null) soknadBarn!!.tilCore() else throw UgyldigInputException("soknadBarn kan ikke være null"),
 
       bidragMottakerInntektPeriodeListe = if (bidragMottakerInntektPeriodeListe != null) bidragMottakerInntektPeriodeListe.map { it.tilCore() }
-      else throw IllegalArgumentException("bidragMottakerInntektPeriodeListe kan ikke være null"),
+      else throw UgyldigInputException("bidragMottakerInntektPeriodeListe kan ikke være null"),
 
       bidragMottakerSivilstandPeriodeListe = if (bidragMottakerSivilstandPeriodeListe != null) bidragMottakerSivilstandPeriodeListe.map { it.tilCore() }
-      else throw IllegalArgumentException("bidragMottakerSivilstandPeriodeListe kan ikke være null"),
+      else throw UgyldigInputException("bidragMottakerSivilstandPeriodeListe kan ikke være null"),
 
       bidragMottakerBarnPeriodeListe = if (bidragMottakerBarnPeriodeListe != null) bidragMottakerBarnPeriodeListe.map { it.tilCore() } else emptyList(),
 
@@ -44,10 +45,10 @@ data class SoknadBarn(
 ) {
   fun tilCore() = SoknadBarnCore(
       soknadBarnFodselsdato = if (soknadBarnFodselsdato != null) soknadBarnFodselsdato!!
-      else throw IllegalArgumentException("soknadBarnFodselsdato kan ikke være null"),
+      else throw UgyldigInputException("soknadBarnFodselsdato kan ikke være null"),
 
       soknadBarnBostatusPeriodeListe = if (soknadBarnBostatusPeriodeListe != null) soknadBarnBostatusPeriodeListe.map { it.tilCore() }
-      else throw IllegalArgumentException("soknadBarnBostatusPeriodeListe kan ikke være null")
+      else throw UgyldigInputException("soknadBarnBostatusPeriodeListe kan ikke være null")
   )
 }
 
@@ -57,9 +58,9 @@ data class BostatusPeriode(
     @ApiModelProperty(value = "Søknadsbarnets bostatuskode") var bostatusKode: String? = null
 ) {
   fun tilCore() = BostatusPeriodeCore(
-      bostatusDatoFraTil = if (bostatusDatoFraTil != null) bostatusDatoFraTil!!.tilCore() else throw IllegalArgumentException(
+      bostatusDatoFraTil = if (bostatusDatoFraTil != null) bostatusDatoFraTil!!.tilCore() else throw UgyldigInputException(
           "bostatusDatoFraTil kan ikke være null"),
-      bostatusKode = if (bostatusKode != null) bostatusKode!! else throw IllegalArgumentException("bostatusKode kan ikke være null")
+      bostatusKode = if (bostatusKode != null) bostatusKode!! else throw UgyldigInputException("bostatusKode kan ikke være null")
   )
 }
 
@@ -69,9 +70,9 @@ data class InntektPeriode(
     @ApiModelProperty(value = "Bidragsmottakers inntekt beløp") var inntektBelop: BigDecimal? = null
 ) {
   fun tilCore() = InntektPeriodeCore(
-      inntektDatoFraTil = if (inntektDatoFraTil != null) inntektDatoFraTil!!.tilCore() else throw IllegalArgumentException(
+      inntektDatoFraTil = if (inntektDatoFraTil != null) inntektDatoFraTil!!.tilCore() else throw UgyldigInputException(
           "inntektDatoFraTil kan ikke være null"),
-      inntektBelop = if (inntektBelop != null) inntektBelop!! else throw IllegalArgumentException("inntektBelop kan ikke være null")
+      inntektBelop = if (inntektBelop != null) inntektBelop!! else throw UgyldigInputException("inntektBelop kan ikke være null")
   )
 }
 
@@ -81,9 +82,9 @@ data class SivilstandPeriode(
     @ApiModelProperty(value = "Bidragsmottakers sivilstandkode") var sivilstandKode: String? = null
 ) {
   fun tilCore() = SivilstandPeriodeCore(
-      sivilstandDatoFraTil = if (sivilstandDatoFraTil != null) sivilstandDatoFraTil!!.tilCore() else throw IllegalArgumentException(
+      sivilstandDatoFraTil = if (sivilstandDatoFraTil != null) sivilstandDatoFraTil!!.tilCore() else throw UgyldigInputException(
           "sivilstandDatoFraTil kan ikke være null"),
-      sivilstandKode = if (sivilstandKode != null) sivilstandKode!! else throw IllegalArgumentException("sivilstandKode kan ikke være null")
+      sivilstandKode = if (sivilstandKode != null) sivilstandKode!! else throw UgyldigInputException("sivilstandKode kan ikke være null")
   )
 }
 
@@ -136,7 +137,7 @@ data class Periode(
   )
 
   fun tilCore() = PeriodeCore(
-      periodeDatoFra = if (periodeDatoFra != null) periodeDatoFra!! else throw IllegalArgumentException("periodeDatoFra kan ikke være null"),
-      periodeDatoTil = if (periodeDatoTil != null) periodeDatoTil!! else throw IllegalArgumentException("periodeDatoTil kan ikke være null")
+      periodeDatoFra = if (periodeDatoFra != null) periodeDatoFra!! else throw UgyldigInputException("periodeDatoFra kan ikke være null"),
+      periodeDatoTil = if (periodeDatoTil != null) periodeDatoTil!! else throw UgyldigInputException("periodeDatoTil kan ikke være null")
   )
 }
