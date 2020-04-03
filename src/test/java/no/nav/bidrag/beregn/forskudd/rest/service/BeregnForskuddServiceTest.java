@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.forskudd.rest.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.exception.SjablonConsumerException;
+import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.commons.web.HttpStatusResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -79,6 +81,19 @@ class BeregnForskuddServiceTest {
 
     assertThatExceptionOfType(SjablonConsumerException.class)
         .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore()))
-        .withMessageContaining ("Feil ved kall av bidrag-sjablon. Status: " + HttpStatus.SERVICE_UNAVAILABLE + " Melding: ");
+        .withMessageContaining("Feil ved kall av bidrag-sjablon. Status: " + HttpStatus.SERVICE_UNAVAILABLE + " Melding: ");
+  }
+
+
+  @Test
+  @DisplayName("Feil i kontroll av input")
+  void feilIKontrollAvInput() {
+    when(sjablonConsumerMock.hentSjablontall()).thenReturn(new HttpStatusResponse<>(HttpStatus.OK, TestUtil.dummySjablonListe()));
+    when(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik());
+
+    assertThatExceptionOfType(UgyldigInputException.class)
+        .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore()))
+        .withMessageContaining("beregnDatoFra kan ikke være null")
+        .withMessageContaining("periodeDatoTil må være etter periodeDatoFra");
   }
 }
