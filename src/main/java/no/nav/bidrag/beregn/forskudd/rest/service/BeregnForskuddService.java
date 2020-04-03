@@ -57,7 +57,7 @@ public class BeregnForskuddService {
 
     if (!resultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av forskudd");
-      throw new UgyldigInputException(resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining(", ")));
+      throw new UgyldigInputException(resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
     return new HttpStatusResponse(HttpStatus.OK, new BeregnForskuddResultat(resultatFraCore));

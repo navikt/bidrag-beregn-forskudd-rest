@@ -23,8 +23,7 @@ class DtoTest {
   @DisplayName("Skal kaste IllegalArgumentException når bostatusDatoTil er null")
   void bostatusDatoTilErNull() {
     var grunnlag = TestUtil.byggForskuddGrunnlagUtenBostatusDatoTil();
-    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag::tilCore)
-        .withMessage("periodeDatoTil kan ikke være null");
+    assertThatCode(grunnlag::tilCore).doesNotThrowAnyException();
   }
 
   @Test
@@ -55,8 +54,7 @@ class DtoTest {
   @DisplayName("Skal kaste IllegalArgumentException når inntektDatoTil er null")
   void inntektDatoTilErNull() {
     var grunnlag = TestUtil.byggForskuddGrunnlagUtenInntektDatoTil();
-    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag::tilCore)
-        .withMessage("periodeDatoTil kan ikke være null");
+    assertThatCode(grunnlag::tilCore).doesNotThrowAnyException();
   }
 
   @Test
@@ -79,8 +77,7 @@ class DtoTest {
   @DisplayName("Skal kaste IllegalArgumentException når sivilstandDatoTil er null")
   void sivilstandDatoTilErNull() {
     var grunnlag = TestUtil.byggForskuddGrunnlagUtenSivilstandDatoTil();
-    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag::tilCore)
-        .withMessage("periodeDatoTil kan ikke være null");
+    assertThatCode(grunnlag::tilCore).doesNotThrowAnyException();
   }
 
   @Test
@@ -103,8 +100,7 @@ class DtoTest {
   @DisplayName("Skal kaste IllegalArgumentException når barnDatoTil er null")
   void barnDatoTilErNull() {
     var grunnlag = TestUtil.byggForskuddGrunnlagUtenBarnDatoTil();
-    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag::tilCore)
-        .withMessage("periodeDatoTil kan ikke være null");
+    assertThatCode(grunnlag::tilCore).doesNotThrowAnyException();
   }
 
   @Test
