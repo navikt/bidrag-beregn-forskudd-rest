@@ -138,6 +138,6 @@ data class Periode(
 
   fun tilCore() = PeriodeCore(
       periodeDatoFra = if (periodeDatoFra != null) periodeDatoFra!! else throw UgyldigInputException("periodeDatoFra kan ikke være null"),
-      periodeDatoTil = if (periodeDatoTil != null) periodeDatoTil!! else throw UgyldigInputException("periodeDatoTil kan ikke være null")
+      periodeDatoTil = periodeDatoTil
   )
 }

@@ -2,4 +2,4 @@
 
 ![](https://github.com/navikt/bidrag-beregn-forskudd-rest/workflows/continious%20integration/badge.svg)
 
-Forskuddsberegning rest-grensesnitt
+Forskuddsberegning rest-grensesnitt 

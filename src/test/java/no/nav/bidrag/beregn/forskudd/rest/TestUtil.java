@@ -3,7 +3,9 @@ package no.nav.bidrag.beregn.forskudd.rest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
@@ -74,7 +76,17 @@ public class TestUtil {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1")));
-    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe);
+    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, Collections.emptyList());
+  }
+
+  // Bygger opp BeregnForskuddResultatCore med avvik
+  public static BeregnForskuddResultatCore dummyForskuddResultatCoreMedAvvik() {
+    var avvikListe = new ArrayList<AvvikCore>();
+    avvikListe.add(new AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"));
+    avvikListe.add(new AvvikCore(
+        "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, periodeDatoTil=2018-03-01",
+        "DATO_FRA_ETTER_DATO_TIL"));
+    return new BeregnForskuddResultatCore(Collections.emptyList(), avvikListe);
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlag() {

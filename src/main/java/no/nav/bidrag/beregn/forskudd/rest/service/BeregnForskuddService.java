@@ -3,7 +3,9 @@ package no.nav.bidrag.beregn.forskudd.rest.service;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
@@ -11,6 +13,7 @@ import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.exception.SjablonConsumerException;
+import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.commons.web.HttpStatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +49,17 @@ public class BeregnForskuddService {
     }
 
     grunnlagTilCore.setSjablonPeriodeListe(mapSjablonVerdier(sjablonResponse.getBody()));
+
     var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
     LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
-    LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore);
+    LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getResultatPeriodeListe());
+    LOGGER.debug("Forskudd - avvik: {}", resultatFraCore.getAvvikListe());
+
+    if (!resultatFraCore.getAvvikListe().isEmpty()) {
+      LOGGER.error("Ugyldig input ved beregning av forskudd");
+      throw new UgyldigInputException(resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
+    }
+
     return new HttpStatusResponse(HttpStatus.OK, new BeregnForskuddResultat(resultatFraCore));
   }
 
