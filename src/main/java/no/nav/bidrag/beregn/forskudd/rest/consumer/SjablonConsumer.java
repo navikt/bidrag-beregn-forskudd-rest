@@ -25,12 +25,11 @@ public class SjablonConsumer {
   public HttpStatusResponse<List<Sjablontall>> hentSjablontall() {
     var sjablonResponse = restTemplate.exchange(sjablonUrl, HttpMethod.GET, null, SJABLONTALL_LISTE);
 
-    if (sjablonResponse != null) {
-      LOGGER.info("Status ({}) for hent sjablontall: ", sjablonResponse.getStatusCode());
-    } else {
+    if (sjablonResponse == null) {
       return null;
     }
 
+    LOGGER.info("Status ({}) for hent sjablontall: ", sjablonResponse.getStatusCode());
     return new HttpStatusResponse<>(sjablonResponse.getStatusCode(), sjablonResponse.getBody());
   }
 }
