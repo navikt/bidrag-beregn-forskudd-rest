@@ -50,19 +50,21 @@ public class BeregnForskuddService {
 
     grunnlagTilCore.setSjablonPeriodeListe(mapSjablonVerdier(sjablonResponse.getBody()));
 
-    var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
     LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
-    LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getResultatPeriodeListe());
-    LOGGER.debug("Forskudd - avvik: {}", resultatFraCore.getAvvikListe());
+    var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
 
     if (!resultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av forskudd");
+      LOGGER.error("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
+      LOGGER.error("Forskudd - avvik: {}", resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
       throw new UgyldigInputException(resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
+    LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getResultatPeriodeListe());
     return new HttpStatusResponse(HttpStatus.OK, new BeregnForskuddResultat(resultatFraCore));
   }
 
+  //Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
   private List<SjablonPeriodeCore> mapSjablonVerdier(List<Sjablontall> sjablontallListe) {
     return sjablontallListe
         .stream()
