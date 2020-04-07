@@ -37,20 +37,6 @@ jobs:
           docker build --tag ${IMAGE} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
-      - if: github.ref == 'refs/heads/master'
-        run: mvn release:update-versions
-      - if: github.ref == 'refs/heads/master'
-        run: |
-          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo ::set-output name=version::${CURRENT_VERSION}
-        id: snapshot
-      - uses: navikt/bidrag-actions/git-commit@v3.0.1-git
-        if: github.ref == 'refs/heads/master'
-        with:
-          commit_message: "Bumped to new version: ${{ steps.snapshot.outputs.version }}"
-          pattern: "pom.xml"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy_dev:
     runs-on: ubuntu-latest
@@ -78,6 +64,32 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: deploy/nais.yaml
           VAR: namespace=q1,sjablonurl=https://bidrag-sjablon-q1.nais.preprod.local/bidrag-sjablon,ingress=https://bidrag-beregn-forskudd-rest-q1.nais.preprod.local/
+
+  bump_dev_version:
+    runs-on: ubuntu-latest
+    name: bump SNAPSHOT version
+    if: github.ref == 'refs/heads/master'
+    needs: run_cucumber
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1.1.2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - run: mvn release:update-versions
+      - run: |
+          BUMPED_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo ::set-output name=version::${BUMPED_VERSION}
+        id: snapshot
+      - uses: navikt/bidrag-git/commit@v3.0.3
+        with:
+          commit_message: "Bumped to new version: ${{ steps.snapshot.outputs.version }}"
+          pattern: "pom.xml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy_prod:
     runs-on: ubuntu-latest
