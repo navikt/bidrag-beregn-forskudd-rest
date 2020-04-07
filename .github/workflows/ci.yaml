@@ -25,8 +25,8 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: navikt/bidrag-actions/maven-setup@v5
-        env:
+    - uses: navikt/bidrag-maven/maven@v1.0.4
+      env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: navikt/bidrag-actions/maven-verify-dependencies@v5
       - run: mvn install -B -e
