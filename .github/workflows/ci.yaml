@@ -28,7 +28,7 @@ jobs:
     - uses: navikt/bidrag-maven/maven@v1.0.4
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: navikt/bidrag-actions/maven-verify-dependencies@v5
+      - uses: navikt/bidrag-maven/verify-dependencies@v1.0.4
       - run: mvn install -B -e
       - name: Build and publish Docker image
         env:
