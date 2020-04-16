@@ -19,16 +19,16 @@ jobs:
         with:
           java-version: '13'
       - run: env
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: navikt/bidrag-maven/setup@v1.0.4
+      - uses: navikt/bidrag-maven/setup@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: navikt/bidrag-maven/verify-dependencies@v1.0.4
+      - uses: navikt/bidrag-maven/verify-dependencies@v1
       - run: mvn install -B -e
       - name: Build and publish Docker image
         env:
@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -115,7 +115,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
