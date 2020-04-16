@@ -19,7 +19,7 @@ jobs:
         with:
           java-version: '13'
       - run: env
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -115,7 +115,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v1
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
