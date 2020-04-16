@@ -54,9 +54,9 @@ public class BeregnForskuddService {
     var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
 
     if (!resultatFraCore.getAvvikListe().isEmpty()) {
-      LOGGER.error("Ugyldig input ved beregning av forskudd");
-      LOGGER.error("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
-      LOGGER.error("Forskudd - avvik: {}", resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
+      LOGGER.error("Ugyldig input ved beregning av forskudd" + System.lineSeparator()
+          + "Forskudd - grunnlag for beregning: " + grunnlagTilCore + System.lineSeparator()
+          + "Forskudd - avvik: " + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
       throw new UgyldigInputException(resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
