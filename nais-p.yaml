@@ -30,6 +30,7 @@ spec:
       memory: 512Mi
   ingresses:
     - https://bidrag-beregn-forskudd-rest.nais.adeo.no/
+    - https://bidrag-beregn-forskudd-rest.prod-fss.nais.io
   vault:
     enabled: false
   env:
