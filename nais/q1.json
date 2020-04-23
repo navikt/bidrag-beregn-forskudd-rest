@@ -1,0 +1,6 @@
+{
+  "namespace": "q1",
+  "ingress_preprod": "https://bidrag-beregn-forskudd-rest-q1.nais.preprod.local/",
+  "ingress_nais": "https://bidrag-beregn-forskudd-rest-q1.dev-fss.nais.io/",
+  "sjablonurl": "https://bidrag-sjablon-q1.dev-fss.nais.io/bidrag-sjablon"
+}
