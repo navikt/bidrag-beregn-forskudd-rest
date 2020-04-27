@@ -1,7 +1,6 @@
 package no.nav.bidrag.beregn.forskudd.rest;
 
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
-import no.nav.bidrag.beregn.forskudd.core.ForskuddCoreImpl;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +13,7 @@ public class BidragBeregnForskudd {
 
   @Bean
   public ForskuddCore forskuddCore() {
-    return new ForskuddCoreImpl();
+    return ForskuddCore.getInstance();
   }
 
   @Bean
