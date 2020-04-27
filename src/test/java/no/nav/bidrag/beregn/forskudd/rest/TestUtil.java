@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest;
 
+import static java.util.Collections.singletonList;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,9 +11,11 @@ import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
@@ -20,9 +24,11 @@ import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BostatusPeriode;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.Inntekt;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.InntektPeriode;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.Periode;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatBeregning;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.SivilstandPeriode;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.SoknadBarn;
@@ -50,7 +56,7 @@ public class TestUtil {
     var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
 
     var bidragMottakerInntektPeriode = new InntektPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), BigDecimal.valueOf(0));
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "LØNNSINNTEKT", BigDecimal.valueOf(0));
     var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
     bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
 
@@ -75,7 +81,9 @@ public class TestUtil {
   public static BeregnForskuddResultatCore dummyForskuddResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1")));
+        new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
+        new ResultatGrunnlagCore(singletonList(new InntektCore("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
+            "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
     return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, Collections.emptyList());
   }
 
@@ -115,6 +123,10 @@ public class TestUtil {
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektDatoTil() {
     return byggForskuddGrunnlag("inntektDatoTil");
+  }
+
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektType() {
+    return byggForskuddGrunnlag("inntektType");
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektBelop() {
@@ -185,6 +197,7 @@ public class TestUtil {
     var soknadBarnFodselsDato = (nullVerdi.equals("soknadBarnFodselsdato") ? null : LocalDate.parse("2006-05-12"));
     var inntektDatoFra = (nullVerdi.equals("inntektDatoFra") ? null : LocalDate.parse("2017-01-01"));
     var inntektDatoTil = (nullVerdi.equals("inntektDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var inntektType = (nullVerdi.equals("inntektType") ? null : "LØNNSINNTEKT");
     var inntektBelop = (nullVerdi.equals("inntektBelop") ? null : BigDecimal.valueOf(100000));
     var sivilstandDatoFra = (nullVerdi.equals("sivilstandDatoFra") ? null : LocalDate.parse("2017-01-01"));
     var sivilstandDatoTil = (nullVerdi.equals("sivilstandDatoTil") ? null : LocalDate.parse("2020-01-01"));
@@ -220,9 +233,9 @@ public class TestUtil {
     } else {
       InntektPeriode bidragMottakerInntektPeriode;
       if (nullVerdi.equals("inntektDatoFraTil")) {
-        bidragMottakerInntektPeriode = new InntektPeriode(null, inntektBelop);
+        bidragMottakerInntektPeriode = new InntektPeriode(null, inntektType, inntektBelop);
       } else {
-        bidragMottakerInntektPeriode = new InntektPeriode(new Periode(inntektDatoFra, inntektDatoTil), inntektBelop);
+        bidragMottakerInntektPeriode = new InntektPeriode(new Periode(inntektDatoFra, inntektDatoTil), inntektType, inntektBelop);
       }
       bidragMottakerInntektPeriodeListe = new ArrayList<>();
       bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
@@ -253,7 +266,9 @@ public class TestUtil {
   public static BeregnForskuddResultat dummyForskuddResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriode>();
     bidragPeriodeResultatListe.add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1")));
+        new ResultatBeregning(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
+        new ResultatGrunnlag(singletonList(new Inntekt("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
+            "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
     return new BeregnForskuddResultat(bidragPeriodeResultatListe);
   }
 }

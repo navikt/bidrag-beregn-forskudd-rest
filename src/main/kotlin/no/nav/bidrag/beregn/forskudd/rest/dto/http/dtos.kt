@@ -67,11 +67,13 @@ data class BostatusPeriode(
 @ApiModel(value = "Bidragsmottakers inntekt")
 data class InntektPeriode(
     @ApiModelProperty(value = "Bidragsmottakers inntekt fra-til-dato") var inntektDatoFraTil: Periode? = null,
+    @ApiModelProperty(value = "Bidragsmottakers inntekt type") var inntektType: String? = null,
     @ApiModelProperty(value = "Bidragsmottakers inntekt beløp") var inntektBelop: BigDecimal? = null
 ) {
   fun tilCore() = InntektPeriodeCore(
       inntektDatoFraTil = if (inntektDatoFraTil != null) inntektDatoFraTil!!.tilCore() else throw UgyldigInputException(
           "inntektDatoFraTil kan ikke være null"),
+      inntektType = if (inntektType != null) inntektType!! else throw UgyldigInputException("inntektType kan ikke være null"),
       inntektBelop = if (inntektBelop != null) inntektBelop!! else throw UgyldigInputException("inntektBelop kan ikke være null")
   )
 }
@@ -103,11 +105,13 @@ data class BeregnForskuddResultat(
 @ApiModel(value = "Resultatet av en beregning for en gitt periode")
 data class ResultatPeriode(
     @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregning
+    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregning,
+    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlag
 ) {
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
       resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
-      resultatBeregning = ResultatBeregning(resultatPeriode.resultatBeregning)
+      resultatBeregning = ResultatBeregning(resultatPeriode.resultatBeregning),
+      resultatGrunnlag = ResultatGrunnlag(resultatPeriode.resultatGrunnlag)
   )
 }
 
@@ -121,6 +125,46 @@ data class ResultatBeregning(
       resultatBelop = resultatBeregning.resultatBelop,
       resultatKode = resultatBeregning.resultatKode,
       resultatBeskrivelse = resultatBeregning.resultatBeskrivelse
+  )
+}
+
+@ApiModel(value = "Grunnlaget for en beregning")
+data class ResultatGrunnlag(
+    @ApiModelProperty(value = "Liste over bidragsmottakers inntekter") var bidragMottakerInntektListe: List<Inntekt> = emptyList(),
+    @ApiModelProperty(value = "Bidragsmottakers sivilstand") var bidragMottakerSivilstandKode: String,
+    @ApiModelProperty(value = "Antall barn i husstanden") var antallBarnIHusstand: Int,
+    @ApiModelProperty(value = "Søknadsbarnets alder") var soknadBarnAlder: Int,
+    @ApiModelProperty(value = "Søknadsbarnets bostatus") var soknadBarnBostatusKode: String,
+    @ApiModelProperty(value = "Sjablonverdi forskuddssats 100%") var forskuddssats100Prosent: Int,
+    @ApiModelProperty(value = "Sjablonverdi multiplikator maks inntektsgrense") var multiplikatorMaksInntektsgrense: Int,
+    @ApiModelProperty(value = "Sjablonverdi inntektsgrense 100% forskudd") var inntektsgrense100ProsentForskudd: Int,
+    @ApiModelProperty(value = "Sjablonverdi inntektsgrense 75% forskudd enslig") var inntektsgrenseEnslig75ProsentForskudd: Int,
+    @ApiModelProperty(value = "Sjablonverdi inntektsgrense 75% forskudd gift") var inntektsgrenseGift75ProsentForskudd: Int,
+    @ApiModelProperty(value = "Sjablonverdi inntektsintervall forskudd") var inntektsintervallForskudd: Int
+) {
+  constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
+      bidragMottakerInntektListe = resultatGrunnlag.bidragMottakerInntektListe.map { Inntekt(it) },
+      bidragMottakerSivilstandKode = resultatGrunnlag.bidragMottakerSivilstandKode,
+      antallBarnIHusstand = resultatGrunnlag.antallBarnIHusstand,
+      soknadBarnAlder = resultatGrunnlag.soknadBarnAlder,
+      soknadBarnBostatusKode = resultatGrunnlag.soknadBarnBostatusKode,
+      forskuddssats100Prosent = resultatGrunnlag.forskuddssats100Prosent,
+      multiplikatorMaksInntektsgrense = resultatGrunnlag.multiplikatorMaksInntektsgrense,
+      inntektsgrense100ProsentForskudd = resultatGrunnlag.inntektsgrense100ProsentForskudd,
+      inntektsgrenseEnslig75ProsentForskudd = resultatGrunnlag.inntektsgrenseEnslig75ProsentForskudd,
+      inntektsgrenseGift75ProsentForskudd = resultatGrunnlag.inntektsgrenseGift75ProsentForskudd,
+      inntektsintervallForskudd = resultatGrunnlag.inntektsintervallForskudd
+  )
+}
+
+@ApiModel(value = "Inntekttype og -beløp")
+data class Inntekt(
+    @ApiModelProperty(value = "Inntekt type") var inntektType: String,
+    @ApiModelProperty(value = "Inntekt beløp") var inntektBelop: BigDecimal
+) {
+  constructor(inntekt: InntektCore) : this(
+      inntektType = inntekt.inntektType,
+      inntektBelop = inntekt.inntektBelop
   )
 }
 

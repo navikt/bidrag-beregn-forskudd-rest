@@ -59,6 +59,14 @@ class DtoTest {
 
   @Test
   @DisplayName("Skal kaste IllegalArgumentException når inntektBelop er null")
+  void skalKasteIllegalArgumentExceptionNaarInntektTypeErNull() {
+    var grunnlag = TestUtil.byggForskuddGrunnlagUtenInntektType();
+    assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag::tilCore)
+        .withMessage("inntektType kan ikke være null");
+  }
+
+  @Test
+  @DisplayName("Skal kaste IllegalArgumentException når inntektBelop er null")
   void skalKasteIllegalArgumentExceptionNaarInntektBelopErNull() {
     var grunnlag = TestUtil.byggForskuddGrunnlagUtenInntektBelop();
     assertThatExceptionOfType(UgyldigInputException.class).isThrownBy(grunnlag::tilCore)
