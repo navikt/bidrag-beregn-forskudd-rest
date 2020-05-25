@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.6.RELEASE</version>
+    <version>2.2.7.RELEASE</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -22,13 +22,13 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>0.3.6</bidrag-commons.version>
+    <bidrag-commons.version>0.3.7</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
     <bidrag-beregn-forskudd-core.version>0.2.1</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
-    <java.version>13</java.version>
+    <java.version>14</java.version>
     <kotlin.version>1.3.72</kotlin.version>
   </properties>
 
