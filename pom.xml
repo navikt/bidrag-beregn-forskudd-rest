@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.7.RELEASE</version>
+    <version>2.3.0.RELEASE</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -24,7 +24,7 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.3.7</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
-    <bidrag-beregn-forskudd-core.version>0.2.1</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-forskudd-core.version>0.2.2</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
