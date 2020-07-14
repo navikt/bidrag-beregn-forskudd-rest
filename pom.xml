@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.3.1.RELEASE</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>no.nav.bidrag</groupId>
@@ -25,7 +25,7 @@
     <bidrag-commons.version>0.4.0</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
     <bidrag-beregn-forskudd-core.version>0.2.2</bidrag-beregn-forskudd-core.version>
-    <springfox-swagger.version>2.9.2</springfox-swagger.version>
+    <springfox-swagger.version>2.10.0</springfox-swagger.version>
 
     <!-- language -->
     <java.version>14</java.version>
