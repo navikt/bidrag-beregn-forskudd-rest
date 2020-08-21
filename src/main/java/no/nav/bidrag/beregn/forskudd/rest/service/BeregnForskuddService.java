@@ -34,19 +34,29 @@ public class BeregnForskuddService {
 
   public HttpResponse<BeregnForskuddResultat> beregn(BeregnForskuddGrunnlagCore grunnlagTilCore) {
 
+    //Henter sjabloner
     var sjablonResponse = sjablonConsumer.hentSjablontall();
     LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonResponse.getResponseEntity().getBody().size());
 
     grunnlagTilCore.setSjablonPeriodeListe(mapSjablonVerdier(sjablonResponse.getResponseEntity().getBody()));
 
+    // Kaller core-modulen for beregning av forskudd
     LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
     var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
 
     if (!resultatFraCore.getAvvikListe().isEmpty()) {
-      LOGGER.error("Ugyldig input ved beregning av forskudd" + System.lineSeparator()
-          + "Forskudd - grunnlag for beregning: " + grunnlagTilCore + System.lineSeparator()
-          + "Forskudd - avvik: " + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
-      throw new UgyldigInputException(resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
+      LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: " + System.lineSeparator()
+          + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining(System.lineSeparator())));
+      LOGGER.info("Forskudd - grunnlag for beregning: " + System.lineSeparator()
+          + "beregnDatoFra= " + grunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
+          + "beregnDatoTil= " + grunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
+          + "soknadBarn= " + grunnlagTilCore.getSoknadBarn() + System.lineSeparator()
+          + "bidragMottakerBarnPeriodeListe= " + grunnlagTilCore.getBidragMottakerBarnPeriodeListe() + System.lineSeparator()
+          + "bidragMottakerInntektPeriodeListe= " + grunnlagTilCore.getBidragMottakerInntektPeriodeListe() + System.lineSeparator()
+          + "bidragMottakerSivilstandPeriodeListe= " + grunnlagTilCore.getBidragMottakerSivilstandPeriodeListe() + System.lineSeparator());
+      throw new UgyldigInputException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: "
+          + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
+
     }
 
     LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getResultatPeriodeListe());
