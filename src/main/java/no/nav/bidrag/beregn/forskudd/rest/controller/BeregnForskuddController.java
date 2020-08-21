@@ -22,6 +22,6 @@ public class BeregnForskuddController {
   @PostMapping(path = "/forskudd")
   public ResponseEntity<BeregnForskuddResultat> beregnForskudd(@RequestBody BeregnForskuddGrunnlag beregnForskuddGrunnlag) {
     var resultat = beregnForskuddService.beregn(beregnForskuddGrunnlag.tilCore());
-    return new ResponseEntity<>(resultat.getBody(), resultat.getHttpStatus());
+    return new ResponseEntity<>(resultat.getResponseEntity().getBody(), resultat.getResponseEntity().getStatusCode());
   }
 }

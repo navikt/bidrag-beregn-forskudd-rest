@@ -15,7 +15,7 @@ import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService;
-import no.nav.bidrag.commons.web.HttpStatusResponse;
+import no.nav.bidrag.commons.web.HttpResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +51,7 @@ class BeregnForskuddControllerTest {
   void skalReturnereForskuddResultat() {
 
     when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
-        .thenReturn(new HttpStatusResponse(OK, TestUtil.dummyForskuddResultat()));
+        .thenReturn(HttpResponse.from(OK, TestUtil.dummyForskuddResultat()));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggForskuddGrunnlag());
@@ -76,8 +76,8 @@ class BeregnForskuddControllerTest {
   }
 
   @Test
-  @DisplayName("Skal returnere 400 Bad Request")
-  void skalReturnere400BadRequest() {
+  @DisplayName("Skal returnere 400 Bad Request når input data mangler")
+  void skalReturnere400BadRequestNaarInputDataMangler() {
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggForskuddGrunnlagUtenBostatusKode());
@@ -89,11 +89,10 @@ class BeregnForskuddControllerTest {
   }
 
   @Test
-  @DisplayName("Skal returnere 500 Internal Server Error")
-  void skalReturnere500InternalServerError() {
+  @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
+  void skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
 
-    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
-        .thenReturn(new HttpStatusResponse(INTERNAL_SERVER_ERROR, null));
+    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR, null));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggForskuddGrunnlag());

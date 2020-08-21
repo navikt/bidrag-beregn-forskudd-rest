@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest.consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
+import no.nav.bidrag.beregn.forskudd.rest.exception.SjablonConsumerException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +21,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,26 +36,29 @@ class SjablonConsumerTest {
   private RestTemplate restTemplateMock;
 
   @Test
-  @DisplayName("Skal hente liste av sjablonverdier")
-  void skalHenteListeAvSjablonverdier() {
+  @DisplayName("Skal hente liste av Sjablontall når respons fra tjenesten er OK")
+  void skalHenteListeAvSjablontallNaarResponsFraTjenestenErOk() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
         .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonListe(), HttpStatus.OK));
     var sjablonResponse = sjablonConsumer.hentSjablontall();
 
     assertAll(
         () -> assertThat(sjablonResponse).isNotNull(),
-        () -> assertThat(sjablonResponse.getBody().size()).isEqualTo(TestUtil.dummySjablonListe().size()),
-        () -> assertThat(sjablonResponse.getBody().get(0).getTypeSjablon()).isEqualTo("0005")
+        () -> assertThat(sjablonResponse.getResponseEntity().getStatusCode()).isNotNull(),
+        () -> assertThat(sjablonResponse.getResponseEntity().getStatusCode()).isEqualTo(HttpStatus.OK),
+        () -> assertThat(sjablonResponse.getResponseEntity().getBody()).isNotNull(),
+        () -> assertThat(sjablonResponse.getResponseEntity().getBody().size()).isEqualTo(TestUtil.dummySjablonListe().size()),
+        () -> assertThat(sjablonResponse.getResponseEntity().getBody().get(0).getTypeSjablon())
+            .isEqualTo(TestUtil.dummySjablonListe().get(0).getTypeSjablon())
     );
   }
 
   @Test
-  @DisplayName("Skal returnere null")
-  void skalReturnereNull() {
+  @DisplayName("Skal kaste SjablonConsumerException når respons fra tjenesten ikke er OK for Sjablontall")
+  void skalKasteRestClientExceptionNaarResponsFraTjenestenIkkeErOkForSjablontall() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
-        .thenReturn(null);
-    var sjablonResponse = sjablonConsumer.hentSjablontall();
+        .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThat(sjablonResponse).isNull();
+    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablontall());
   }
 }

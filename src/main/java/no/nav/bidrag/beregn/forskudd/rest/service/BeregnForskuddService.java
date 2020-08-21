@@ -12,9 +12,8 @@ import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
-import no.nav.bidrag.beregn.forskudd.rest.exception.SjablonConsumerException;
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException;
-import no.nav.bidrag.commons.web.HttpStatusResponse;
+import no.nav.bidrag.commons.web.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,22 +32,12 @@ public class BeregnForskuddService {
     this.forskuddCore = forskuddCore;
   }
 
-  public HttpStatusResponse<BeregnForskuddResultat> beregn(BeregnForskuddGrunnlagCore grunnlagTilCore) {
+  public HttpResponse<BeregnForskuddResultat> beregn(BeregnForskuddGrunnlagCore grunnlagTilCore) {
 
     var sjablonResponse = sjablonConsumer.hentSjablontall();
+    LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonResponse.getResponseEntity().getBody().size());
 
-    if (sjablonResponse == null) {
-      LOGGER.error("Feil ved kall av bidrag-sjablon. Ingen respons");
-      throw new SjablonConsumerException("Feil ved kall av bidrag-sjablon. Ingen respons");
-    }
-
-    if (!(sjablonResponse.getHttpStatus().is2xxSuccessful())) {
-      LOGGER.error("Feil ved kall av bidrag-sjablon. Status: {}", sjablonResponse.getHttpStatus().toString());
-      throw new SjablonConsumerException("Feil ved kall av bidrag-sjablon. Status: " + sjablonResponse.getHttpStatus().toString() + " Melding: " +
-          sjablonResponse.getBody());
-    }
-
-    grunnlagTilCore.setSjablonPeriodeListe(mapSjablonVerdier(sjablonResponse.getBody()));
+    grunnlagTilCore.setSjablonPeriodeListe(mapSjablonVerdier(sjablonResponse.getResponseEntity().getBody()));
 
     LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
     var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
@@ -61,7 +50,7 @@ public class BeregnForskuddService {
     }
 
     LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getResultatPeriodeListe());
-    return new HttpStatusResponse(HttpStatus.OK, new BeregnForskuddResultat(resultatFraCore));
+    return HttpResponse.from(HttpStatus.OK, new BeregnForskuddResultat(resultatFraCore));
   }
 
   //Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
