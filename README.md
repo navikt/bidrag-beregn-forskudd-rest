@@ -1,6 +1,6 @@
 # bidrag-beregn-forskudd-rest
 
-![](https://github.com/navikt/bidrag-beregn-forskudd-rest/workflows/continious%20integration/badge.svg)
+![](https://github.com/navikt/bidrag-beregn-forskudd-rest/workflows/continuous%20integration/badge.svg)
 
 Mikrotjeneste / Rest-API for beregning av bidragsforskudd, som er satt opp til å kjøre på NAIS.
 
