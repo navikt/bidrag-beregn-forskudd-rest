@@ -17,7 +17,7 @@ jobs:
       - uses: navikt/bidrag-docker/exists@v1
         id: dockerimage
         with:
-          image_name: bidrag-dokument
+          image_name: bidrag-beregn-forskudd-rest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo ::set-env name=NOT_FOUND::${{ steps.dockerimage.outputs.not_found }}
