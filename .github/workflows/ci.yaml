@@ -1,4 +1,4 @@
-name: continious integration
+name: continuous integration
 on:
   push:
     branches:
@@ -14,25 +14,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: navikt/bidrag-docker/exists@v1
+        id: dockerimage
+        with:
+          image_name: bidrag-beregn-forskudd-rest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo ::set-env name=NOT_FOUND::${{ steps.dockerimage.outputs.not_found }}
       - uses: actions/checkout@v2
+        if: env.NOT_FOUND == 'true'
       - uses: actions/setup-java@v1.3.0
+        if: env.NOT_FOUND == 'true'
         with:
           java-version: '14'
       - run: env
       - uses: actions/cache@v1
+        if: env.NOT_FOUND == 'true'
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
       - uses: navikt/bidrag-maven/setup@v4
+        if: env.NOT_FOUND == 'true'
         with:
           repositories: maven-central=https://repo.maven.apache.org/maven2,github-packages=https://maven.pkg.github.com/navikt/maven-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: navikt/bidrag-maven/verify-dependencies@v1
+        if: env.NOT_FOUND == 'true'
       - run: mvn install -B -e
+        if: env.NOT_FOUND == 'true'
       - name: Build and publish Docker image
+        if: env.NOT_FOUND == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -57,15 +71,15 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: deploy/nais/nais.yaml
-          VARS: deploy/nais/q0.json
-      - name: Deploy to dev-fss, namespace q1
+          VARS: deploy/nais/main.json
+      - name: Deploy to dev-fss, "feature" namespace
         if: github.ref != 'refs/heads/main'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: deploy/nais/nais.yaml
-          VARS: deploy/nais/q1.json
+          VARS: deploy/nais/feature.json
 
   bump_dev_version:
     runs-on: ubuntu-latest
