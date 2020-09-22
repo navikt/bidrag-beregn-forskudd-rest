@@ -29,7 +29,7 @@
 
     <!-- language -->
     <java.version>14</java.version>
-    <kotlin.version>1.4.0</kotlin.version>
+    <kotlin.version>1.4.10</kotlin.version>
   </properties>
 
   <dependencies>
