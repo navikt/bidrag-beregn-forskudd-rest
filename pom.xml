@@ -11,7 +11,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-rest</artifactId>
-  <version>0.0.46-SNAPSHOT</version>
+  <version>0.0.47-SNAPSHOT</version>
   <name>bidrag-beregn-forskudd-rest</name>
   <description>Forskuddsberegning</description>
 
