@@ -28,7 +28,7 @@
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
-    <java.version>14</java.version>
+    <java.version>15</java.version>
     <kotlin.version>1.4.10</kotlin.version>
   </properties>
 
