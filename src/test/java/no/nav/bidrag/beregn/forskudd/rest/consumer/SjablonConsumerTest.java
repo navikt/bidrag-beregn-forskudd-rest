@@ -39,17 +39,17 @@ class SjablonConsumerTest {
   @DisplayName("Skal hente liste av Sjablontall når respons fra tjenesten er OK")
   void skalHenteListeAvSjablontallNaarResponsFraTjenestenErOk() {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
-        .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonListe(), HttpStatus.OK));
-    var sjablonResponse = sjablonConsumer.hentSjablontall();
+        .thenReturn(new ResponseEntity<>(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK));
+    var sjablonResponse = sjablonConsumer.hentSjablonSjablontall();
 
     assertAll(
         () -> assertThat(sjablonResponse).isNotNull(),
         () -> assertThat(sjablonResponse.getResponseEntity().getStatusCode()).isNotNull(),
         () -> assertThat(sjablonResponse.getResponseEntity().getStatusCode()).isEqualTo(HttpStatus.OK),
         () -> assertThat(sjablonResponse.getResponseEntity().getBody()).isNotNull(),
-        () -> assertThat(sjablonResponse.getResponseEntity().getBody().size()).isEqualTo(TestUtil.dummySjablonListe().size()),
+        () -> assertThat(sjablonResponse.getResponseEntity().getBody().size()).isEqualTo(TestUtil.dummySjablonSjablontallListe().size()),
         () -> assertThat(sjablonResponse.getResponseEntity().getBody().get(0).getTypeSjablon())
-            .isEqualTo(TestUtil.dummySjablonListe().get(0).getTypeSjablon())
+            .isEqualTo(TestUtil.dummySjablonSjablontallListe().get(0).getTypeSjablon())
     );
   }
 
@@ -59,6 +59,6 @@ class SjablonConsumerTest {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
         .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablontall());
+    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonSjablontall());
   }
 }
