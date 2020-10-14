@@ -41,7 +41,7 @@ class BeregnForskuddServiceTest {
   @DisplayName("Skal beregne forskudd")
   void skalBeregneForskudd() {
     var grunnlagTilCoreCaptor = ArgumentCaptor.forClass(BeregnForskuddGrunnlagCore.class);
-    when(sjablonConsumerMock.hentSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(grunnlagTilCoreCaptor.capture())).thenReturn(TestUtil.dummyForskuddResultatCore());
 
     var beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore());
@@ -52,16 +52,15 @@ class BeregnForskuddServiceTest {
         () -> assertThat(beregnForskuddResultat.getResponseEntity().getBody()).isNotNull(),
         () -> assertThat(beregnForskuddResultat.getResponseEntity().getBody().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(beregnForskuddResultat.getResponseEntity().getBody().getResultatPeriodeListe().size()).isEqualTo(1),
-        // Den ene sjablonen skal filtreres bort (ikke gyldig for forskudd)
-        () -> assertThat(grunnlagTilCore.getSjablonPeriodeListe().size()).isEqualTo(TestUtil.dummySjablonListe().size() - 1)
+        // Sjablonetyper som ikke er gyldige for forskudd og sjabloner som ikke er innenfor beregn-fra-til-dato filtreres bort
+        () -> assertThat(grunnlagTilCore.getSjablonPeriodeListe().size()).isEqualTo(21)
     );
   }
-
 
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved feil retur fra Core")
   void skalKasteUgyldigInputExceptionVedFeilReturFraCore() {
-    when(sjablonConsumerMock.hentSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik());
 
     assertThatExceptionOfType(UgyldigInputException.class)

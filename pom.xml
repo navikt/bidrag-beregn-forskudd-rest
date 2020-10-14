@@ -24,6 +24,7 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.4.2</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
+    <bidrag-beregn-felles.version>0.7.0</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.2.5</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
@@ -33,6 +34,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-beregn-felles</artifactId>
+      <version>${bidrag-beregn-felles.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-beregn-forskudd-core</artifactId>

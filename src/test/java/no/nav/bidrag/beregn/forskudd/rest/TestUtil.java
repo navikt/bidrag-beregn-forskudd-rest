@@ -35,68 +35,6 @@ import no.nav.bidrag.beregn.forskudd.rest.dto.http.SoknadBarn;
 
 public class TestUtil {
 
-  // Bygger opp liste av sjablonverdier
-  public static List<Sjablontall> dummySjablonListe() {
-    var sjablontallListe = new ArrayList<Sjablontall>();
-    sjablontallListe.add(new Sjablontall("0005", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(1600)));
-    sjablontallListe.add(new Sjablontall("0013", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(320)));
-    sjablontallListe.add(new Sjablontall("0033", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(270200)));
-    sjablontallListe.add(new Sjablontall("0034", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(419700)));
-    sjablontallListe.add(new Sjablontall("0035", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(336500)));
-    sjablontallListe.add(new Sjablontall("0036", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(61700)));
-    sjablontallListe.add(new Sjablontall("XXXX", LocalDate.MIN, LocalDate.MAX, BigDecimal.valueOf(0)));
-    return sjablontallListe;
-  }
-
-  // Bygger opp BeregnForskuddGrunnlagCore
-  public static BeregnForskuddGrunnlagCore dummyForskuddGrunnlagCore() {
-    var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
-    var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
-    bostatusPeriodeListe.add(bostatusPeriode);
-    var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
-
-    var bidragMottakerInntektPeriode = new InntektPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "LØNNSINNTEKT", BigDecimal.valueOf(0));
-    var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
-    bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
-
-    var bidragMottakerSivilstandPeriode = new SivilstandPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
-    var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
-    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
-
-    var bidragMottakerBarnPeriodeListe = new ArrayList<PeriodeCore>();
-    bidragMottakerBarnPeriodeListe.add(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")));
-
-    var sjablonPeriode = new SjablonPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "0013",
-        BigDecimal.valueOf(0));
-    var sjablonPeriodeListe = new ArrayList<SjablonPeriodeCore>();
-    sjablonPeriodeListe.add(sjablonPeriode);
-
-    return new BeregnForskuddGrunnlagCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn,
-        bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, sjablonPeriodeListe);
-  }
-
-  // Bygger opp BeregnForskuddResultatCore
-  public static BeregnForskuddResultatCore dummyForskuddResultatCore() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeCore>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
-        new ResultatGrunnlagCore(singletonList(new InntektCore("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
-            "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
-    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, Collections.emptyList());
-  }
-
-  // Bygger opp BeregnForskuddResultatCore med avvik
-  public static BeregnForskuddResultatCore dummyForskuddResultatCoreMedAvvik() {
-    var avvikListe = new ArrayList<AvvikCore>();
-    avvikListe.add(new AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"));
-    avvikListe.add(new AvvikCore(
-        "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, periodeDatoTil=2018-03-01",
-        "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnForskuddResultatCore(Collections.emptyList(), avvikListe);
-  }
-
   public static BeregnForskuddGrunnlag byggForskuddGrunnlag() {
     return byggForskuddGrunnlag("");
   }
@@ -189,6 +127,7 @@ public class TestUtil {
     return byggForskuddGrunnlag("sivilstandDatoFraTil");
   }
 
+
   // Bygger opp BeregnForskuddGrunnlag
   private static BeregnForskuddGrunnlag byggForskuddGrunnlag(String nullVerdi) {
     var bostatusDatoFra = (nullVerdi.equals("bostatusDatoFra") ? null : LocalDate.parse("2017-01-01"));
@@ -262,6 +201,55 @@ public class TestUtil {
         bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe);
   }
 
+  // Bygger opp BeregnForskuddGrunnlagCore
+  public static BeregnForskuddGrunnlagCore dummyForskuddGrunnlagCore() {
+    var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
+    var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
+    bostatusPeriodeListe.add(bostatusPeriode);
+    var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
+
+    var bidragMottakerInntektPeriode = new InntektPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "LØNNSINNTEKT", BigDecimal.valueOf(0));
+    var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
+    bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
+
+    var bidragMottakerSivilstandPeriode = new SivilstandPeriodeCore(
+        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
+    var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
+    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
+
+    var bidragMottakerBarnPeriodeListe = new ArrayList<PeriodeCore>();
+    bidragMottakerBarnPeriodeListe.add(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")));
+
+    var sjablonPeriode = new SjablonPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "0013",
+        BigDecimal.valueOf(0));
+    var sjablonPeriodeListe = new ArrayList<SjablonPeriodeCore>();
+    sjablonPeriodeListe.add(sjablonPeriode);
+
+    return new BeregnForskuddGrunnlagCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn,
+        bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, sjablonPeriodeListe);
+  }
+
+  // Bygger opp BeregnForskuddResultatCore
+  public static BeregnForskuddResultatCore dummyForskuddResultatCore() {
+    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeCore>();
+    bidragPeriodeResultatListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
+        new ResultatGrunnlagCore(singletonList(new InntektCore("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
+            "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
+    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, Collections.emptyList());
+  }
+
+  // Bygger opp BeregnForskuddResultatCore med avvik
+  public static BeregnForskuddResultatCore dummyForskuddResultatCoreMedAvvik() {
+    var avvikListe = new ArrayList<AvvikCore>();
+    avvikListe.add(new AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"));
+    avvikListe.add(new AvvikCore(
+        "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, periodeDatoTil=2018-03-01",
+        "DATO_FRA_ETTER_DATO_TIL"));
+    return new BeregnForskuddResultatCore(Collections.emptyList(), avvikListe);
+  }
+
   // Bygger opp BeregnForskuddResultat
   public static BeregnForskuddResultat dummyForskuddResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriode>();
@@ -270,5 +258,57 @@ public class TestUtil {
         new ResultatGrunnlag(singletonList(new Inntekt("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
             "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
     return new BeregnForskuddResultat(bidragPeriodeResultatListe);
+  }
+
+  // Bygger opp liste av sjablonverdier
+  public static List<Sjablontall> dummySjablonSjablontallListe() {
+    var sjablonSjablontallListe = new ArrayList<Sjablontall>();
+
+    sjablonSjablontallListe.add(new Sjablontall("0005", LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), BigDecimal.valueOf(1490)));
+    sjablonSjablontallListe.add(new Sjablontall("0005", LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), BigDecimal.valueOf(1530)));
+    sjablonSjablontallListe.add(new Sjablontall("0005", LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), BigDecimal.valueOf(1570)));
+    sjablonSjablontallListe.add(new Sjablontall("0005", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(1600)));
+    sjablonSjablontallListe.add(new Sjablontall("0005", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(1640)));
+    sjablonSjablontallListe.add(new Sjablontall("0005", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(1670)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0013", LocalDate.parse("2003-01-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(320)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0033", LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), BigDecimal.valueOf(241600)));
+    sjablonSjablontallListe.add(new Sjablontall("0033", LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), BigDecimal.valueOf(264200)));
+    sjablonSjablontallListe.add(new Sjablontall("0033", LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), BigDecimal.valueOf(271000)));
+    sjablonSjablontallListe.add(new Sjablontall("0033", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(270200)));
+    sjablonSjablontallListe.add(new Sjablontall("0033", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(277600)));
+    sjablonSjablontallListe.add(new Sjablontall("0033", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(297500)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0034", LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), BigDecimal.valueOf(370200)));
+    sjablonSjablontallListe.add(new Sjablontall("0034", LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), BigDecimal.valueOf(399100)));
+    sjablonSjablontallListe.add(new Sjablontall("0034", LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), BigDecimal.valueOf(408200)));
+    sjablonSjablontallListe.add(new Sjablontall("0034", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(419700)));
+    sjablonSjablontallListe.add(new Sjablontall("0034", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(430000)));
+    sjablonSjablontallListe.add(new Sjablontall("0034", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(468500)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0035", LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), BigDecimal.valueOf(314800)));
+    sjablonSjablontallListe.add(new Sjablontall("0035", LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), BigDecimal.valueOf(328700)));
+    sjablonSjablontallListe.add(new Sjablontall("0035", LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), BigDecimal.valueOf(335900)));
+    sjablonSjablontallListe.add(new Sjablontall("0035", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(336500)));
+    sjablonSjablontallListe.add(new Sjablontall("0035", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(344900)));
+    sjablonSjablontallListe.add(new Sjablontall("0035", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(360800)));
+
+    sjablonSjablontallListe.add(new Sjablontall("0036", LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), BigDecimal.valueOf(58400)));
+    sjablonSjablontallListe.add(new Sjablontall("0036", LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), BigDecimal.valueOf(60200)));
+    sjablonSjablontallListe.add(new Sjablontall("0036", LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), BigDecimal.valueOf(61100)));
+    sjablonSjablontallListe.add(new Sjablontall("0036", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(61700)));
+    sjablonSjablontallListe.add(new Sjablontall("0036", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(62700)));
+    sjablonSjablontallListe.add(new Sjablontall("0036", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(69100)));
+
+    // Ikke i bruk for forskudd
+    sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2015-07-01"), LocalDate.parse("2016-06-30"), BigDecimal.valueOf(74250)));
+    sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2016-07-01"), LocalDate.parse("2017-06-30"), BigDecimal.valueOf(76250)));
+    sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2017-07-01"), LocalDate.parse("2018-06-30"), BigDecimal.valueOf(78300)));
+    sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2018-07-01"), LocalDate.parse("2019-06-30"), BigDecimal.valueOf(54750)));
+    sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2019-07-01"), LocalDate.parse("2020-06-30"), BigDecimal.valueOf(56550)));
+    sjablonSjablontallListe.add(new Sjablontall("0028", LocalDate.parse("2020-07-01"), LocalDate.parse("9999-12-31"), BigDecimal.valueOf(51300)));
+
+    return sjablonSjablontallListe;
   }
 }
