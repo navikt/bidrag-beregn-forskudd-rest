@@ -2,7 +2,17 @@ package no.nav.bidrag.beregn.forskudd.rest.dto.http
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import no.nav.bidrag.beregn.forskudd.core.dto.*
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore
+import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore
+import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatGrunnlagCore
+import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
+import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -135,12 +145,7 @@ data class ResultatGrunnlag(
     @ApiModelProperty(value = "Antall barn i husstanden") var antallBarnIHusstand: Int,
     @ApiModelProperty(value = "Søknadsbarnets alder") var soknadBarnAlder: Int,
     @ApiModelProperty(value = "Søknadsbarnets bostatus") var soknadBarnBostatusKode: String,
-    @ApiModelProperty(value = "Sjablonverdi forskuddssats 100%") var forskuddssats100Prosent: Int,
-    @ApiModelProperty(value = "Sjablonverdi multiplikator maks inntektsgrense") var multiplikatorMaksInntektsgrense: Int,
-    @ApiModelProperty(value = "Sjablonverdi inntektsgrense 100% forskudd") var inntektsgrense100ProsentForskudd: Int,
-    @ApiModelProperty(value = "Sjablonverdi inntektsgrense 75% forskudd enslig") var inntektsgrenseEnslig75ProsentForskudd: Int,
-    @ApiModelProperty(value = "Sjablonverdi inntektsgrense 75% forskudd gift") var inntektsgrenseGift75ProsentForskudd: Int,
-    @ApiModelProperty(value = "Sjablonverdi inntektsintervall forskudd") var inntektsintervallForskudd: Int
+//    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
   constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
       bidragMottakerInntektListe = resultatGrunnlag.bidragMottakerInntektListe.map { Inntekt(it) },
@@ -148,12 +153,7 @@ data class ResultatGrunnlag(
       antallBarnIHusstand = resultatGrunnlag.antallBarnIHusstand,
       soknadBarnAlder = resultatGrunnlag.soknadBarnAlder,
       soknadBarnBostatusKode = resultatGrunnlag.soknadBarnBostatusKode,
-      forskuddssats100Prosent = resultatGrunnlag.forskuddssats100Prosent,
-      multiplikatorMaksInntektsgrense = resultatGrunnlag.multiplikatorMaksInntektsgrense,
-      inntektsgrense100ProsentForskudd = resultatGrunnlag.inntektsgrense100ProsentForskudd,
-      inntektsgrenseEnslig75ProsentForskudd = resultatGrunnlag.inntektsgrenseEnslig75ProsentForskudd,
-      inntektsgrenseGift75ProsentForskudd = resultatGrunnlag.inntektsgrenseGift75ProsentForskudd,
-      inntektsintervallForskudd = resultatGrunnlag.inntektsintervallForskudd
+//      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
   )
 }
 

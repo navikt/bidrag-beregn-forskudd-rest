@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest.service;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
@@ -7,12 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import no.nav.bidrag.beregn.felles.dto.AvvikCore;
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
+import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
+import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
@@ -87,7 +91,10 @@ public class BeregnForskuddService {
         .filter(sjablon -> (!(sjablon.getDatoFom().isAfter(beregnDatoTil)) && (!(sjablon.getDatoTom().isBefore(beregnDatoFra)))))
         .filter(sjablon -> filtrerSjablonTall(sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY)))
         .map(sjablon -> new SjablonPeriodeCore(
-            new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()), sjablon.getTypeSjablon(), sjablon.getVerdi()))
+            new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()),
+            sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY).getNavn(),
+            emptyList(),
+            singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi().doubleValue()))))
         .collect(toList());
   }
 

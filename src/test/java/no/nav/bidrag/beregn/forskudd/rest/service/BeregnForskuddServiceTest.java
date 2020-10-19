@@ -44,7 +44,7 @@ class BeregnForskuddServiceTest {
     when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(grunnlagTilCoreCaptor.capture())).thenReturn(TestUtil.dummyForskuddResultatCore());
 
-    var beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore());
+    var beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag().tilCore());
     var grunnlagTilCore = grunnlagTilCoreCaptor.getValue();
 
     assertAll(
@@ -52,7 +52,7 @@ class BeregnForskuddServiceTest {
         () -> assertThat(beregnForskuddResultat.getResponseEntity().getBody()).isNotNull(),
         () -> assertThat(beregnForskuddResultat.getResponseEntity().getBody().getResultatPeriodeListe()).isNotNull(),
         () -> assertThat(beregnForskuddResultat.getResponseEntity().getBody().getResultatPeriodeListe().size()).isEqualTo(1),
-        // Sjablonetyper som ikke er gyldige for forskudd og sjabloner som ikke er innenfor beregn-fra-til-dato filtreres bort
+        // Sjablontyper som ikke er gyldige for forskudd og sjabloner som ikke er innenfor beregn-fra-til-dato filtreres bort
         () -> assertThat(grunnlagTilCore.getSjablonPeriodeListe().size()).isEqualTo(21)
     );
   }
@@ -64,7 +64,7 @@ class BeregnForskuddServiceTest {
     when(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik());
 
     assertThatExceptionOfType(UgyldigInputException.class)
-        .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.dummyForskuddGrunnlagCore()))
+        .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag().tilCore()))
         .withMessageContaining("beregnDatoFra kan ikke være null")
         .withMessageContaining("periodeDatoTil må være etter periodeDatoFra");
   }

@@ -1,25 +1,19 @@
 package no.nav.bidrag.beregn.forskudd.rest;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import no.nav.bidrag.beregn.forskudd.core.dto.AvvikCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
+import no.nav.bidrag.beregn.felles.dto.AvvikCore;
+import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.PeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.SjablonPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
@@ -201,43 +195,14 @@ public class TestUtil {
         bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe);
   }
 
-  // Bygger opp BeregnForskuddGrunnlagCore
-  public static BeregnForskuddGrunnlagCore dummyForskuddGrunnlagCore() {
-    var bostatusPeriode = new BostatusPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "MED_FORELDRE");
-    var bostatusPeriodeListe = new ArrayList<BostatusPeriodeCore>();
-    bostatusPeriodeListe.add(bostatusPeriode);
-    var soknadBarn = new SoknadBarnCore(LocalDate.parse("2006-05-12"), bostatusPeriodeListe);
-
-    var bidragMottakerInntektPeriode = new InntektPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "LØNNSINNTEKT", BigDecimal.valueOf(0));
-    var bidragMottakerInntektPeriodeListe = new ArrayList<InntektPeriodeCore>();
-    bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
-
-    var bidragMottakerSivilstandPeriode = new SivilstandPeriodeCore(
-        new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "GIFT");
-    var bidragMottakerSivilstandPeriodeListe = new ArrayList<SivilstandPeriodeCore>();
-    bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
-
-    var bidragMottakerBarnPeriodeListe = new ArrayList<PeriodeCore>();
-    bidragMottakerBarnPeriodeListe.add(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")));
-
-    var sjablonPeriode = new SjablonPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01")), "0013",
-        BigDecimal.valueOf(0));
-    var sjablonPeriodeListe = new ArrayList<SjablonPeriodeCore>();
-    sjablonPeriodeListe.add(sjablonPeriode);
-
-    return new BeregnForskuddGrunnlagCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2020-01-01"), soknadBarn,
-        bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe, sjablonPeriodeListe);
-  }
-
   // Bygger opp BeregnForskuddResultatCore
   public static BeregnForskuddResultatCore dummyForskuddResultatCore() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeCore>();
     bidragPeriodeResultatListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
         new ResultatGrunnlagCore(singletonList(new InntektCore("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
-            "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
-    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, Collections.emptyList());
+            "MED_FORELDRE", emptyList())));
+    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, emptyList());
   }
 
   // Bygger opp BeregnForskuddResultatCore med avvik
@@ -247,7 +212,7 @@ public class TestUtil {
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, periodeDatoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnForskuddResultatCore(Collections.emptyList(), avvikListe);
+    return new BeregnForskuddResultatCore(emptyList(), avvikListe);
   }
 
   // Bygger opp BeregnForskuddResultat
@@ -256,7 +221,7 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregning(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
         new ResultatGrunnlag(singletonList(new Inntekt("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
-            "MED_FORELDRE", 1600, 320, 270200, 419700, 336500, 61700)));
+            "MED_FORELDRE")));
     return new BeregnForskuddResultat(bidragPeriodeResultatListe);
   }
 
