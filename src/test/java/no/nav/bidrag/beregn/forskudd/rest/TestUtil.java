@@ -130,7 +130,7 @@ public class TestUtil {
     var soknadBarnFodselsDato = (nullVerdi.equals("soknadBarnFodselsdato") ? null : LocalDate.parse("2006-05-12"));
     var inntektDatoFra = (nullVerdi.equals("inntektDatoFra") ? null : LocalDate.parse("2017-01-01"));
     var inntektDatoTil = (nullVerdi.equals("inntektDatoTil") ? null : LocalDate.parse("2020-01-01"));
-    var inntektType = (nullVerdi.equals("inntektType") ? null : "LØNNSINNTEKT");
+    var inntektType = (nullVerdi.equals("inntektType") ? null : "OVERGANGSSTONAD");
     var inntektBelop = (nullVerdi.equals("inntektBelop") ? null : BigDecimal.valueOf(100000));
     var sivilstandDatoFra = (nullVerdi.equals("sivilstandDatoFra") ? null : LocalDate.parse("2017-01-01"));
     var sivilstandDatoTil = (nullVerdi.equals("sivilstandDatoTil") ? null : LocalDate.parse("2020-01-01"));
