@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
+import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
@@ -25,6 +26,7 @@ import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatBeregning;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatPeriode;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.SivilstandPeriode;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.Sjablon;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.SoknadBarn;
 
 public class TestUtil {
@@ -221,7 +223,7 @@ public class TestUtil {
     bidragPeriodeResultatListe.add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregning(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
         new ResultatGrunnlag(singletonList(new Inntekt("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
-            "MED_FORELDRE")));
+            "MED_FORELDRE", byggSjablonNavnVerdiListe())));
     return new BeregnForskuddResultat(bidragPeriodeResultatListe);
   }
 
@@ -276,4 +278,19 @@ public class TestUtil {
 
     return sjablonSjablontallListe;
   }
+
+  public static List<Sjablon> byggSjablonNavnVerdiListe() {
+    var sjablonListe = new ArrayList<Sjablon>();
+
+    // Sjablontall
+    sjablonListe.add(new Sjablon(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), BigDecimal.valueOf(1600)));
+    sjablonListe.add(new Sjablon(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(), BigDecimal.valueOf(320)));
+    sjablonListe.add(new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(270200)));
+    sjablonListe.add(new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(), BigDecimal.valueOf(419700)));
+    sjablonListe.add(new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(), BigDecimal.valueOf(336500)));
+    sjablonListe.add(new Sjablon(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(61700)));
+
+    return sjablonListe;
+  }
+
 }

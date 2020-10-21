@@ -3,6 +3,7 @@ package no.nav.bidrag.beregn.forskudd.rest.dto.http
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
+import no.nav.bidrag.beregn.felles.dto.SjablonNavnVerdiCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
@@ -145,7 +146,7 @@ data class ResultatGrunnlag(
     @ApiModelProperty(value = "Antall barn i husstanden") var antallBarnIHusstand: Int,
     @ApiModelProperty(value = "Søknadsbarnets alder") var soknadBarnAlder: Int,
     @ApiModelProperty(value = "Søknadsbarnets bostatus") var soknadBarnBostatusKode: String,
-//    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
+    @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
   constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
       bidragMottakerInntektListe = resultatGrunnlag.bidragMottakerInntektListe.map { Inntekt(it) },
@@ -153,7 +154,7 @@ data class ResultatGrunnlag(
       antallBarnIHusstand = resultatGrunnlag.antallBarnIHusstand,
       soknadBarnAlder = resultatGrunnlag.soknadBarnAlder,
       soknadBarnBostatusKode = resultatGrunnlag.soknadBarnBostatusKode,
-//      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
+      sjablonListe = resultatGrunnlag.sjablonListe.map { Sjablon(it) }
   )
 }
 
@@ -165,6 +166,17 @@ data class Inntekt(
   constructor(inntekt: InntektCore) : this(
       inntektType = inntekt.inntektType,
       inntektBelop = inntekt.inntektBelop
+  )
+}
+
+@ApiModel(value = "Sjablonnavn og -verdi")
+data class Sjablon(
+    @ApiModelProperty(value = "Sjablonnavn") var sjablonNavn: String,
+    @ApiModelProperty(value = "Sjablonverdi") var sjablonVerdi: BigDecimal
+) {
+  constructor(sjablon: SjablonNavnVerdiCore) : this(
+      sjablonNavn = sjablon.sjablonNavn,
+      sjablonVerdi = BigDecimal.valueOf(sjablon.sjablonVerdi)
   )
 }
 
