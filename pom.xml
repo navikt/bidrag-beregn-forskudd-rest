@@ -24,8 +24,8 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.4.2</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
-    <bidrag-beregn-felles.version>0.8.0</bidrag-beregn-felles.version>
-    <bidrag-beregn-forskudd-core.version>0.3.0</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-felles.version>0.9.0</bidrag-beregn-felles.version>
+    <bidrag-beregn-forskudd-core.version>0.4.0</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
