@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.rest;
 
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
+import no.nav.bidrag.commons.ExceptionLogger;
 import no.nav.bidrag.commons.web.CorrelationIdFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +21,11 @@ public class BidragBeregnForskudd {
   @Bean
   public SjablonConsumer sjablonConsumer(@Value("${SJABLON_URL}") String sjablonBaseUrl, RestTemplate restTemplate) {
     return new SjablonConsumer(restTemplate, sjablonBaseUrl);
+  }
+
+  @Bean
+  public ExceptionLogger exceptionLogger() {
+    return new ExceptionLogger(BidragBeregnForskudd.class.getSimpleName());
   }
 
   @Bean
