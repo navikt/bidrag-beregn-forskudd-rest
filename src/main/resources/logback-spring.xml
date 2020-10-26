@@ -29,4 +29,6 @@
     <root level="info">
         <appender-ref ref="stdout_json" />
     </root>
+
+    <logger name="no.nav.bidrag.beregn.forskudd.rest" level="INFO"/>
 </configuration>

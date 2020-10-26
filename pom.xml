@@ -11,7 +11,7 @@
 
   <groupId>no.nav.bidrag</groupId>
   <artifactId>bidrag-beregn-forskudd-rest</artifactId>
-  <version>0.0.55-SNAPSHOT</version>
+  <version>0.0.54-SNAPSHOT</version>
   <name>bidrag-beregn-forskudd-rest</name>
   <description>Forskuddsberegning</description>
 
@@ -24,8 +24,8 @@
     <!-- dependencies -->
     <bidrag-commons.version>0.4.2</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
-    <bidrag-beregn-felles.version>0.9.0</bidrag-beregn-felles.version>
-    <bidrag-beregn-forskudd-core.version>0.4.0</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-felles.version>0.11.0</bidrag-beregn-felles.version>
+    <bidrag-beregn-forskudd-core.version>0.4.5</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
 
     <!-- language -->
@@ -52,6 +52,14 @@
       <version>${bidrag-commons.version}</version>
     </dependency>
 
+    <!-- test -->
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-commons-test</artifactId>
+      <version>${bidrag-commons-test.version}</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -60,11 +68,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
     <dependency>
@@ -131,15 +134,24 @@
 
     <!-- test scope -->
     <dependency>
-      <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-commons-test</artifactId>
-      <version>${bidrag-commons-test.version}</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit</groupId>
+          <artifactId>junit-bom</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
