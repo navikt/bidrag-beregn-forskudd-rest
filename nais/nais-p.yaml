@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: bidrag-beregn-forskudd-rest
-  namespace: {{ namespace }}
+  namespace: bidrag
   labels:
     team: bidrag
 spec:
@@ -31,8 +31,6 @@ spec:
   ingresses:
     - https://bidrag-beregn-forskudd-rest.nais.adeo.no/
     - https://bidrag-beregn-forskudd-rest.prod-fss.nais.io
-  vault:
-    enabled: false
   env:
     - name: SJABLON_URL
       value: https://bidrag-sjablon.nais.adeo.no/bidrag-sjablon
