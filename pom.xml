@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.3.6.RELEASE</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>no.nav.bidrag</groupId>
@@ -22,7 +22,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>0.4.2</bidrag-commons.version>
+    <bidrag-commons.version>0.4.3</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.11.0</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.4.5</bidrag-beregn-forskudd-core.version>
@@ -30,7 +30,7 @@
 
     <!-- language -->
     <java.version>15</java.version>
-    <kotlin.version>1.4.10</kotlin.version>
+    <kotlin.version>1.4.21</kotlin.version>
   </properties>
 
   <dependencies>
@@ -121,7 +121,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>30.0-android</version>
+      <version>30.0-jre</version>
     </dependency>
 
     <!-- avhengigheter for lokal kjøring -->
