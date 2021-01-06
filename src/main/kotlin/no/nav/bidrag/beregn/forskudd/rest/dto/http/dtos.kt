@@ -176,7 +176,7 @@ data class Sjablon(
 ) {
   constructor(sjablon: SjablonNavnVerdiCore) : this(
       sjablonNavn = sjablon.sjablonNavn,
-      sjablonVerdi = BigDecimal.valueOf(sjablon.sjablonVerdi)
+      sjablonVerdi = sjablon.sjablonVerdi
   )
 }
 

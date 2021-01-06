@@ -94,7 +94,7 @@ public class BeregnForskuddService {
             new PeriodeCore(sjablon.getDatoFom(), sjablon.getDatoTom()),
             sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY).getNavn(),
             emptyList(),
-            singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi().doubleValue()))))
+            singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi()))))
         .collect(toList());
   }
 
