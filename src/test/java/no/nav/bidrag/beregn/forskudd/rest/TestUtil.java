@@ -221,7 +221,7 @@ public class TestUtil {
   public static BeregnForskuddResultat dummyForskuddResultat() {
     var bidragPeriodeResultatListe = new ArrayList<ResultatPeriode>();
     bidragPeriodeResultatListe.add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregning(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
+        new ResultatBeregning(100, "INNVILGET_100_PROSENT", "REGEL 1"),
         new ResultatGrunnlag(singletonList(new Inntekt("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
             "MED_FORELDRE", byggSjablonNavnVerdiListe())));
     return new BeregnForskuddResultat(bidragPeriodeResultatListe);

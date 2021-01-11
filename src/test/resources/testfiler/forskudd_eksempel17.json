@@ -1,0 +1,37 @@
+{
+  "beregnDatoFra": "2020-12-01",
+  "beregnDatoTil": "2021-01-01",
+  "bidragMottakerBarnPeriodeListe": [
+  ],
+  "bidragMottakerInntektPeriodeListe": [
+    {
+      "inntektBelop": 468000,
+      "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+      "inntektDatoFraTil": {
+        "periodeDatoFra": "2020-12-01",
+        "periodeDatoTil": "2021-01-01"
+      }
+    }
+  ],
+  "bidragMottakerSivilstandPeriodeListe": [
+    {
+      "sivilstandDatoFraTil": {
+        "periodeDatoFra": "2020-12-01",
+        "periodeDatoTil": "2021-01-01"
+      },
+      "sivilstandKode": "GIFT"
+    }
+  ],
+  "soknadBarn": {
+    "soknadBarnBostatusPeriodeListe": [
+      {
+        "bostatusKode": "MED_FORELDRE",
+        "bostatusDatoFraTil": {
+          "periodeDatoFra": "2020-12-01",
+          "periodeDatoTil": "2021-01-01"
+        }
+      }
+    ],
+    "soknadBarnFodselsdato": "2015-01-01"
+  }
+}
