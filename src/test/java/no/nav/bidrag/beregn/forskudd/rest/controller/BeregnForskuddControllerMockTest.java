@@ -8,7 +8,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
@@ -17,10 +16,10 @@ import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService;
 import no.nav.bidrag.commons.web.HttpResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -30,9 +29,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("BeregnForskuddControllerTest")
 @SpringBootTest(classes = BidragBeregnForskuddLocal.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-class BeregnForskuddControllerTest {
+class BeregnForskuddControllerMockTest {
 
   @Autowired
   private HttpHeaderTestRestTemplate httpHeaderTestRestTemplate;
@@ -40,11 +40,6 @@ class BeregnForskuddControllerTest {
   private int port;
   @MockBean
   private BeregnForskuddService beregnForskuddServiceMock;
-
-  @BeforeEach
-  void initMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   @DisplayName("Skal returnere forskudd resultat")
@@ -68,7 +63,7 @@ class BeregnForskuddControllerTest {
         () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
             .isEqualTo(LocalDate.parse("2019-01-01")),
         () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop())
-            .isEqualTo(BigDecimal.valueOf((100))),
+            .isEqualTo(100),
         () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode())
             .isEqualTo("INNVILGET_100_PROSENT"),
         () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 1")

@@ -115,9 +115,9 @@ data class BeregnForskuddResultat(
 
 @ApiModel(value = "Resultatet av en beregning for en gitt periode")
 data class ResultatPeriode(
-    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode,
-    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregning,
-    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlag
+    @ApiModelProperty(value = "Beregning resultat fra-til-dato") var resultatDatoFraTil: Periode = Periode(),
+    @ApiModelProperty(value = "Beregning resultat innhold") var resultatBeregning: ResultatBeregning = ResultatBeregning(),
+    @ApiModelProperty(value = "Beregning grunnlag innhold") var resultatGrunnlag: ResultatGrunnlag = ResultatGrunnlag()
 ) {
   constructor(resultatPeriode: ResultatPeriodeCore) : this(
       resultatDatoFraTil = Periode(resultatPeriode.resultatDatoFraTil),
@@ -128,12 +128,12 @@ data class ResultatPeriode(
 
 @ApiModel(value = "Resultatet av en beregning")
 data class ResultatBeregning(
-    @ApiModelProperty(value = "Resultatbeløp") var resultatBelop: BigDecimal,
-    @ApiModelProperty(value = "Resultatkode") var resultatKode: String,
-    @ApiModelProperty(value = "Resultatbeskrivelse") var resultatBeskrivelse: String
+    @ApiModelProperty(value = "Resultatbeløp") var resultatBelop: Int = 0,
+    @ApiModelProperty(value = "Resultatkode") var resultatKode: String = "",
+    @ApiModelProperty(value = "Resultatbeskrivelse") var resultatBeskrivelse: String = ""
 ) {
   constructor(resultatBeregning: ResultatBeregningCore) : this(
-      resultatBelop = resultatBeregning.resultatBelop,
+      resultatBelop = resultatBeregning.resultatBelop.intValueExact(),
       resultatKode = resultatBeregning.resultatKode,
       resultatBeskrivelse = resultatBeregning.resultatBeskrivelse
   )
@@ -142,10 +142,10 @@ data class ResultatBeregning(
 @ApiModel(value = "Grunnlaget for en beregning")
 data class ResultatGrunnlag(
     @ApiModelProperty(value = "Liste over bidragsmottakers inntekter") var bidragMottakerInntektListe: List<Inntekt> = emptyList(),
-    @ApiModelProperty(value = "Bidragsmottakers sivilstand") var bidragMottakerSivilstandKode: String,
-    @ApiModelProperty(value = "Antall barn i husstanden") var antallBarnIHusstand: Int,
-    @ApiModelProperty(value = "Søknadsbarnets alder") var soknadBarnAlder: Int,
-    @ApiModelProperty(value = "Søknadsbarnets bostatus") var soknadBarnBostatusKode: String,
+    @ApiModelProperty(value = "Bidragsmottakers sivilstand") var bidragMottakerSivilstandKode: String = "",
+    @ApiModelProperty(value = "Antall barn i husstanden") var antallBarnIHusstand: Int = 0,
+    @ApiModelProperty(value = "Søknadsbarnets alder") var soknadBarnAlder: Int = 0,
+    @ApiModelProperty(value = "Søknadsbarnets bostatus") var soknadBarnBostatusKode: String = "",
     @ApiModelProperty(value = "Liste over sjablonperioder") var sjablonListe: List<Sjablon> = emptyList()
 ) {
   constructor(resultatGrunnlag: ResultatGrunnlagCore) : this(
@@ -160,8 +160,8 @@ data class ResultatGrunnlag(
 
 @ApiModel(value = "Inntekttype og -beløp")
 data class Inntekt(
-    @ApiModelProperty(value = "Inntekt type") var inntektType: String,
-    @ApiModelProperty(value = "Inntekt beløp") var inntektBelop: BigDecimal
+    @ApiModelProperty(value = "Inntekt type") var inntektType: String = "",
+    @ApiModelProperty(value = "Inntekt beløp") var inntektBelop: BigDecimal = BigDecimal.ZERO
 ) {
   constructor(inntekt: InntektCore) : this(
       inntektType = inntekt.inntektType,
@@ -171,8 +171,8 @@ data class Inntekt(
 
 @ApiModel(value = "Sjablonnavn og -verdi")
 data class Sjablon(
-    @ApiModelProperty(value = "Sjablonnavn") var sjablonNavn: String,
-    @ApiModelProperty(value = "Sjablonverdi") var sjablonVerdi: BigDecimal
+    @ApiModelProperty(value = "Sjablonnavn") var sjablonNavn: String = "",
+    @ApiModelProperty(value = "Sjablonverdi") var sjablonVerdi: BigDecimal = BigDecimal.ZERO
 ) {
   constructor(sjablon: SjablonNavnVerdiCore) : this(
       sjablonNavn = sjablon.sjablonNavn,

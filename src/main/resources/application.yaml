@@ -8,3 +8,17 @@ management:
     web:
       exposure:
         include: "*"
+
+---
+# Profil for lokal kjøring
+spring.profiles: local
+
+# Lokal profil bruker selvstendige wiremocks
+wiremock.server:
+  files: classpath:/__files
+  stubs: classpath:/wiremock_stubs
+
+---
+# Profil for integrasjonstest
+spring.profiles: integrationtest
+SJABLON_URL: http://localhost:8096/bidrag-sjablon

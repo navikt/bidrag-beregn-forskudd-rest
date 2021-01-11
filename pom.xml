@@ -27,6 +27,8 @@
     <bidrag-beregn-felles.version>0.14.5</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.4.7</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
+    <wiremock-standalone.version>2.19.0</wiremock-standalone.version>
+    <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
 
     <!-- language -->
     <java.version>15</java.version>
@@ -133,6 +135,18 @@
     </dependency>
 
     <!-- test scope -->
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-standalone</artifactId>
+      <version>${wiremock-standalone.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+      <version>${springframework-cloud.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
