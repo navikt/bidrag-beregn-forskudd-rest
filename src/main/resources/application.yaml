@@ -11,7 +11,7 @@ management:
 
 ---
 # Profil for lokal kjøring
-spring.profiles: local
+spring.config.activate.on-profile: local
 
 # Lokal profil bruker selvstendige wiremocks
 wiremock.server:
@@ -20,5 +20,5 @@ wiremock.server:
 
 ---
 # Profil for integrasjonstest
-spring.profiles: integrationtest
+spring.config.activate.on-profile: integrationtest
 SJABLON_URL: http://localhost:8096/bidrag-sjablon
