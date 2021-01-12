@@ -175,7 +175,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel3.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 14";
 
@@ -201,7 +201,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel5.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 14";
 
@@ -253,7 +253,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder > 11 år; BM inntekt 530000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel9.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 14";
 
@@ -318,7 +318,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel14.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 14";
 
@@ -357,7 +357,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel17.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 14";
 
@@ -396,7 +396,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder < 11 år; BM inntekt 430000; BM antall barn egen husstand 2; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel20.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 16";
 
@@ -422,7 +422,7 @@ public class BeregnForskuddControllerIntegrationTest {
     // Ordinært forskudd: SB alder < 11 år; BM inntekt 489000; BM antall barn egen husstand 2; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel23.json";
 
-    forventetForskuddBelop = 840;
+    forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
     forventetForskuddRegel = "REGEL 16";
 
