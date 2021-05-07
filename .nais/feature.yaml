@@ -1,0 +1,8 @@
+name: bidrag-beregn-forskudd-rest-feature
+ingresses:
+  - https://bidrag-beregn-forskudd-rest-feature.nais.preprod.local/
+  - https://bidrag-beregn-forskudd-rest-feature.dev-fss.nais.io/
+  - https://bidrag-beregn-forskudd-rest-feature.dev.adeo.no/
+env:
+  - name: SJABLON_URL
+    value: https://bidrag-sjablon.dev-fss.nais.io/bidrag-sjablon

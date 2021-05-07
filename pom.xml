@@ -22,12 +22,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>0.5.1</bidrag-commons.version>
+    <bidrag-commons.version>0.5.6</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.14.7</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.4.10</bidrag-beregn-forskudd-core.version>
     <springfox-swagger.version>2.9.2</springfox-swagger.version>
-    <wiremock-standalone.version>2.19.0</wiremock-standalone.version>
+    <wiremock-standalone.version>2.27.2</wiremock-standalone.version>
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
 
     <!-- language -->
