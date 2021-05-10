@@ -9,6 +9,9 @@ management:
       exposure:
         include: "*"
 
+springdoc:
+  packages-to-scan: no.nav.bidrag.beregn.forskudd.rest.controller
+
 ---
 # Profil for lokal kjøring
 spring.config.activate.on-profile: local
