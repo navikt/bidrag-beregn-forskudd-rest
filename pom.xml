@@ -31,7 +31,7 @@
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
 
     <!-- language -->
-    <java.version>15</java.version>
+    <java.version>16</java.version>
     <kotlin.version>1.5.0</kotlin.version>
   </properties>
 
