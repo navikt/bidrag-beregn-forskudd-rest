@@ -4,15 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService;
 import no.nav.bidrag.commons.web.HttpResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
@@ -45,41 +44,28 @@ class BeregnForskuddControllerMockTest {
   @DisplayName("Skal returnere forskudd resultat")
   void skalReturnereForskuddResultat() {
 
-    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class)))
+    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class)))
         .thenReturn(HttpResponse.from(OK, TestUtil.dummyForskuddResultat()));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
-    var request = initHttpEntity(TestUtil.byggForskuddGrunnlag());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnForskuddResultat.class);
+    var request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag());
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat.class);
     var forskuddResultat = responseEntity.getBody();
 
     assertAll(
         () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
         () -> assertThat(forskuddResultat).isNotNull(),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe()).isNotNull(),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe().size()).isEqualTo(1),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoFra())
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe()).isNotNull(),
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2017-01-01")),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatDatoFraTil().getPeriodeDatoTil())
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoTil())
             .isEqualTo(LocalDate.parse("2019-01-01")),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBelop())
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getBelop().intValue())
             .isEqualTo(100),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatKode())
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getKode())
             .isEqualTo("INNVILGET_100_PROSENT"),
-        () -> assertThat(forskuddResultat.getResultatPeriodeListe().get(0).getResultatBeregning().getResultatBeskrivelse()).isEqualTo("REGEL 1")
-    );
-  }
-
-  @Test
-  @DisplayName("Skal returnere 400 Bad Request når input data mangler")
-  void skalReturnere400BadRequestNaarInputDataMangler() {
-
-    var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
-    var request = initHttpEntity(TestUtil.byggForskuddGrunnlagUtenBostatusKode());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnForskuddResultat.class);
-
-    assertAll(
-        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST)
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel()).isEqualTo("REGEL 1")
     );
   }
 
@@ -87,11 +73,11 @@ class BeregnForskuddControllerMockTest {
   @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
   void skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
 
-    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlagCore.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR, null));
+    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR, null));
 
     var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
-    var request = initHttpEntity(TestUtil.byggForskuddGrunnlag());
-    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnForskuddResultat.class);
+    var request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag());
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat.class);
     var forskuddResultat = responseEntity.getBody();
 
     assertAll(
