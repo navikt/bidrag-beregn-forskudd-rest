@@ -27,12 +27,4 @@ public class ExceptionHandlerAdvice {
   private String errorMsg(RuntimeException runtimeException) {
     return String.format("%s: %s", runtimeException.getClass().getSimpleName(), runtimeException.getMessage());
   }
-
-  private String errorMsg(RuntimeException runtimeException, String meldingstekst) {
-    if (meldingstekst.isBlank()) {
-      return errorMsg(runtimeException);
-    } else {
-      return String.format("%s: %s", runtimeException.getClass().getSimpleName(), meldingstekst);
-    }
-  }
 }

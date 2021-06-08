@@ -3,228 +3,149 @@ package no.nav.bidrag.beregn.forskudd.rest;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
-import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddResultatCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.InntektCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore;
-import no.nav.bidrag.beregn.forskudd.core.dto.ResultatGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddResultat;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BostatusPeriode;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.Inntekt;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.InntektPeriode;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
+import no.nav.bidrag.beregn.forskudd.rest.dto.http.Grunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.Periode;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatBeregning;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatPeriode;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.SivilstandPeriode;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.Sjablon;
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.SoknadBarn;
 
 public class TestUtil {
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlag() {
-    return byggForskuddGrunnlag("");
-  }
+  private static final String INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1";
+  private static final String SIVILSTAND_REFERANSE_ENSLIG = "SIVILSTAND_REFERANSE_ENSLIG";
+  private static final String BARN_REFERANSE_1 = "BARN_REFERANSE_1";
+  private static final String SOKNADBARN_REFERANSE = "SOKNADBARN_REFERANSE";
+  private static final String BOSTATUS_REFERANSE_MED_FORELDRE_1 = "BOSTATUS_REFERANSE_MED_FORELDRE_1";
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBostatusDatoFra() {
-    return byggForskuddGrunnlag("bostatusDatoFra");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBostatusDatoTil() {
-    return byggForskuddGrunnlag("bostatusDatoTil");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBostatusKode() {
-    return byggForskuddGrunnlag("bostatusKode");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSoknadBarnFodselsdato() {
-    return byggForskuddGrunnlag("soknadBarnFodselsdato");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektDatoFra() {
-    return byggForskuddGrunnlag("inntektDatoFra");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektDatoTil() {
-    return byggForskuddGrunnlag("inntektDatoTil");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektType() {
-    return byggForskuddGrunnlag("inntektType");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektBelop() {
-    return byggForskuddGrunnlag("inntektBelop");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSivilstandDatoFra() {
-    return byggForskuddGrunnlag("sivilstandDatoFra");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSivilstandDatoTil() {
-    return byggForskuddGrunnlag("sivilstandDatoTil");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSivilstandKode() {
-    return byggForskuddGrunnlag("sivilstandKode");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBarnDatoFra() {
-    return byggForskuddGrunnlag("barnDatoFra");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBarnDatoTil() {
-    return byggForskuddGrunnlag("barnDatoTil");
+  public static BeregnForskuddGrunnlag byggDummyForskuddGrunnlag() {
+    return byggDummyForskuddGrunnlag("");
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBeregnDatoFra() {
-    return byggForskuddGrunnlag("beregnDatoFra");
+    return byggDummyForskuddGrunnlag("beregnDatoFra");
   }
 
   public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBeregnDatoTil() {
-    return byggForskuddGrunnlag("beregnDatoTil");
+    return byggDummyForskuddGrunnlag("beregnDatoTil");
   }
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSoknadBarnBostatusPeriodeListe() {
-    return byggForskuddGrunnlag("soknadBarnBostatusPeriodeListe");
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenGrunnlagListe() {
+    return byggDummyForskuddGrunnlag("grunnlagListe");
   }
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBidragMottakerInntektPeriodeListe() {
-    return byggForskuddGrunnlag("bidragMottakerInntektPeriodeListe");
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenReferanse() {
+    return byggDummyForskuddGrunnlag("referanse");
   }
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBidragMottakerSivilstandPeriodeListe() {
-    return byggForskuddGrunnlag("bidragMottakerSivilstandPeriodeListe");
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenType() {
+    return byggDummyForskuddGrunnlag("type");
   }
 
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSoknadBarn() {
-    return byggForskuddGrunnlag("soknadBarn");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenBostatusDatoFraTil() {
-    return byggForskuddGrunnlag("bostatusDatoFraTil");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInntektDatoFraTil() {
-    return byggForskuddGrunnlag("inntektDatoFraTil");
-  }
-
-  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenSivilstandDatoFraTil() {
-    return byggForskuddGrunnlag("sivilstandDatoFraTil");
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlagUtenInnhold() {
+    return byggDummyForskuddGrunnlag("innhold");
   }
 
 
   // Bygger opp BeregnForskuddGrunnlag
-  private static BeregnForskuddGrunnlag byggForskuddGrunnlag(String nullVerdi) {
-    var bostatusDatoFra = (nullVerdi.equals("bostatusDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var bostatusDatoTil = (nullVerdi.equals("bostatusDatoTil") ? null : LocalDate.parse("2020-01-01"));
-    var bostatusKode = (nullVerdi.equals("bostatusKode") ? null : "MED_FORELDRE");
-    var soknadBarnFodselsDato = (nullVerdi.equals("soknadBarnFodselsdato") ? null : LocalDate.parse("2006-05-12"));
-    var inntektDatoFra = (nullVerdi.equals("inntektDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var inntektDatoTil = (nullVerdi.equals("inntektDatoTil") ? null : LocalDate.parse("2020-01-01"));
-    var inntektType = (nullVerdi.equals("inntektType") ? null : "OVERGANGSSTONAD");
-    var inntektBelop = (nullVerdi.equals("inntektBelop") ? null : BigDecimal.valueOf(100000));
-    var sivilstandDatoFra = (nullVerdi.equals("sivilstandDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var sivilstandDatoTil = (nullVerdi.equals("sivilstandDatoTil") ? null : LocalDate.parse("2020-01-01"));
-    var sivilstandKode = (nullVerdi.equals("sivilstandKode") ? null : "GIFT");
-    var barnDatoFra = (nullVerdi.equals("barnDatoFra") ? null : LocalDate.parse("2017-01-01"));
-    var barnDatoTil = (nullVerdi.equals("barnDatoTil") ? null : LocalDate.parse("2020-01-01"));
+  private static BeregnForskuddGrunnlag byggDummyForskuddGrunnlag(String nullVerdi) {
+    var mapper = new ObjectMapper();
+
     var beregnDatoFra = (nullVerdi.equals("beregnDatoFra") ? null : LocalDate.parse("2017-01-01"));
     var beregnDatoTil = (nullVerdi.equals("beregnDatoTil") ? null : LocalDate.parse("2020-01-01"));
+    var referanse = (nullVerdi.equals("referanse") ? null : "Mottatt_BM_Inntekt_AG_20201201");
+    var type = (nullVerdi.equals("type") ? null : "Inntekt");
+    var innhold = (nullVerdi.equals("innhold") ? null : mapper.valueToTree(Map.of(
+        "rolle", "BM",
+        "datoFom", "2017-01-01",
+        "datoTil", "2020-01-01",
+        "inntektType", "INNTEKTTYPE",
+        "belop", 290000)));
 
-    List<BostatusPeriode> soknadBarnBostatusPeriodeListe;
-    if (nullVerdi.equals("soknadBarnBostatusPeriodeListe")) {
-      soknadBarnBostatusPeriodeListe = null;
+    List<Grunnlag> grunnlagListe;
+    if (nullVerdi.equals("grunnlagListe")) {
+      grunnlagListe = null;
     } else {
-      BostatusPeriode bostatusPeriode;
-      if (nullVerdi.equals("bostatusDatoFraTil")) {
-        bostatusPeriode = new BostatusPeriode(null, bostatusKode);
-      } else {
-        bostatusPeriode = new BostatusPeriode(new Periode(bostatusDatoFra, bostatusDatoTil), bostatusKode);
-      }
-      soknadBarnBostatusPeriodeListe = new ArrayList<>();
-      soknadBarnBostatusPeriodeListe.add(bostatusPeriode);
-    }
-    SoknadBarn soknadBarn;
-    if (nullVerdi.equals("soknadBarn")) {
-      soknadBarn = null;
-    } else {
-      soknadBarn = new SoknadBarn(soknadBarnFodselsDato, soknadBarnBostatusPeriodeListe);
+      grunnlagListe = singletonList(new Grunnlag(referanse, type, innhold));
     }
 
-    List<InntektPeriode> bidragMottakerInntektPeriodeListe;
-    if (nullVerdi.equals("bidragMottakerInntektPeriodeListe")) {
-      bidragMottakerInntektPeriodeListe = null;
-    } else {
-      InntektPeriode bidragMottakerInntektPeriode;
-      if (nullVerdi.equals("inntektDatoFraTil")) {
-        bidragMottakerInntektPeriode = new InntektPeriode(null, inntektType, inntektBelop);
-      } else {
-        bidragMottakerInntektPeriode = new InntektPeriode(new Periode(inntektDatoFra, inntektDatoTil), inntektType, inntektBelop);
-      }
-      bidragMottakerInntektPeriodeListe = new ArrayList<>();
-      bidragMottakerInntektPeriodeListe.add(bidragMottakerInntektPeriode);
-    }
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, grunnlagListe);
+  }
 
-    List<SivilstandPeriode> bidragMottakerSivilstandPeriodeListe;
-    if (nullVerdi.equals("bidragMottakerSivilstandPeriodeListe")) {
-      bidragMottakerSivilstandPeriodeListe = null;
-    } else {
-      SivilstandPeriode bidragMottakerSivilstandPeriode;
-      if (nullVerdi.equals("sivilstandDatoFraTil")) {
-        bidragMottakerSivilstandPeriode = new SivilstandPeriode(null, sivilstandKode);
-      } else {
-        bidragMottakerSivilstandPeriode = new SivilstandPeriode(new Periode(sivilstandDatoFra, sivilstandDatoTil), sivilstandKode);
-      }
-      bidragMottakerSivilstandPeriodeListe = new ArrayList<>();
-      bidragMottakerSivilstandPeriodeListe.add(bidragMottakerSivilstandPeriode);
-    }
+  // Bygger opp fullt BeregnForskuddGrunnlag
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlag() {
+    var mapper = new ObjectMapper();
 
-    var bidragMottakerBarnPeriodeListe = new ArrayList<Periode>();
-    bidragMottakerBarnPeriodeListe.add(new Periode(barnDatoFra, barnDatoTil));
+    var fodselsdatoInnhold = mapper.valueToTree(Map.of(
+        "rolle", "SB",
+        "fodselsdato", "2006-12-01"));
+    var bostatusInnhold = mapper.valueToTree(Map.of(
+        "rolle", "SB",
+        "datoFom", "2017-01-01",
+        "datoTil", "2020-01-01",
+        "bostatusKode", "MED_FORELDRE"));
+    var inntektInnhold = mapper.valueToTree(Map.of(
+        "rolle", "BM",
+        "datoFom", "2017-01-01",
+        "datoTil", "2020-01-01",
+        "inntektType", "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "belop", 290000));
+    var sivilstandInnhold = mapper.valueToTree(Map.of(
+        "rolle", "BM",
+        "datoFom", "2017-01-01",
+        "datoTil", "2020-01-01",
+        "sivilstandKode", "GIFT"));
 
-    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, soknadBarn,
-        bidragMottakerInntektPeriodeListe, bidragMottakerSivilstandPeriodeListe, bidragMottakerBarnPeriodeListe);
+    var beregnDatoFra = LocalDate.parse("2017-01-01");
+    var beregnDatoTil = LocalDate.parse("2020-01-01");
+
+    List<Grunnlag> grunnlagListe = new ArrayList<>();
+    grunnlagListe.add(new Grunnlag("Mottatt_GenerellInfo", "GenerellInfo", fodselsdatoInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20170101", "Bostatus", bostatusInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20170101", "Inntekt", inntektInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_Sivilstand_20201201", "Sivilstand", sivilstandInnhold));
+
+    return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, grunnlagListe);
   }
 
   // Bygger opp BeregnForskuddResultatCore
-  public static BeregnForskuddResultatCore dummyForskuddResultatCore() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriodeCore>();
-    bidragPeriodeResultatListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+  public static BeregnetForskuddResultatCore dummyForskuddResultatCore() {
+    var beregnetForskuddPeriodeListe = new ArrayList<ResultatPeriodeCore>();
+    beregnetForskuddPeriodeListe.add(new ResultatPeriodeCore(new PeriodeCore(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
         new ResultatBeregningCore(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
-        new ResultatGrunnlagCore(singletonList(new InntektCore("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
-            "MED_FORELDRE", emptyList())));
-    return new BeregnForskuddResultatCore(bidragPeriodeResultatListe, emptyList());
+        List.of(INNTEKT_REFERANSE_1, SIVILSTAND_REFERANSE_ENSLIG, BARN_REFERANSE_1, SOKNADBARN_REFERANSE, BOSTATUS_REFERANSE_MED_FORELDRE_1)));
+    return new BeregnetForskuddResultatCore(beregnetForskuddPeriodeListe, emptyList(), emptyList());
   }
 
   // Bygger opp BeregnForskuddResultatCore med avvik
-  public static BeregnForskuddResultatCore dummyForskuddResultatCoreMedAvvik() {
+  public static BeregnetForskuddResultatCore dummyForskuddResultatCoreMedAvvik() {
     var avvikListe = new ArrayList<AvvikCore>();
     avvikListe.add(new AvvikCore("beregnDatoFra kan ikke være null", "NULL_VERDI_I_DATO"));
     avvikListe.add(new AvvikCore(
         "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, periodeDatoTil=2018-03-01",
         "DATO_FRA_ETTER_DATO_TIL"));
-    return new BeregnForskuddResultatCore(emptyList(), avvikListe);
+    return new BeregnetForskuddResultatCore(emptyList(), emptyList(), avvikListe);
   }
 
   // Bygger opp BeregnForskuddResultat
-  public static BeregnForskuddResultat dummyForskuddResultat() {
-    var bidragPeriodeResultatListe = new ArrayList<ResultatPeriode>();
-    bidragPeriodeResultatListe.add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
-        new ResultatBeregning(100, "INNVILGET_100_PROSENT", "REGEL 1"),
-        new ResultatGrunnlag(singletonList(new Inntekt("LØNNSINNTEKT", BigDecimal.valueOf(500000))), "ENSLIG", 2, 10,
-            "MED_FORELDRE", byggSjablonNavnVerdiListe())));
-    return new BeregnForskuddResultat(bidragPeriodeResultatListe);
+  public static BeregnetForskuddResultat dummyForskuddResultat() {
+    var beregnetForskuddPeriodeListe = new ArrayList<ResultatPeriode>();
+    beregnetForskuddPeriodeListe.add(new ResultatPeriode(new Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+        new ResultatBeregning(BigDecimal.valueOf(100), "INNVILGET_100_PROSENT", "REGEL 1"),
+        List.of(INNTEKT_REFERANSE_1, SIVILSTAND_REFERANSE_ENSLIG, BARN_REFERANSE_1, SOKNADBARN_REFERANSE, BOSTATUS_REFERANSE_MED_FORELDRE_1)));
+    return new BeregnetForskuddResultat(beregnetForskuddPeriodeListe, emptyList());
   }
 
   // Bygger opp liste av sjablonverdier
@@ -278,19 +199,4 @@ public class TestUtil {
 
     return sjablonSjablontallListe;
   }
-
-  public static List<Sjablon> byggSjablonNavnVerdiListe() {
-    var sjablonListe = new ArrayList<Sjablon>();
-
-    // Sjablontall
-    sjablonListe.add(new Sjablon(SjablonTallNavn.FORSKUDDSSATS_BELOP.getNavn(), BigDecimal.valueOf(1600)));
-    sjablonListe.add(new Sjablon(SjablonTallNavn.MAKS_INNTEKT_FORSKUDD_MOTTAKER_MULTIPLIKATOR.getNavn(), BigDecimal.valueOf(320)));
-    sjablonListe.add(new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_FULLT_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(270200)));
-    sjablonListe.add(new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_EN_BELOP.getNavn(), BigDecimal.valueOf(419700)));
-    sjablonListe.add(new Sjablon(SjablonTallNavn.OVRE_INNTEKTSGRENSE_75PROSENT_FORSKUDD_GS_BELOP.getNavn(), BigDecimal.valueOf(336500)));
-    sjablonListe.add(new Sjablon(SjablonTallNavn.INNTEKTSINTERVALL_FORSKUDD_BELOP.getNavn(), BigDecimal.valueOf(61700)));
-
-    return sjablonListe;
-  }
-
 }

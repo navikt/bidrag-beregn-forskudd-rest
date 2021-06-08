@@ -1,37 +1,45 @@
 {
   "beregnDatoFra": "2020-12-01",
   "beregnDatoTil": "2021-01-01",
-  "bidragMottakerBarnPeriodeListe": [
-  ],
-  "bidragMottakerInntektPeriodeListe": [
+  "grunnlagListe": [
     {
-      "inntektBelop": 468000,
-      "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-      "inntektDatoFraTil": {
-        "periodeDatoFra": "2020-12-01",
-        "periodeDatoTil": "2021-01-01"
+      "referanse": "Mottatt_GenerellInfo",
+      "type": "GenerellInfo",
+      "innhold": {
+        "rolle": "SB",
+        "fodselsdato": "2015-01-01"
+      }
+    },
+    {
+      "referanse": "Mottatt_Bostatus_20201201",
+      "type": "Bostatus",
+      "innhold": {
+        "rolle": "SB",
+        "datoFom": "2020-12-01",
+        "datoTil": "2021-01-01",
+        "bostatusKode": "MED_FORELDRE"
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_AG_20201201",
+      "type": "Inntekt",
+      "innhold": {
+        "rolle": "BM",
+        "datoFom": "2020-12-01",
+        "datoTil": "2021-01-01",
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "belop": 468000
+      }
+    },
+    {
+      "referanse": "Mottatt_Sivilstand_20201201",
+      "type": "Sivilstand",
+      "innhold": {
+        "rolle": "BM",
+        "datoFom": "2020-12-01",
+        "datoTil": "2021-01-01",
+        "sivilstandKode": "ENSLIG"
       }
     }
-  ],
-  "bidragMottakerSivilstandPeriodeListe": [
-    {
-      "sivilstandDatoFraTil": {
-        "periodeDatoFra": "2020-12-01",
-        "periodeDatoTil": "2021-01-01"
-      },
-      "sivilstandKode": "ENSLIG"
-    }
-  ],
-  "soknadBarn": {
-    "soknadBarnBostatusPeriodeListe": [
-      {
-        "bostatusKode": "MED_FORELDRE",
-        "bostatusDatoFraTil": {
-          "periodeDatoFra": "2020-12-01",
-          "periodeDatoTil": "2021-01-01"
-        }
-      }
-    ],
-    "soknadBarnFodselsdato": "2015-01-01"
-  }
+  ]
 }

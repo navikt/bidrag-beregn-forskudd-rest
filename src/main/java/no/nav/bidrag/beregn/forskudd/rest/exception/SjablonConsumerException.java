@@ -5,7 +5,7 @@ import org.springframework.web.client.RestClientResponseException;
 
 public class SjablonConsumerException extends RuntimeException {
 
-  private HttpStatus statusCode;
+  private final HttpStatus statusCode;
 
   public HttpStatus getStatusCode() {
     return statusCode;
