@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.4.5</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>no.nav.bidrag</groupId>
@@ -26,7 +26,7 @@
     <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.18.0</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.6.0</bidrag-beregn-forskudd-core.version>
-    <springdoc-openapi-uio.version>1.5.10</springdoc-openapi-uio.version>
+    <springdoc-openapi-uio.version>1.5.11</springdoc-openapi-uio.version>
     <wiremock-standalone.version>2.27.2</wiremock-standalone.version>
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
 
