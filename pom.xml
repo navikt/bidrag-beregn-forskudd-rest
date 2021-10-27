@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.4.5</version>
+    <version>2.5.6</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -22,29 +22,18 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>0.5.6</bidrag-commons.version>
-    <bidrag-commons-test.version>0.2.1</bidrag-commons-test.version>
+    <bidrag-commons.version>0.5.16</bidrag-commons.version>
+    <bidrag-commons-test.version>0.2.2</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.18.0</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.6.0</bidrag-beregn-forskudd-core.version>
-    <springdoc-openapi-uio.version>1.5.10</springdoc-openapi-uio.version>
+    <springdoc-openapi-uio.version>1.5.12</springdoc-openapi-uio.version>
     <wiremock-standalone.version>2.27.2</wiremock-standalone.version>
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
 
     <!-- language -->
     <java.version>16</java.version>
-    <kotlin.version>1.5.21</kotlin.version>
+    <kotlin.version>1.5.31</kotlin.version>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <!-- vulnerable dependency overridden -->
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
-        <version>9.0.43</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
