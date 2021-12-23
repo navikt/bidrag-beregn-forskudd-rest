@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.forskudd.rest.exception.SjablonConsumerException;
+import no.nav.bidrag.beregn.forskudd.rest.exception.BidragGcpProxyConsumerException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +59,6 @@ class SjablonConsumerTest {
     when(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), (ParameterizedTypeReference<List<Sjablontall>>) any()))
         .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-    assertThatExceptionOfType(SjablonConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonSjablontall());
+    assertThatExceptionOfType(BidragGcpProxyConsumerException.class).isThrownBy(() -> sjablonConsumer.hentSjablonSjablontall());
   }
 }

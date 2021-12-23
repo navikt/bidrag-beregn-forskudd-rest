@@ -17,7 +17,7 @@ public class ExceptionHandlerAdvice {
   }
 
   @ExceptionHandler
-  public ResponseEntity<?> handleSjablonConsumerException(SjablonConsumerException exception) {
+  public ResponseEntity<?> handleSjablonConsumerException(BidragGcpProxyConsumerException exception) {
     return ResponseEntity
         .status(exception.getStatusCode())
         .header("Error", errorMsg(exception))

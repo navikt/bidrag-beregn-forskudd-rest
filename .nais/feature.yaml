@@ -1,8 +1,9 @@
 name: bidrag-beregn-forskudd-rest-feature
 ingresses:
-  - https://bidrag-beregn-forskudd-rest-feature.nais.preprod.local/
-  - https://bidrag-beregn-forskudd-rest-feature.dev-fss.nais.io/
-  - https://bidrag-beregn-forskudd-rest-feature.dev.adeo.no/
-env:
-  - name: SJABLON_URL
-    value: https://bidrag-sjablon.dev-fss.nais.io/bidrag-sjablon
+  - https://bidrag-beregn-forskudd-rest-feature.dev.intern.nav.no/
+
+azure:
+  bidraggcpproxy_url: bidrag-gcp-proxy-feature.dev-fss-pub.nais.io
+  bidraggcpproxy_scope: dev-fss.bidrag.bidrag-gcp-proxy-feature
+  cucumber_cloud_app: bidrag-cucumber-cloud-feature
+  cucumber_cloud_cluster: dev-gcp

@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
-import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.commons.web.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +28,7 @@ class BeregnForskuddServiceTest {
   private BeregnForskuddService beregnForskuddService;
 
   @Mock
-  private SjablonConsumer sjablonConsumerMock;
+  private SjablonService sjablonService;
   @Mock
   private ForskuddCore forskuddCoreMock;
 
@@ -37,7 +36,7 @@ class BeregnForskuddServiceTest {
   @DisplayName("Skal beregne forskudd")
   void skalBeregneForskudd() {
     var grunnlagTilCoreCaptor = ArgumentCaptor.forClass(BeregnForskuddGrunnlagCore.class);
-    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(grunnlagTilCoreCaptor.capture())).thenReturn(TestUtil.dummyForskuddResultatCore());
 
     var beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag());
@@ -56,7 +55,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved feil retur fra Core")
   void skalKasteUgyldigInputExceptionVedFeilReturFraCore() {
-    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik());
 
     assertThatExceptionOfType(UgyldigInputException.class)
