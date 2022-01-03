@@ -1,6 +1,5 @@
 package no.nav.bidrag.beregn.forskudd.rest.service;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +17,7 @@ public class SecurityTokenService {
 
   private OAuth2AuthorizedClientManager authorizedClientManager;
 
-  public SecurityTokenService(@Lazy OAuth2AuthorizedClientManager authorizedClientManager) {
+  public SecurityTokenService(OAuth2AuthorizedClientManager authorizedClientManager) {
     this.authorizedClientManager = authorizedClientManager;
   }
 
