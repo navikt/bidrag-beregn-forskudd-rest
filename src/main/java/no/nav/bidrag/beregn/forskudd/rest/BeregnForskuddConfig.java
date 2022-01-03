@@ -2,7 +2,6 @@ package no.nav.bidrag.beregn.forskudd.rest;
 
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.BidragGcpProxyConsumer;
-import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.service.SecurityTokenService;
 import no.nav.bidrag.beregn.forskudd.rest.service.SjablonService;
 import no.nav.bidrag.commons.ExceptionLogger;
