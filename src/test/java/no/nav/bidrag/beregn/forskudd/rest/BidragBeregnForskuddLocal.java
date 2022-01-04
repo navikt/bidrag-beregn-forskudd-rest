@@ -2,10 +2,12 @@ package no.nav.bidrag.beregn.forskudd.rest;
 
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
+import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub;
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 
@@ -20,6 +22,8 @@ public class BidragBeregnForskuddLocal {
   public static void main(String... args) {
     SpringApplication app = new SpringApplication(BidragBeregnForskuddLocal.class);
     app.setAdditionalProfiles(LOCAL);
-    app.run(args);
+    ConfigurableApplicationContext context = app.run(args);
+
+    context.getBean(SjablonApiStub.class).settOppSjablonStub();
   }
 }

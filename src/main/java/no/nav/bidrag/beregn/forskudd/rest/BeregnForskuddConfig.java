@@ -20,11 +20,6 @@ public class BeregnForskuddConfig {
     return ForskuddCore.getInstance();
   }
 
-//  @Bean
-//  public SjablonConsumer sjablonConsumer(@Value("${SJABLON_URL}") String sjablonBaseUrl, RestTemplate restTemplate) {
-//    return new SjablonConsumer(restTemplate, sjablonBaseUrl);
-//  }
-
   @Bean
   public BidragGcpProxyConsumer bidragGcpProxyConsumer(
       @Value("${BIDRAGGCPPROXY_URL}") String url,
