@@ -9,12 +9,15 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.time.LocalDate;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddOverridesConfig;
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService;
 import no.nav.bidrag.commons.web.HttpResponse;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,13 +27,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
-@ExtendWith(MockitoExtension.class)
 @DisplayName("BeregnForskuddControllerTest")
-@SpringBootTest(classes = BidragBeregnForskuddLocal.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = BidragBeregnForskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@Import(BidragBeregnForskuddOverridesConfig.class)
+@AutoConfigureWireMock(port = 8096)
+@EnableMockOAuth2Server
 class BeregnForskuddControllerMockTest {
 
   @Autowired
@@ -47,7 +54,7 @@ class BeregnForskuddControllerMockTest {
     when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class)))
         .thenReturn(HttpResponse.from(OK, TestUtil.dummyForskuddResultat()));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
+    var url = "http://localhost:" + port + "/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag());
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat.class);
     var forskuddResultat = responseEntity.getBody();
@@ -75,7 +82,7 @@ class BeregnForskuddControllerMockTest {
 
     when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR, null));
 
-    var url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
+    var url = "http://localhost:" + port + "/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag());
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat.class);
     var forskuddResultat = responseEntity.getBody();

@@ -13,7 +13,7 @@ import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
+import no.nav.bidrag.beregn.forskudd.rest.consumer.BidragGcpProxyConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatGrunnlag;
@@ -29,11 +29,11 @@ public class BeregnForskuddService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BeregnForskuddService.class);
 
-  private final SjablonConsumer sjablonConsumer;
+  private final SjablonService sjablonService;
   private final ForskuddCore forskuddCore;
 
-  public BeregnForskuddService(SjablonConsumer sjablonConsumer, ForskuddCore forskuddCore) {
-    this.sjablonConsumer = sjablonConsumer;
+  public BeregnForskuddService(SjablonService sjablonService, ForskuddCore forskuddCore) {
+    this.sjablonService = sjablonService;
     this.forskuddCore = forskuddCore;
   }
 
@@ -43,7 +43,7 @@ public class BeregnForskuddService {
     grunnlag.valider();
 
     // Henter sjabloner
-    var sjablonSjablontallResponse = sjablonConsumer.hentSjablonSjablontall();
+    var sjablonSjablontallResponse = sjablonService.hentSjablonSjablontall();
     LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallResponse.getResponseEntity().getBody().size());
 
     // Lager input-grunnlag til core-modulen

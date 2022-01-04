@@ -6,20 +6,32 @@ metadata:
   labels:
     team: bidrag
 spec:
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: {{ azure.cucumber_cloud_app }}
+          cluster: {{ azure.cucumber_cloud_cluster }}
+          namespace: bidrag
+    outbound:
+      external:
+        - host: {{ azure.bidraggcpproxy_url }}
   image: {{ image }}
   liveness:
-    path: /bidrag-beregn-forskudd-rest/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
     periodSeconds: 5
     failureThreshold: 10
   readiness:
-    path: /bidrag-beregn-forskudd-rest/actuator/health
+    path: /actuator/health
     initialDelay: 20
     timeout: 1
   prometheus:
     enabled: true
-    path: /bidrag-beregn-forskudd-rest/actuator/prometheus
+    path: /actuator/prometheus
   resources:
     limits:
       cpu: 1000m
@@ -32,7 +44,7 @@ spec:
     - {{url}}
   {{/each}}
   env:
-  {{#each env}}
-    - name: {{this.name}}
-      value: "{{this.value}}"
-  {{/each}}
+    - name: BIDRAGGCPPROXY_URL
+      value: https://{{ azure.bidraggcpproxy_url }}
+    - name: BIDRAGGCPPROXY_SCOPE
+      value: {{ azure.bidraggcpproxy_scope }}

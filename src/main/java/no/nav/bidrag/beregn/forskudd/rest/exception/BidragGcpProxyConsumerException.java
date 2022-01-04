@@ -3,7 +3,7 @@ package no.nav.bidrag.beregn.forskudd.rest.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestClientResponseException;
 
-public class SjablonConsumerException extends RuntimeException {
+public class BidragGcpProxyConsumerException extends RuntimeException {
 
   private final HttpStatus statusCode;
 
@@ -11,7 +11,7 @@ public class SjablonConsumerException extends RuntimeException {
     return statusCode;
   }
 
-  public SjablonConsumerException(RestClientResponseException exception) {
+  public BidragGcpProxyConsumerException(RestClientResponseException exception) {
     super(exception);
     this.statusCode = HttpStatus.valueOf(exception.getRawStatusCode());
   }

@@ -7,10 +7,12 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest;
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddOverridesConfig;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,15 +21,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = BidragBeregnForskuddLocal.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("integrationtest")
+@SpringBootTest(classes = BidragBeregnForskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@Import(BidragBeregnForskuddOverridesConfig.class)
 @AutoConfigureWireMock(port = 8096)
+@EnableMockOAuth2Server
 public class BeregnForskuddControllerIntegrationTest {
 
   @Autowired
@@ -142,7 +146,7 @@ public class BeregnForskuddControllerIntegrationTest {
     sjablonApiStub.settOppSjablonStub();
 
     // Bygg opp url
-    url = "http://localhost:" + port + "/bidrag-beregn-forskudd-rest/beregn/forskudd";
+    url = "http://localhost:" + port + "/beregn/forskudd";
   }
 
   @Test
