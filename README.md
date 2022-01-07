@@ -27,3 +27,35 @@ Det gjøres en mapping fra rest-tjenestens input-grensesnitt til core-tjenestens
 ### Overordnet arkitektur
 
 ![Overordnet arkitektur](./img/beregn-forskudd.drawio.png)
+
+### Kjøre applikasjon lokalt
+Applikasjonen kan kjøres opp lokalt med fila `BidragBeregnForskuddLocal`. Applikasjonen kjøres da opp på [http://localhost:8080/](http://localhost:8080/) og kan testes med Swagger. Også når applikasjonen kjøres lokalt kreves et gyldig JWT-token, men her kreves ikke et gyldig Azure AD token. Lokalt er applikasjonen konfugurert til å bruke en lokalt kjørende MockOAuth-service for å utstede og validere JWT-tokens. For å utstede et gylig token til testing kan man benytte endepunktet `GET /local/cookie?issuerId=aad&audience=aud-localhost`. Viktig at `issuerId=aad` og `audience=aud-locahost`.
+
+## Utstede gyldig token i dev-gcp
+For å kunne teste applikasjonen i `dev-gcp` trenger man et gyldig AzureAD JWT-token. For å utstede et slikt token trenger man miljøvariablene `AZURE_APP_CLIENT_ID` og `AZURE_APP_CLIENT_SECRET`. Disse ligger tilgjengelig i de kjørende pod'ene til applikasjonen.
+
+Koble seg til en kjørende pod (feature-branch):
+```
+kubectl -n bidrag exec -i -t bidrag-beregn-forskudd-rest-feature-<sha> -c bidrag-beregn-forskudd-rest-feature -- /bin/bash
+```
+
+Koble seg til en kjørende pod (main-branch):
+```
+kubectl -n bidrag exec -i -t bidrag-beregn-forskudd-rest-<sha> -c bidrag-beregn-forskudd-rest -- /bin/bash
+```
+
+Når man er inne i pod'en kan man hente ut miljøvariablene på følgende måte:
+```
+echo "$( cat /var/run/secrets/nais.io/azure/AZURE_APP_CLIENT_ID )"
+echo "$( cat /var/run/secrets/nais.io/azure/AZURE_APP_CLIENT_SECRET )"
+```
+
+Deretter kan vi hente ned et gyldig Azure AD JWT-token med følgende kall (feature-branch):
+```
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'client_id=<AZURE_APP_CLIENT_ID>&scope=api://dev-gcp.bidrag.bidrag-beregn-forskudd-rest-feature/.default&client_secret=<AZURE_APP_CLIENT_SECRET>&grant_type=client_credentials' 'https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token'
+```
+
+Deretter kan vi hente ned et gyldig Azure AD JWT-token med følgende kall (main-branch):
+```
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'client_id=<AZURE_APP_CLIENT_ID>&scope=api://dev-gcp.bidrag.bidrag-beregn-forskudd-rest/.default&client_secret=<AZURE_APP_CLIENT_SECRET>&grant_type=client_credentials' 'https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token'
+```
