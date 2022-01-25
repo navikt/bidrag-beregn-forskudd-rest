@@ -28,7 +28,7 @@
     <bidrag-beregn-forskudd-core.version>0.6.1</bidrag-beregn-forskudd-core.version>
     <springdoc-openapi-uio.version>1.6.3</springdoc-openapi-uio.version>
     <wiremock-standalone.version>2.27.2</wiremock-standalone.version>
-    <springframework-cloud.version>3.0.4</springframework-cloud.version>
+    <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
     <token-support.version>1.3.9</token-support.version>
     <com.squareup.okhttp3.version>4.9.2</com.squareup.okhttp3.version>
 
