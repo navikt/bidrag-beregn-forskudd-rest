@@ -40,9 +40,7 @@ spec:
       cpu: 500m
       memory: 512Mi
   ingresses:
-  {{#each ingresses as |url|}}
-    - {{url}}
-  {{/each}}
+    - {{ ingress }}
   env:
     - name: BIDRAGGCPPROXY_URL
       value: https://{{ azure.bidraggcpproxy_url }}
