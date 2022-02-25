@@ -32,19 +32,20 @@ public class BidragBeregnForskuddOverridesConfig {
 
   public ClientHttpRequestInterceptor generateBearerToken(String clientRegistrationId) {
     return (request, body, execution) -> {
-      var accessToken = token("", "", "");
+      var accessToken = token("", "", "", "");
       request.getHeaders().setBearerAuth(accessToken);
       return execution.execute(request, body);
     };
   }
 
-  private String token(String issuerId, String subject, String scope) {
+  private String token(String issuerId, String subject, String typeHeader, String scope) {
     return "Bearer "  + auth2Server.issueToken(
         issuerId,
         subject,
         new DefaultOAuth2TokenCallback(
             issuerId,
             subject,
+            typeHeader,
             Collections.emptyList(),
             Collections.singletonMap("scope", scope),
             3600
