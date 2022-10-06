@@ -43,8 +43,7 @@ public class CoreMapper {
       sjablontallMap.put(sjablonTallNavn.getId(), sjablonTallNavn);
     }
 
-    LocalDate soknadBarnFodselsdato = null;
-    String soknadBarnReferanse = null;
+    SoknadBarnCore soknadbarnCore = null;
     var bostatusPeriodeCoreListe = new ArrayList<BostatusPeriodeCore>();
     var inntektPeriodeCoreListe = new ArrayList<InntektPeriodeCore>();
     var sivilstandPeriodeCoreListe = new ArrayList<SivilstandPeriodeCore>();
@@ -52,10 +51,7 @@ public class CoreMapper {
 
     for (Grunnlag grunnlag : beregnForskuddGrunnlag.getGrunnlagListe()) {
       switch (grunnlag.getType()) {
-        case SOKNADSBARN_TYPE -> {
-          soknadBarnFodselsdato = mapFodselsdato(grunnlag);
-          soknadBarnReferanse = grunnlag.getReferanse();
-        }
+        case SOKNADSBARN_TYPE -> soknadbarnCore = mapSoknadsbarn(grunnlag);
         case BOSTATUS_TYPE -> bostatusPeriodeCoreListe.add(mapBostatus(grunnlag));
         case INNTEKT_TYPE -> inntektPeriodeCoreListe.add(mapInntekt(grunnlag));
         case SIVILSTAND_TYPE -> sivilstandPeriodeCoreListe.add(mapSivilstand(grunnlag));
@@ -63,19 +59,19 @@ public class CoreMapper {
       }
     }
 
-    var soknadBarnCore = new SoknadBarnCore(soknadBarnReferanse, soknadBarnFodselsdato, bostatusPeriodeCoreListe);
+//    var soknadBarnCore = new SoknadBarnCore(soknadBarnReferanse, soknadBarnFodselsdato);
 
     var sjablonPeriodeCoreListe = mapSjablonVerdier(beregnForskuddGrunnlag.getBeregnDatoFra(), beregnForskuddGrunnlag.getBeregnDatoTil(),
         sjablontallListe, sjablontallMap);
 
-    return new BeregnForskuddGrunnlagCore(beregnForskuddGrunnlag.getBeregnDatoFra(), beregnForskuddGrunnlag.getBeregnDatoTil(), soknadBarnCore,
-        inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnIHusstandenPeriodeCoreListe, sjablonPeriodeCoreListe);
+    return new BeregnForskuddGrunnlagCore(beregnForskuddGrunnlag.getBeregnDatoFra(), beregnForskuddGrunnlag.getBeregnDatoTil(), soknadbarnCore,
+        bostatusPeriodeCoreListe, inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnIHusstandenPeriodeCoreListe, sjablonPeriodeCoreListe);
   }
 
-  private static LocalDate mapFodselsdato(Grunnlag grunnlag) {
+  private static SoknadBarnCore mapSoknadsbarn(Grunnlag grunnlag) {
     var fodselsdato = Optional.of(grunnlag.getInnhold().get("fodselsdato"))
         .orElseThrow(() -> new UgyldigInputException("fødselsdato mangler i objekt av type SOKNADSBARN_INFO")).asText();
-    return LocalDate.parse(fodselsdato);
+    return new SoknadBarnCore(grunnlag.getReferanse(), LocalDate.parse(fodselsdato));
   }
 
   private static BostatusPeriodeCore mapBostatus(Grunnlag grunnlag) {
