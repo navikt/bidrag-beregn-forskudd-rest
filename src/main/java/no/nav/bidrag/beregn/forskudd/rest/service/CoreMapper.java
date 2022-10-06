@@ -16,7 +16,7 @@ import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
 import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn;
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn;
-import no.nav.bidrag.beregn.forskudd.core.dto.BarnPeriodeCore;
+import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore;
@@ -29,11 +29,11 @@ import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException;
 
 public class CoreMapper {
 
-  private static final String GENERELL_INFO_TYPE = "GenerellInfo";
-  private static final String BOSTATUS_TYPE = "Bostatus";
-  private static final String INNTEKT_TYPE = "Inntekt";
-  private static final String SIVILSTAND_TYPE = "Sivilstand";
-  private static final String BARN_TYPE = "Barn";
+  private static final String SOKNADSBARN_TYPE = "SOKNADSBARN_INFO";
+  private static final String BOSTATUS_TYPE = "BOSTATUS";
+  private static final String INNTEKT_TYPE = "INNTEKT";
+  private static final String SIVILSTAND_TYPE = "SIVILSTAND";
+  private static final String BARN_I_HUSSTAND_TYPE = "BARN_I_HUSSTAND";
 
   public static BeregnForskuddGrunnlagCore mapGrunnlagTilCore(BeregnForskuddGrunnlag beregnForskuddGrunnlag, List<Sjablontall> sjablontallListe) {
 
@@ -48,18 +48,18 @@ public class CoreMapper {
     var bostatusPeriodeCoreListe = new ArrayList<BostatusPeriodeCore>();
     var inntektPeriodeCoreListe = new ArrayList<InntektPeriodeCore>();
     var sivilstandPeriodeCoreListe = new ArrayList<SivilstandPeriodeCore>();
-    var barnPeriodeCoreListe = new ArrayList<BarnPeriodeCore>();
+    var barnIHusstandenPeriodeCoreListe = new ArrayList<BarnIHusstandenPeriodeCore>();
 
     for (Grunnlag grunnlag : beregnForskuddGrunnlag.getGrunnlagListe()) {
       switch (grunnlag.getType()) {
-        case GENERELL_INFO_TYPE -> {
+        case SOKNADSBARN_TYPE -> {
           soknadBarnFodselsdato = mapFodselsdato(grunnlag);
           soknadBarnReferanse = grunnlag.getReferanse();
         }
         case BOSTATUS_TYPE -> bostatusPeriodeCoreListe.add(mapBostatus(grunnlag));
         case INNTEKT_TYPE -> inntektPeriodeCoreListe.add(mapInntekt(grunnlag));
         case SIVILSTAND_TYPE -> sivilstandPeriodeCoreListe.add(mapSivilstand(grunnlag));
-        case BARN_TYPE -> barnPeriodeCoreListe.add(mapBarn(grunnlag));
+        case BARN_I_HUSSTAND_TYPE -> barnIHusstandenPeriodeCoreListe.add(mapBarnIHusstanden(grunnlag));
       }
     }
 
@@ -69,12 +69,12 @@ public class CoreMapper {
         sjablontallListe, sjablontallMap);
 
     return new BeregnForskuddGrunnlagCore(beregnForskuddGrunnlag.getBeregnDatoFra(), beregnForskuddGrunnlag.getBeregnDatoTil(), soknadBarnCore,
-        inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnPeriodeCoreListe, sjablonPeriodeCoreListe);
+        inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnIHusstandenPeriodeCoreListe, sjablonPeriodeCoreListe);
   }
 
   private static LocalDate mapFodselsdato(Grunnlag grunnlag) {
     var fodselsdato = Optional.of(grunnlag.getInnhold().get("fodselsdato"))
-        .orElseThrow(() -> new UgyldigInputException("fodselsdato mangler i objekt av type GenerellInfo")).asText();
+        .orElseThrow(() -> new UgyldigInputException("fødselsdato mangler i objekt av type SOKNADSBARN_INFO")).asText();
     return LocalDate.parse(fodselsdato);
   }
 
@@ -89,8 +89,7 @@ public class CoreMapper {
         .orElseThrow(() -> new UgyldigInputException("inntektType mangler i objekt av type Inntekt")).asText();
     var belop = Optional.of(grunnlag.getInnhold().get("belop"))
         .orElseThrow(() -> new UgyldigInputException("belop mangler i objekt av type Inntekt")).asText();
-    return new InntektPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), inntektType,
-        new BigDecimal(belop));
+    return new InntektPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), inntektType, new BigDecimal(belop));
   }
 
   private static SivilstandPeriodeCore mapSivilstand(Grunnlag grunnlag) {
@@ -99,8 +98,10 @@ public class CoreMapper {
     return new SivilstandPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), sivilstandKode);
   }
 
-  private static BarnPeriodeCore mapBarn(Grunnlag grunnlag) {
-    return new BarnPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()));
+  private static BarnIHusstandenPeriodeCore mapBarnIHusstanden(Grunnlag grunnlag) {
+    var antall = Optional.of(grunnlag.getInnhold().get("antall"))
+        .orElseThrow(() -> new UgyldigInputException("antall mangler i objekt av type BarnIHusstanden")).asText();
+    return new BarnIHusstandenPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), Double.parseDouble(antall));
   }
 
   private static PeriodeCore mapPeriode(JsonNode grunnlagInnhold, String grunnlagType) {

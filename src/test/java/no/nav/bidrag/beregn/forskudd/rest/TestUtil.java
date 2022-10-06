@@ -88,18 +88,22 @@ public class TestUtil {
   public static BeregnForskuddGrunnlag byggForskuddGrunnlag() {
     var mapper = new ObjectMapper();
 
-    var fodselsdatoInnhold = mapper.valueToTree(Map.of(
-        "rolle", "SB",
+    var barnIHusstandInnhold = mapper.valueToTree(Map.of(
+        "datoFom", "2017-01-01",
+        "datoTil", "2020-01-01",
+        "antall", "1"));
+    var soknadsbarnInnhold = mapper.valueToTree(Map.of(
+        "soknadsbarnId", "1",
         "fodselsdato", "2006-12-01"));
     var bostatusInnhold = mapper.valueToTree(Map.of(
-        "rolle", "SB",
         "datoFom", "2017-01-01",
         "datoTil", "2020-01-01",
+        "rolle", "SOKNADSBARN",
         "bostatusKode", "MED_FORELDRE"));
     var inntektInnhold = mapper.valueToTree(Map.of(
-        "rolle", "BM",
         "datoFom", "2017-01-01",
         "datoTil", "2020-01-01",
+        "rolle", "BIDRAGSMOTTAKER",
         "inntektType", "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
         "belop", 290000));
     var sivilstandInnhold = mapper.valueToTree(Map.of(
@@ -112,10 +116,11 @@ public class TestUtil {
     var beregnDatoTil = LocalDate.parse("2020-01-01");
 
     List<Grunnlag> grunnlagListe = new ArrayList<>();
-    grunnlagListe.add(new Grunnlag("Mottatt_GenerellInfo", "GenerellInfo", fodselsdatoInnhold));
-    grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20170101", "Bostatus", bostatusInnhold));
-    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20170101", "Inntekt", inntektInnhold));
-    grunnlagListe.add(new Grunnlag("Mottatt_Sivilstand_20201201", "Sivilstand", sivilstandInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand", "BARN_I_HUSSTAND", barnIHusstandInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_BarnIHusstand", "SOKNADSBARN_INFO", soknadsbarnInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_Bostatus_20170101", "BOSTATUS", bostatusInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_Inntekt_AG_20170101", "INNTEKT", inntektInnhold));
+    grunnlagListe.add(new Grunnlag("Mottatt_Sivilstand_20201201", "SIVILSTAND", sivilstandInnhold));
 
     return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, grunnlagListe);
   }

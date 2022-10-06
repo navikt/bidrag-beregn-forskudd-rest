@@ -178,7 +178,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 3")
   void skalKalleCoreOgReturnereEtResultat_Eksempel03() {
-    // Ordinært forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 1; BM sivilstatus gift
+    // Redusert forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel3.json";
 
     forventetForskuddBelop = 830;
@@ -426,6 +426,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @DisplayName("skal kalle core og returnere et resultat - eksempel 23")
   void skalKalleCoreOgReturnereEtResultat_Eksempel23() {
     // Ordinært forskudd: SB alder < 11 år; BM inntekt 489000; BM antall barn egen husstand 2; BM sivilstatus gift
+    // I tillegg testes det på at inntekt med valgt = false ikke tas med i beregning
     filnavn = "src/test/resources/testfiler/forskudd_eksempel23.json";
 
     forventetForskuddBelop = 830;
