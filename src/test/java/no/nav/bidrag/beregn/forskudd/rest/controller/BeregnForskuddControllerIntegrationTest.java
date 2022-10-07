@@ -204,7 +204,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 5")
   void skalKalleCoreOgReturnereEtResultat_Eksempel05() {
-    // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus gift
+    // Redusert forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel5.json";
 
     forventetForskuddBelop = 830;
@@ -256,7 +256,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 9")
   void skalKalleCoreOgReturnereEtResultat_Eksempel09() {
-    // Ordinært forskudd: SB alder > 11 år; BM inntekt 530000; BM antall barn egen husstand 1; BM sivilstatus gift
+    // Redusert forskudd: SB alder > 11 år; BM inntekt 530000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel9.json";
 
     forventetForskuddBelop = 830;
@@ -269,7 +269,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 10")
   void skalKalleCoreOgReturnereEtResultat_Eksempel10() {
-    // Ordinært forskudd: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus enslig
+    // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus enslig
     filnavn = "src/test/resources/testfiler/forskudd_eksempel10.json";
 
     forventetForskuddBelop = 0;
@@ -282,7 +282,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 11")
   void skalKalleCoreOgReturnereEtResultat_Eksempel11() {
-    // Ordinært forskudd: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus gift
+    // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel11.json";
 
     forventetForskuddBelop = 0;
@@ -295,7 +295,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 12")
   void skalKalleCoreOgReturnereEtResultat_Eksempel12() {
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus enslig
+    // Forhøyet forskudd: SB alder < 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus enslig
     filnavn = "src/test/resources/testfiler/forskudd_eksempel12.json";
 
     forventetForskuddBelop = 1670;
@@ -321,7 +321,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 14")
   void skalKalleCoreOgReturnereEtResultat_Eksempel14() {
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus gift
+    // Redusert forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel14.json";
 
     forventetForskuddBelop = 830;
@@ -360,7 +360,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 17")
   void skalKalleCoreOgReturnereEtResultat_Eksempel17() {
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus gift
+    // Redusert forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel17.json";
 
     forventetForskuddBelop = 830;
@@ -399,7 +399,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 20")
   void skalKalleCoreOgReturnereEtResultat_Eksempel20() {
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 430000; BM antall barn egen husstand 2; BM sivilstatus gift
+    // Redusert forskudd: SB alder < 11 år; BM inntekt 430000; BM antall barn egen husstand 2; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel20.json";
 
     forventetForskuddBelop = 830;
@@ -412,7 +412,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 22")
   void skalKalleCoreOgReturnereEtResultat_Eksempel22() {
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 489000+60000; BM antall barn egen husstand 2; BM sivilstatus gift
+    // Avslag: SB alder < 11 år; BM inntekt 489000+60000; BM antall barn egen husstand 2; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel22.json";
 
     forventetForskuddBelop = 0;
@@ -425,8 +425,7 @@ public class BeregnForskuddControllerIntegrationTest {
   @Test
   @DisplayName("skal kalle core og returnere et resultat - eksempel 23")
   void skalKalleCoreOgReturnereEtResultat_Eksempel23() {
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 489000; BM antall barn egen husstand 2; BM sivilstatus gift
-    // I tillegg testes det på at inntekt med valgt = false ikke tas med i beregning
+    // Redusert forskudd: SB alder < 11 år; BM inntekt 489000; BM antall barn egen husstand 2; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel23.json";
 
     forventetForskuddBelop = 830;
@@ -435,6 +434,21 @@ public class BeregnForskuddControllerIntegrationTest {
 
     utfoerBeregningerOgEvaluerResultat();
   }
+
+  @Test
+  @DisplayName("skal kalle core og returnere et resultat - eksempel 24")
+  void skalKalleCoreOgReturnereEtResultat_Eksempel24() {
+    // Testen er basert på output fra vedtaksoverføring
+    // Ordinært forskudd: SB alder < 11 år; BM inntekt 359366; BM antall barn egen husstand 2; BM sivilstatus enslig
+    filnavn = "src/test/resources/testfiler/forskudd_eksempel24.json";
+
+    forventetForskuddBelop = 1250;
+    forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
+    forventetForskuddRegel = "REGEL 11";
+
+    utfoerBeregningerOgEvaluerResultat();
+  }
+
 
   private void utfoerBeregningerOgEvaluerResultat() {
     var request = lesFilOgByggRequest(filnavn);
