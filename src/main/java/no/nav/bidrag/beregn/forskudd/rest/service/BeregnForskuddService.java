@@ -60,9 +60,9 @@ public class BeregnForskuddService {
           + "beregnDatoFra= " + grunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
           + "beregnDatoTil= " + grunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
           + "soknadBarn= " + grunnlagTilCore.getSoknadBarn() + System.lineSeparator()
-          + "bidragMottakerBarnPeriodeListe= " + grunnlagTilCore.getBidragMottakerBarnPeriodeListe() + System.lineSeparator()
-          + "bidragMottakerInntektPeriodeListe= " + grunnlagTilCore.getBidragMottakerInntektPeriodeListe() + System.lineSeparator()
-          + "bidragMottakerSivilstandPeriodeListe= " + grunnlagTilCore.getBidragMottakerSivilstandPeriodeListe() + System.lineSeparator());
+          + "barnIHusstandenPeriodeListe= " + grunnlagTilCore.getBarnIHusstandenPeriodeListe() + System.lineSeparator()
+          + "inntektPeriodeListe= " + grunnlagTilCore.getInntektPeriodeListe() + System.lineSeparator()
+          + "sivilstandPeriodeListe= " + grunnlagTilCore.getSivilstandPeriodeListe() + System.lineSeparator());
       throw new UgyldigInputException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: "
           + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
