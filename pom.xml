@@ -22,14 +22,14 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>0.6.7</bidrag-commons.version>
+    <bidrag-commons.version>0.7.9</bidrag-commons.version>
     <bidrag-commons-test.version>0.2.2</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.18.4</bidrag-beregn-felles.version>
-    <bidrag-beregn-forskudd-core.version>0.6.5</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-forskudd-core.version>0.6.7</bidrag-beregn-forskudd-core.version>
     <springdoc-openapi-uio.version>1.6.10</springdoc-openapi-uio.version>
     <wiremock-standalone.version>2.27.2</wiremock-standalone.version>
     <springframework-cloud.version>2.2.3.RELEASE</springframework-cloud.version>
-    <token-support.version>2.1.4</token-support.version>
+    <token-support.version>2.1.5</token-support.version>
     <com.squareup.okhttp3.version>4.9.2</com.squareup.okhttp3.version>
 
     <okhttp3.version>4.9.1</okhttp3.version>
