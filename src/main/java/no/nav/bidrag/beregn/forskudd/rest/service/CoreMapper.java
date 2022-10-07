@@ -104,7 +104,13 @@ public class CoreMapper {
     var datoFom = Optional.of(grunnlagInnhold.get("datoFom"))
         .orElseThrow(() -> new UgyldigInputException("datoFom mangler i objekt av type " + grunnlagType)).asText();
     var datoTil = Optional.of(grunnlagInnhold.get("datoTil")).orElse(null).asText();
-    return new PeriodeCore(LocalDate.parse(datoFom), LocalDate.parse(datoTil));
+    datoTil = (datoTil.equals("null") ? null : datoTil) ;
+    if (datoTil == null) {
+      return new PeriodeCore(LocalDate.parse(datoFom),null);
+    }
+    else {
+      return new PeriodeCore(LocalDate.parse(datoFom), LocalDate.parse(datoTil));
+    }
   }
 
   // Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
