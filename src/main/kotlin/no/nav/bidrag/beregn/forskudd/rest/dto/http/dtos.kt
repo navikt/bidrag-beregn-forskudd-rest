@@ -100,8 +100,4 @@ data class Periode(
     datoFom = periode.datoFom,
     datoTil = periode.datoTil
   )
-
-  fun valider() {
-    if (datoFom == null) throw UgyldigInputException("datoFom kan ikke være null")
-  }
 }

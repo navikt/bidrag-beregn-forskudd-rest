@@ -84,32 +84,36 @@ public class TestUtil {
     return new BeregnForskuddGrunnlag(beregnDatoFra, beregnDatoTil, grunnlagListe);
   }
 
-  // Bygger opp fullt BeregnForskuddGrunnlag
   public static BeregnForskuddGrunnlag byggForskuddGrunnlag() {
+    return byggForskuddGrunnlag("2017-01-01", "2020-01-01", "2006-12-01", "1.0", "290000");
+  }
+
+  // Bygger opp fullt BeregnForskuddGrunnlag
+  public static BeregnForskuddGrunnlag byggForskuddGrunnlag(String datoFom, String datoTom, String fodselsdato, String antall, String belop) {
     var mapper = new ObjectMapper();
 
     var barnIHusstandInnhold = mapper.valueToTree(Map.of(
-        "datoFom", "2017-01-01",
-        "datoTil", "2020-01-01",
-        "antall", "1"));
+        "datoFom", datoFom,
+        "datoTil", datoTom,
+        "antall", antall));
     var soknadsbarnInnhold = mapper.valueToTree(Map.of(
-        "soknadsbarnId", "1",
-        "fodselsdato", "2006-12-01"));
+        "soknadsbarnId", 1,
+        "fodselsdato", fodselsdato));
     var bostatusInnhold = mapper.valueToTree(Map.of(
-        "datoFom", "2017-01-01",
-        "datoTil", "2020-01-01",
+        "datoFom", datoFom,
+        "datoTil", datoTom,
         "rolle", "SOKNADSBARN",
         "bostatusKode", "MED_FORELDRE"));
     var inntektInnhold = mapper.valueToTree(Map.of(
-        "datoFom", "2017-01-01",
-        "datoTil", "2020-01-01",
+        "datoFom", datoFom,
+        "datoTil", datoTom,
         "rolle", "BIDRAGSMOTTAKER",
         "inntektType", "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-        "belop", 290000));
+        "belop", belop));
     var sivilstandInnhold = mapper.valueToTree(Map.of(
-        "rolle", "BM",
-        "datoFom", "2017-01-01",
-        "datoTil", "2020-01-01",
+        "datoFom", datoFom,
+        "datoTil", datoTom,
+        "rolle", "BIDRAGSMOTTAKER",
         "sivilstandKode", "GIFT"));
 
     var beregnDatoFra = LocalDate.parse("2017-01-01");

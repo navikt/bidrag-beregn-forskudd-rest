@@ -15,10 +15,10 @@
       "referanse": "Mottatt_Bostatus_20201201",
       "type": "BOSTATUS",
       "innhold": {
-        "rolle": "SOKNADSBARN",
         "datoFom": "2020-12-01",
         "datoTil": "2021-01-01",
-        "bostatusKode": "MED_FORELDRE"
+        "rolle": "SOKNADSBARN",
+        "bostatusKode": "BOR_MED_FORELDRE"
       }
     },
     {

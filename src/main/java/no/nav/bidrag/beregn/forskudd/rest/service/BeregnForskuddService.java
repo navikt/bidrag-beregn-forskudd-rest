@@ -1,7 +1,5 @@
 package no.nav.bidrag.beregn.forskudd.rest.service;
 
-import static java.util.stream.Collectors.toList;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import no.nav.bidrag.beregn.felles.dto.AvvikCore;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore;
-import no.nav.bidrag.beregn.forskudd.rest.consumer.BidragGcpProxyConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatGrunnlag;
@@ -44,32 +41,47 @@ public class BeregnForskuddService {
 
     // Henter sjabloner
     var sjablonSjablontallResponse = sjablonService.hentSjablonSjablontall();
-    LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallResponse.getResponseEntity().getBody().size());
+    if (LOGGER.isDebugEnabled() && sjablonSjablontallResponse.getResponseEntity().getBody() != null) {
+      LOGGER.debug("Antall sjabloner hentet av type Sjablontall: {}", sjablonSjablontallResponse.getResponseEntity().getBody().size());
+    }
 
     // Lager input-grunnlag til core-modulen
     var grunnlagTilCore = CoreMapper.mapGrunnlagTilCore(grunnlag, sjablonSjablontallResponse.getResponseEntity().getBody());
 
-    // Kaller core-modulen for beregning av forskudd
-    LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
-    var resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
+    BeregnetForskuddResultatCore resultatFraCore;
 
-    if (!resultatFraCore.getAvvikListe().isEmpty()) {
-      LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: " + System.lineSeparator()
-          + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining(System.lineSeparator())));
-      LOGGER.info("Forskudd - grunnlag for beregning: " + System.lineSeparator()
-          + "beregnDatoFra= " + grunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
-          + "beregnDatoTil= " + grunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
-          + "soknadBarn= " + grunnlagTilCore.getSoknadBarn() + System.lineSeparator()
-          + "barnIHusstandenPeriodeListe= " + grunnlagTilCore.getBarnIHusstandenPeriodeListe() + System.lineSeparator()
-          + "inntektPeriodeListe= " + grunnlagTilCore.getInntektPeriodeListe() + System.lineSeparator()
-          + "sivilstandPeriodeListe= " + grunnlagTilCore.getSivilstandPeriodeListe() + System.lineSeparator());
-      throw new UgyldigInputException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: "
-          + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
+    // Kaller core-modulen for beregning av forskudd
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
     }
 
-    LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getBeregnetForskuddPeriodeListe());
+    try {
+      resultatFraCore = forskuddCore.beregnForskudd(grunnlagTilCore);
+
+      if (!resultatFraCore.getAvvikListe().isEmpty()) {
+        LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: " + System.lineSeparator()
+            + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining(System.lineSeparator())));
+        LOGGER.info("Forskudd - grunnlag for beregning: " + System.lineSeparator()
+            + "beregnDatoFra= " + grunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
+            + "beregnDatoTil= " + grunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
+            + "soknadBarn= " + grunnlagTilCore.getSoknadBarn() + System.lineSeparator()
+            + "barnIHusstandenPeriodeListe= " + grunnlagTilCore.getBarnIHusstandenPeriodeListe() + System.lineSeparator()
+            + "inntektPeriodeListe= " + grunnlagTilCore.getInntektPeriodeListe() + System.lineSeparator()
+            + "sivilstandPeriodeListe= " + grunnlagTilCore.getSivilstandPeriodeListe() + System.lineSeparator());
+        throw new UgyldigInputException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: "
+            + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
+      }
+
+    } catch (Exception e) {
+      throw new UgyldigInputException("Ugyldig input ved beregning av forskudd: " + e.getMessage());
+    }
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getBeregnetForskuddPeriodeListe());
+    }
+
     var grunnlagReferanseListe = lagGrunnlagReferanseListe(grunnlag, resultatFraCore);
-    return HttpResponse.from(HttpStatus.OK, new BeregnetForskuddResultat(resultatFraCore, grunnlagReferanseListe));
+    return HttpResponse.Companion.from(HttpStatus.OK, new BeregnetForskuddResultat(resultatFraCore, grunnlagReferanseListe));
   }
 
   // Lager en liste over resultatgrunnlag som inneholder:
@@ -83,13 +95,13 @@ public class BeregnForskuddService {
         .map(ResultatPeriodeCore::getGrunnlagReferanseListe)
         .flatMap(Collection::stream)
         .distinct()
-        .collect(toList());
+        .toList();
 
     // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
     resultatGrunnlagListe.addAll(forskuddGrunnlag.getGrunnlagListe().stream()
         .filter(grunnlag -> grunnlagReferanseListe.contains(grunnlag.getReferanse()))
         .map(grunnlag -> new ResultatGrunnlag(grunnlag.getReferanse(), grunnlag.getType(), grunnlag.getInnhold()))
-        .collect(toList()));
+        .toList());
 
     // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
     resultatGrunnlagListe.addAll(resultatFraCore.getSjablonListe().stream()
@@ -102,7 +114,7 @@ public class BeregnForskuddService {
               return new ResultatGrunnlag(sjablon.getReferanse(), "Sjablon", mapper.valueToTree(map));
             }
         )
-        .collect(toList()));
+        .toList());
 
     return resultatGrunnlagListe;
   }

@@ -8,7 +8,7 @@
       "innhold": {
         "datoFom": "2020-12-01",
         "datoTil": "2021-01-01",
-        "antall": 3.0
+        "antall": 1.0
       }
     },
     {
@@ -18,7 +18,7 @@
         "datoFom": "2020-12-01",
         "datoTil": "2021-01-01",
         "rolle": "SOKNADSBARN",
-        "bostatusKode": "BOR_MED_FORELDRE"
+        "bostatusKode": "BOR_MED_BESTEMOR"
       }
     },
     {
@@ -29,7 +29,7 @@
         "datoTil": "2021-01-01",
         "rolle": "BIDRAGSMOTTAKER",
         "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-        "belop": 460000
+        "belop": 290000
       }
     },
     {
@@ -39,7 +39,8 @@
         "datoFom": "2020-12-01",
         "datoTil": "2021-01-01",
         "rolle": "BIDRAGSMOTTAKER",
-        "sivilstandKode": "GIFT"
+        "sivilstandKode": "GIFT",
+        "beskrivelse": "gift"
       }
     },
     {

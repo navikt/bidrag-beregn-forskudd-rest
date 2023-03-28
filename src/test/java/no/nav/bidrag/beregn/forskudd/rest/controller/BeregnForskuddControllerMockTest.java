@@ -8,7 +8,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.time.LocalDate;
-import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddOverridesConfig;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
@@ -20,8 +19,6 @@ import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -52,7 +49,7 @@ class BeregnForskuddControllerMockTest {
   void skalReturnereForskuddResultat() {
 
     when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class)))
-        .thenReturn(HttpResponse.from(OK, TestUtil.dummyForskuddResultat()));
+        .thenReturn(HttpResponse.Companion.from(OK, TestUtil.dummyForskuddResultat()));
 
     var url = "http://localhost:" + port + "/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag());
@@ -63,7 +60,7 @@ class BeregnForskuddControllerMockTest {
         () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
         () -> assertThat(forskuddResultat).isNotNull(),
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe()).isNotNull(),
-        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe()).hasSize(1),
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoFom())
             .isEqualTo(LocalDate.parse("2017-01-01")),
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getPeriode().getDatoTil())
@@ -80,7 +77,7 @@ class BeregnForskuddControllerMockTest {
   @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
   void skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
 
-    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class))).thenReturn(HttpResponse.from(INTERNAL_SERVER_ERROR, null));
+    when(beregnForskuddServiceMock.beregn(any(BeregnForskuddGrunnlag.class))).thenReturn(HttpResponse.Companion.from(INTERNAL_SERVER_ERROR, null));
 
     var url = "http://localhost:" + port + "/beregn/forskudd";
     var request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag());
