@@ -111,7 +111,7 @@ public class BeregnForskuddService {
               map.put("datoTil", mapDato(sjablon.getPeriode().getDatoTil()));
               map.put("sjablonNavn", sjablon.getNavn());
               map.put("sjablonVerdi", sjablon.getVerdi().intValue());
-              return new ResultatGrunnlag(sjablon.getReferanse(), "Sjablon", mapper.valueToTree(map));
+              return new ResultatGrunnlag(sjablon.getReferanse(), "SJABLON", mapper.valueToTree(map));
             }
         )
         .toList());
