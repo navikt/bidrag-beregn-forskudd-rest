@@ -74,7 +74,7 @@ jobs:
 
     env:
       INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
-      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.dev.intern.nav.no
+      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
