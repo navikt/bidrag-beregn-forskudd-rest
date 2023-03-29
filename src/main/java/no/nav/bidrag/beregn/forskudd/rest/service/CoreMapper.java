@@ -10,6 +10,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
@@ -59,8 +60,12 @@ public class CoreMapper {
       }
     }
 
+    var antallSoknadsbarn = beregnForskuddGrunnlag.getGrunnlagListe().stream()
+        .filter(grunnlag -> Objects.equals(grunnlag.getType(), SOKNADSBARN_TYPE))
+        .count();
+
     // Validerer at alle nødvendige grunnlag er med
-    validerGrunnlag(soknadbarnCore != null, !bostatusPeriodeCoreListe.isEmpty(), !inntektPeriodeCoreListe.isEmpty(),
+    validerGrunnlag(antallSoknadsbarn > 1, soknadbarnCore != null, !bostatusPeriodeCoreListe.isEmpty(), !inntektPeriodeCoreListe.isEmpty(),
         !sivilstandPeriodeCoreListe.isEmpty());
 
     var sjablonPeriodeCoreListe = mapSjablonVerdier(beregnForskuddGrunnlag.getBeregnDatoFra(), beregnForskuddGrunnlag.getBeregnDatoTil(),
@@ -70,8 +75,11 @@ public class CoreMapper {
         bostatusPeriodeCoreListe, inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnIHusstandenPeriodeCoreListe, sjablonPeriodeCoreListe);
   }
 
-  private static void validerGrunnlag(boolean soknadbarnGrunnlag, boolean bostatusGrunnlag, boolean inntektGrunnlag, boolean sivilstandGrunnlag) {
-    if (!soknadbarnGrunnlag) {
+  private static void validerGrunnlag(boolean merEnnEttSoknadsbarn, boolean soknadbarnGrunnlag, boolean bostatusGrunnlag, boolean inntektGrunnlag,
+      boolean sivilstandGrunnlag) {
+    if (merEnnEttSoknadsbarn) {
+      throw new UgyldigInputException("Det er kun tillatt med en forekomst av SOKNADSBARN_INFO i input");
+    } else if (!soknadbarnGrunnlag) {
       throw new UgyldigInputException("Grunnlagstype SOKNADSBARN_INFO mangler i input");
     } else if (!bostatusGrunnlag) {
       throw new UgyldigInputException("Grunnlagstype BOSTATUS mangler i input");
