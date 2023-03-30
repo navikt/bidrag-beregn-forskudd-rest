@@ -2,15 +2,15 @@ package no.nav.bidrag.beregn.forskudd.rest.service;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore;
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore;
@@ -49,6 +49,7 @@ public class CoreMapper {
     var sivilstandPeriodeCoreListe = new ArrayList<SivilstandPeriodeCore>();
     var barnIHusstandenPeriodeCoreListe = new ArrayList<BarnIHusstandenPeriodeCore>();
 
+    // Mapper grunnlagstyper til input for core
     for (Grunnlag grunnlag : beregnForskuddGrunnlag.getGrunnlagListe()) {
       switch (grunnlag.getType()) {
         case SOKNADSBARN_TYPE -> soknadbarnCore = mapSoknadsbarn(grunnlag);
@@ -59,7 +60,13 @@ public class CoreMapper {
       }
     }
 
-//    var soknadBarnCore = new SoknadBarnCore(soknadBarnReferanse, soknadBarnFodselsdato);
+    var antallSoknadsbarn = beregnForskuddGrunnlag.getGrunnlagListe().stream()
+        .filter(grunnlag -> Objects.equals(grunnlag.getType(), SOKNADSBARN_TYPE))
+        .count();
+
+    // Validerer at alle nødvendige grunnlag er med
+    validerGrunnlag(antallSoknadsbarn > 1, soknadbarnCore != null, !bostatusPeriodeCoreListe.isEmpty(), !inntektPeriodeCoreListe.isEmpty(),
+        !sivilstandPeriodeCoreListe.isEmpty());
 
     var sjablonPeriodeCoreListe = mapSjablonVerdier(beregnForskuddGrunnlag.getBeregnDatoFra(), beregnForskuddGrunnlag.getBeregnDatoTil(),
         sjablontallListe, sjablontallMap);
@@ -68,53 +75,79 @@ public class CoreMapper {
         bostatusPeriodeCoreListe, inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnIHusstandenPeriodeCoreListe, sjablonPeriodeCoreListe);
   }
 
+  private static void validerGrunnlag(boolean merEnnEttSoknadsbarn, boolean soknadbarnGrunnlag, boolean bostatusGrunnlag, boolean inntektGrunnlag,
+      boolean sivilstandGrunnlag) {
+    if (merEnnEttSoknadsbarn) {
+      throw new UgyldigInputException("Det er kun tillatt med en forekomst av SOKNADSBARN_INFO i input");
+    } else if (!soknadbarnGrunnlag) {
+      throw new UgyldigInputException("Grunnlagstype SOKNADSBARN_INFO mangler i input");
+    } else if (!bostatusGrunnlag) {
+      throw new UgyldigInputException("Grunnlagstype BOSTATUS mangler i input");
+    } else if (!inntektGrunnlag) {
+      throw new UgyldigInputException("Grunnlagstype INNTEKT mangler i input");
+    } else if (!sivilstandGrunnlag) {
+      throw new UgyldigInputException("Grunnlagstype SIVILSTAND mangler i input");
+    }
+  }
+
   private static SoknadBarnCore mapSoknadsbarn(Grunnlag grunnlag) {
-    var fodselsdato = Optional.of(grunnlag.getInnhold().get("fodselsdato"))
-        .orElseThrow(() -> new UgyldigInputException("fødselsdato mangler i objekt av type SOKNADSBARN_INFO")).asText();
-    return new SoknadBarnCore(grunnlag.getReferanse(), LocalDate.parse(fodselsdato));
+    var fodselsdato = grunnlag.getInnhold().get("fodselsdato") != null ? grunnlag.getInnhold().get("fodselsdato").asText() : null;
+    if (fodselsdato == null) {
+      throw new UgyldigInputException("fødselsdato mangler i objekt av type " + SOKNADSBARN_TYPE);
+    }
+    return new SoknadBarnCore(grunnlag.getReferanse(), formaterDato(fodselsdato, "fodselsdato", SOKNADSBARN_TYPE));
   }
 
   private static BostatusPeriodeCore mapBostatus(Grunnlag grunnlag) {
-    var bostatusKode = Optional.of(grunnlag.getInnhold().get("bostatusKode"))
-        .orElseThrow(() -> new UgyldigInputException("bostatusKode mangler i objekt av type Bostatus")).asText();
+    var bostatusKode = grunnlag.getInnhold().get("bostatusKode") != null ? grunnlag.getInnhold().get("bostatusKode").asText() : null;
+    if (bostatusKode == null) {
+      throw new UgyldigInputException("bostatusKode mangler i objekt av type " + BOSTATUS_TYPE);
+    }
     return new BostatusPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), bostatusKode);
   }
 
   private static InntektPeriodeCore mapInntekt(Grunnlag grunnlag) {
-    var inntektType = Optional.of(grunnlag.getInnhold().get("inntektType"))
-        .orElseThrow(() -> new UgyldigInputException("inntektType mangler i objekt av type Inntekt")).asText();
-    var belop = Optional.of(grunnlag.getInnhold().get("belop"))
-        .orElseThrow(() -> new UgyldigInputException("belop mangler i objekt av type Inntekt")).asText();
-    return new InntektPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), inntektType, new BigDecimal(belop));
+    var inntektType = grunnlag.getInnhold().get("inntektType") != null ? grunnlag.getInnhold().get("inntektType").asText() : null;
+    if (inntektType == null) {
+      throw new UgyldigInputException("inntektType mangler i objekt av type " + INNTEKT_TYPE);
+    }
+    var belop = grunnlag.getInnhold().get("belop") != null ? grunnlag.getInnhold().get("belop").asText() : null;
+    if (belop == null) {
+      throw new UgyldigInputException("belop mangler i objekt av type " + INNTEKT_TYPE);
+    }
+    return new InntektPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), inntektType,
+        formaterBelop(belop, INNTEKT_TYPE));
   }
 
   private static SivilstandPeriodeCore mapSivilstand(Grunnlag grunnlag) {
-    var sivilstandKode = Optional.of(grunnlag.getInnhold().get("sivilstandKode"))
-        .orElseThrow(() -> new UgyldigInputException("sivilstandKode mangler i objekt av type Sivilstand")).asText();
+    var sivilstandKode = grunnlag.getInnhold().get("sivilstandKode") != null ? grunnlag.getInnhold().get("sivilstandKode").asText() : null;
+    if (sivilstandKode == null) {
+      throw new UgyldigInputException("sivilstandKode mangler i objekt av type " + SIVILSTAND_TYPE);
+    }
     return new SivilstandPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), sivilstandKode);
   }
 
   private static BarnIHusstandenPeriodeCore mapBarnIHusstanden(Grunnlag grunnlag) {
-    var antall = Optional.of(grunnlag.getInnhold().get("antall"))
-        .orElseThrow(() -> new UgyldigInputException("antall mangler i objekt av type BarnIHusstanden")).asText();
-    return new BarnIHusstandenPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()), Double.parseDouble(antall));
+    var antall = grunnlag.getInnhold().get("antall") != null ? grunnlag.getInnhold().get("antall").asText() : null;
+    if (antall == null) {
+      throw new UgyldigInputException("antall mangler i objekt av type " + BARN_I_HUSSTAND_TYPE);
+    }
+    return new BarnIHusstandenPeriodeCore(grunnlag.getReferanse(), mapPeriode(grunnlag.getInnhold(), grunnlag.getType()),
+        formaterAntall(antall, BARN_I_HUSSTAND_TYPE));
   }
 
   private static PeriodeCore mapPeriode(JsonNode grunnlagInnhold, String grunnlagType) {
-    var datoFom = Optional.of(grunnlagInnhold.get("datoFom"))
-        .orElseThrow(() -> new UgyldigInputException("datoFom mangler i objekt av type " + grunnlagType)).asText();
-    var datoTil = Optional.of(grunnlagInnhold.get("datoTil")).orElse(null).asText();
-    datoTil = (datoTil.equals("null") ? null : datoTil) ;
-    if (datoTil == null) {
-      return new PeriodeCore(LocalDate.parse(datoFom),null);
+    var datoFom = grunnlagInnhold.get("datoFom") != null ? grunnlagInnhold.get("datoFom").asText() : null;
+    if (datoFom == null) {
+      throw new UgyldigInputException("datoFom mangler i objekt av type " + grunnlagType);
     }
-    else {
-      return new PeriodeCore(LocalDate.parse(datoFom), LocalDate.parse(datoTil));
-    }
+    var datoTil = grunnlagInnhold.get("datoTil") != null ? grunnlagInnhold.get("datoTil").asText() : null;
+    return new PeriodeCore(formaterDato(datoFom, "datoFom", grunnlagType), formaterDato(datoTil, "datoTil", grunnlagType));
   }
 
   // Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
-  private static List<SjablonPeriodeCore> mapSjablonVerdier(LocalDate beregnDatoFra, LocalDate beregnDatoTil, List<Sjablontall> sjablonSjablontallListe,
+  private static List<SjablonPeriodeCore> mapSjablonVerdier(LocalDate beregnDatoFra, LocalDate beregnDatoTil,
+      List<Sjablontall> sjablonSjablontallListe,
       HashMap<String, SjablonTallNavn> sjablontallMap) {
     return sjablonSjablontallListe
         .stream()
@@ -125,11 +158,44 @@ public class CoreMapper {
             sjablontallMap.getOrDefault(sjablon.getTypeSjablon(), SjablonTallNavn.DUMMY).getNavn(),
             emptyList(),
             singletonList(new SjablonInnholdCore(SjablonInnholdNavn.SJABLON_VERDI.getNavn(), sjablon.getVerdi()))))
-        .collect(toList());
+        .toList();
   }
 
   // Sjekker om en type SjablonTall er i bruk for forskudd
   private static boolean filtrerSjablonTall(SjablonTallNavn sjablonTallNavn) {
     return sjablonTallNavn.getForskudd();
+  }
+
+  private static LocalDate formaterDato(String dato, String datoType, String grunnlagType) {
+    if ((dato == null) || (dato.equals("null"))) {
+      return null;
+    }
+    try {
+      return LocalDate.parse(dato);
+    } catch (DateTimeParseException e) {
+      throw new UgyldigInputException("Dato " + dato + " av type " + datoType + " i objekt av type " + grunnlagType + " har feil format");
+    }
+  }
+
+  private static BigDecimal formaterBelop(String belop, String grunnlagType) {
+    if ((belop == null) || (belop.equals("null"))) {
+      return null;
+    }
+    try {
+      return new BigDecimal(belop);
+    } catch (NumberFormatException e) {
+      throw new UgyldigInputException("belop " + belop + " i objekt av type " + grunnlagType + " har feil format");
+    }
+  }
+
+  private static Double formaterAntall(String antall, String grunnlagType) {
+    if ((antall == null) || (antall.equals("null"))) {
+      return null;
+    }
+    try {
+      return Double.parseDouble(antall);
+    } catch (NumberFormatException e) {
+      throw new UgyldigInputException("antall " + antall + " i objekt av type " + grunnlagType + " har feil format");
+    }
   }
 }

@@ -3,7 +3,7 @@
   "beregnDatoTil": "2021-01-01",
   "grunnlagListe": [
     {
-      "referanse": "Mottatt_BarnIHusstand_20150201",
+      "referanse": "Mottatt_BarnIHusstand_20201201",
       "type": "BARN_I_HUSSTAND",
       "innhold": {
         "datoFom": "2020-12-01",
@@ -18,7 +18,7 @@
         "rolle": "SOKNADSBARN",
         "datoFom": "2020-12-01",
         "datoTil": "2021-01-01",
-        "bostatusKode": "MED_FORELDRE"
+        "bostatusKode": "BOR_MED_FORELDRE"
       }
     },
     {

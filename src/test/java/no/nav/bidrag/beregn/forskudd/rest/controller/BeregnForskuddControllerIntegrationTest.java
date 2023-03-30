@@ -7,8 +7,8 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest;
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddOverridesConfig;
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest;
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate;
@@ -25,14 +25,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = BidragBeregnForskuddTest.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 @Import(BidragBeregnForskuddOverridesConfig.class)
 @AutoConfigureWireMock(port = 8096)
 @EnableMockOAuth2Server
-public class BeregnForskuddControllerIntegrationTest {
+class BeregnForskuddControllerIntegrationTest {
 
   @Autowired
   private HttpHeaderTestRestTemplate httpHeaderTestRestTemplate;
@@ -155,9 +155,9 @@ public class BeregnForskuddControllerIntegrationTest {
     // Forhøyet forskudd ved 11 år: SB alder > 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus gift
     filnavn = "src/test/resources/testfiler/forskudd_eksempel1.json";
 
-    forventetForskuddBelop = 2090;
+    forventetForskuddBelop = 2080;
     forventetForskuddResultatkode = "FORHOYET_FORSKUDD_11_AAR_125_PROSENT";
-    forventetForskuddRegel = "REGEL 7";
+    forventetForskuddRegel = "REGEL 5";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -170,7 +170,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 13";
+    forventetForskuddRegel = "REGEL 11";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -183,7 +183,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 14";
+    forventetForskuddRegel = "REGEL 12";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -196,7 +196,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 15";
+    forventetForskuddRegel = "REGEL 13";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -209,7 +209,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 14";
+    forventetForskuddRegel = "REGEL 12";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -222,7 +222,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 9";
+    forventetForskuddRegel = "REGEL 7";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -235,7 +235,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 15";
+    forventetForskuddRegel = "REGEL 13";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -248,7 +248,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 11";
+    forventetForskuddRegel = "REGEL 9";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -261,7 +261,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 14";
+    forventetForskuddRegel = "REGEL 12";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -274,7 +274,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 0;
     forventetForskuddResultatkode = "AVSLAG";
-    forventetForskuddRegel = "REGEL 6";
+    forventetForskuddRegel = "REGEL 4";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -287,7 +287,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 0;
     forventetForskuddResultatkode = "AVSLAG";
-    forventetForskuddRegel = "REGEL 6";
+    forventetForskuddRegel = "REGEL 4";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -300,7 +300,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1670;
     forventetForskuddResultatkode = "FORHOYET_FORSKUDD_100_PROSENT";
-    forventetForskuddRegel = "REGEL 8";
+    forventetForskuddRegel = "REGEL 6";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -313,7 +313,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 9";
+    forventetForskuddRegel = "REGEL 7";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -326,7 +326,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 14";
+    forventetForskuddRegel = "REGEL 12";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -339,7 +339,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 9";
+    forventetForskuddRegel = "REGEL 7";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -352,7 +352,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 9";
+    forventetForskuddRegel = "REGEL 7";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -365,7 +365,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 14";
+    forventetForskuddRegel = "REGEL 12";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -378,7 +378,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 11";
+    forventetForskuddRegel = "REGEL 9";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -391,7 +391,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 1250;
     forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 15";
+    forventetForskuddRegel = "REGEL 13";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -404,7 +404,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 16";
+    forventetForskuddRegel = "REGEL 14";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -417,7 +417,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 0;
     forventetForskuddResultatkode = "AVSLAG";
-    forventetForskuddRegel = "REGEL 6";
+    forventetForskuddRegel = "REGEL 4";
 
     utfoerBeregningerOgEvaluerResultat();
   }
@@ -430,30 +430,31 @@ public class BeregnForskuddControllerIntegrationTest {
 
     forventetForskuddBelop = 830;
     forventetForskuddResultatkode = "REDUSERT_FORSKUDD_50_PROSENT";
-    forventetForskuddRegel = "REGEL 16";
+    forventetForskuddRegel = "REGEL 14";
 
     utfoerBeregningerOgEvaluerResultat();
   }
 
   @Test
-  @DisplayName("skal kalle core og returnere et resultat - eksempel 24")
-  void skalKalleCoreOgReturnereEtResultat_Eksempel24() {
-    // Testen er basert på output fra vedtaksoverføring
-    // Ordinært forskudd: SB alder < 11 år; BM inntekt 359366; BM antall barn egen husstand 2; BM sivilstatus enslig
-    filnavn = "src/test/resources/testfiler/forskudd_eksempel24.json";
+  @DisplayName("skal feile med exception ved kall til core - eksempel 1")
+  void skalFeileMedExceptionVedKallTilCore_Eksempel01() {
+    filnavn = "src/test/resources/testfiler/forskudd_eksempel1_med_feil_verdi_i_enum.json";
+    var request = lesFilOgByggRequest(filnavn);
 
-    forventetForskuddBelop = 1250;
-    forventetForskuddResultatkode = "ORDINAERT_FORSKUDD_75_PROSENT";
-    forventetForskuddRegel = "REGEL 11";
-
-    utfoerBeregningerOgEvaluerResultat();
+    // Kall rest-API for forskudd
+    var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat.class);
+    assertAll(
+        () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST),
+        () -> assertThat(responseEntity.getHeaders().get("Error").stream().anyMatch(s -> s.contains("UgyldigInputException"))).isTrue(),
+        () -> assertThat(responseEntity.getHeaders().get("Error").stream().anyMatch(s -> s.contains("BOR_MED_BESTEMOR"))).isTrue()
+    );
   }
 
 
   private void utfoerBeregningerOgEvaluerResultat() {
     var request = lesFilOgByggRequest(filnavn);
 
-    // Kall rest-API for barnebidrag
+    // Kall rest-API for forskudd
     var responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat.class);
     var forskuddResultat = responseEntity.getBody();
 
@@ -463,7 +464,7 @@ public class BeregnForskuddControllerIntegrationTest {
 
         // Sjekk resultat av beregningnen
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe()).isNotNull(),
-        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().size()).isEqualTo(1),
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe()).hasSize(1),
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getResultat()).isNotNull(),
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getBelop().intValue())
             .isEqualTo(forventetForskuddBelop),
@@ -472,11 +473,11 @@ public class BeregnForskuddControllerIntegrationTest {
         () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getResultat().getRegel())
             .isEqualTo(forventetForskuddRegel),
 
-        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().size())
-            .isEqualTo(forskuddResultat.getGrunnlagListe().size()),
+        () -> assertThat(forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe()).hasSameSizeAs(
+            forskuddResultat.getGrunnlagListe()),
         () -> assertThat((int) forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().stream()
             .filter(grunnlagReferanse -> grunnlagReferanse.startsWith("Mottatt")).count())
-            .isEqualTo(request.getBody().split("Mottatt", -1).length  - 1),
+            .isEqualTo(request.getBody().split("Mottatt", -1).length - 1),
         () -> assertThat((int) forskuddResultat.getBeregnetForskuddPeriodeListe().get(0).getGrunnlagReferanseListe().stream()
             .filter(grunnlagReferanse -> grunnlagReferanse.startsWith("Sjablon")).count())
             .isEqualTo(7)

@@ -1,7 +1,6 @@
 name: bidrag-beregn-forskudd-rest
 ingresses:
   - https://bidrag-beregn-forskudd-rest.intern.dev.nav.no/
-  - https://bidrag-beregn-forskudd-rest.dev.intern.nav.no/
 azure:
   bidraggcpproxy_url: bidrag-gcp-proxy.dev-fss-pub.nais.io
   bidraggcpproxy_scope: dev-fss.bidrag.bidrag-gcp-proxy
