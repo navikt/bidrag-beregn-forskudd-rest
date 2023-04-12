@@ -42,7 +42,7 @@ spec:
   ingresses:
     {{#each ingresses as |url|}}
        - {{url}}
-      {{/each}}
+    {{/each}}
   env:
     - name: BIDRAGSJABLON_URL
       value: https://{{ unsecured.bidragsjablon_url }}

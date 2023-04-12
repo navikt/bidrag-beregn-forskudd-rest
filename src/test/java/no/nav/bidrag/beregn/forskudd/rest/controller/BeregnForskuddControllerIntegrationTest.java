@@ -49,72 +49,78 @@ class BeregnForskuddControllerIntegrationTest {
 
   /*
   Beskrivelse av regler
+
   REGEL 1
   Betingelse 1	Søknadsbarn alder er høyere enn eller lik 18 år
   Resultatkode	AVSLAG
+
   REGEL 2
   Betingelse 1	Søknadsbarn alder er høyere enn eller lik 11 år
-  Betingelse 2	Søknadsbarn bostedsstatus er ENSLIG_ASYLANT
-  Resultatkode	FORSKUDD_ENSLIG_ASYLANT_11_AAR_250_PROSENT
+  Betingelse 2	Søknadsbarn bostedsstatus er BOR_IKKE_MED_FORELDRE
+  Resultatkode	FORHOYET_FORSKUDD_11_AAR_125_PROSENT
+
   REGEL 3
   Betingelse 1	Søknadsbarn alder er lavere enn 11 år
-  Betingelse 2	Søknadsbarn bostedsstatus er ENSLIG_ASYLANT
-  Resultatkode	FORSKUDD_ENSLIG_ASYLANT_200_PROSENT
-  REGEL 4
-  Betingelse 1	Søknadsbarn alder er høyere enn eller lik 11 år
-  Betingelse 2	Søknadsbarn bostedsstatus er ALENE eller MED_ANDRE_ENN_FORELDRE
-  Resultatkode	FORHOYET_FORSKUDD_11_AAR_125_PROSENT
-  REGEL 5
-  Betingelse 1	Søknadsbarn alder er lavere enn 11 år
-  Betingelse 2	Søknadsbarn bostedsstatus er ALENE eller MED_ANDRE_ENN_FORELDRE
+  Betingelse 2	Søknadsbarn bostedsstatus er BOR_IKKE_MED_FORELDRE
   Resultatkode	FORHOYET_FORSKUDD_100_PROSENT
-  REGEL 6
+
+  REGEL 4
   Betingelse 1	Bidragsmottakers inntekt er høyere enn 0005 x 0013
   Resultatkode	AVSLAG
-  REGEL 7
+
+  REGEL 5
   Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0033
   Betingelse 2	Søknadsbarn alder er høyere enn eller lik 11 år
   Resultatkode	FORHOYET_FORSKUDD_11_AAR_125_PROSENT
-  REGEL 8
+
+  REGEL 6
   Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0033
   Betingelse 2	Søknadsbarn alder er lavere enn 11 år
   Resultatkode	FORHOYET_FORSKUDD_100_PROSENT
-  REGEL 9
+
+  REGEL 7
   Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0034
   Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
   Betingelse 3	Antall barn i husstand er 1
   Resultatkode	ORDINAERT_FORSKUDD_75_PROSENT
-  REGEL 10
+
+  REGEL 8
   Betingelse 1	Bidragsmottakers inntekt er høyere enn 0034
   Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
   Betingelse 3	Antall barn i husstand er 1
   Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
-  REGEL 11
+
+  REGEL 9
   Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0034 + (0036 x antall barn utover ett)
   Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
   Betingelse 3	Antall barn i husstand er mer enn 1
   Resultatkode	ORDINAERT_FORSKUDD_75_PROSENT
-  REGEL 12
+
+  REGEL 10
   Betingelse 1	Bidragsmottakers inntekt er høyere enn 0034 + (0036 x antall barn utover ett)
   Betingelse 2	Bidragsmottakers sivilstand er ENSLIG
   Betingelse 3	Antall barn i husstand er mer enn 1
   Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
-  REGEL 13
+
+  REGEL 11
   Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0035
   Betingelse 2	Bidragsmottakers sivilstand er GIFT
   Betingelse 3	Antall barn i husstand er 1
   Resultatkode	ORDINAERT_FORSKUDD_75_PROSENT
-  REGEL 14
+
+  REGEL 12
   Betingelse 1	Bidragsmottakers inntekt er høyere enn 0035
   Betingelse 2	Bidragsmottakers sivilstand er GIFT
   Betingelse 3	Antall barn i husstand er 1
   Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
-  REGEL 15
+
+  REGEL 13
   Betingelse 1	Bidragsmottakers inntekt er lavere enn eller lik 0035 + (0036 x antall barn utover ett)
   Betingelse 2	Bidragsmottakers sivilstand er GIFT
   Betingelse 3	Antall barn i husstand er mer enn 1
   Resultatkode	ORDINAERT_FORSKUDD_75_PROSENT
-  REGEL 16
+
+  REGEL 14
   Betingelse 1	Bidragsmottakers inntekt er høyere enn 0035 + (0036 x antall barn utover ett)
   Betingelse 2	Bidragsmottakers sivilstand er GIFT
   Betingelse 3	Antall barn i husstand er mer enn 1
