@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore;
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore;
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil;
+import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer;
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException;
 import no.nav.bidrag.commons.web.HttpResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +29,7 @@ class BeregnForskuddServiceTest {
   private BeregnForskuddService beregnForskuddService;
 
   @Mock
-  private SjablonService sjablonService;
+  private SjablonConsumer sjablonConsumerMock;
   @Mock
   private ForskuddCore forskuddCoreMock;
 
@@ -36,7 +37,7 @@ class BeregnForskuddServiceTest {
   @DisplayName("Skal beregne forskudd")
   void skalBeregneForskudd() {
     var grunnlagTilCoreCaptor = ArgumentCaptor.forClass(BeregnForskuddGrunnlagCore.class);
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(grunnlagTilCoreCaptor.capture())).thenReturn(TestUtil.dummyForskuddResultatCore());
 
     var beregnForskuddResultat = beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag());
@@ -55,7 +56,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved feil retur fra Core")
   void skalKasteUgyldigInputExceptionVedFeilReturFraCore() {
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
     when(forskuddCoreMock.beregnForskudd(any())).thenReturn(TestUtil.dummyForskuddResultatCoreMedAvvik());
 
     assertThatExceptionOfType(UgyldigInputException.class)
@@ -67,7 +68,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved ugyldig datoFom format")
   void skalKasteUgyldigInputExceptionVedUgyldigDatoFomFormat() {
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
 
     assertThatExceptionOfType(UgyldigInputException.class)
         .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag("2017-xx-01", "2020-01-01", "2006-12-01", "1.0", "290000")))
@@ -77,7 +78,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved ugyldig datoTom format")
   void skalKasteUgyldigInputExceptionVedUgyldigDatoTomFormat() {
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
 
     assertThatExceptionOfType(UgyldigInputException.class)
         .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag("2017-01-01", "2020-xx-01", "2006-12-01", "1.0", "290000")))
@@ -87,7 +88,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved ugyldig fodselsdato format")
   void skalKasteUgyldigInputExceptionVedUgyldigFodselsdatoFormat() {
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
 
     assertThatExceptionOfType(UgyldigInputException.class)
         .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag("2017-01-01", "2020-01-01", "2006-xx-01", "1.0", "290000")))
@@ -97,7 +98,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved ugyldig antall barn i husstand format")
   void skalKasteUgyldigInputExceptionVedUgyldigAntallBarnIHusstandFormat() {
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
 
     assertThatExceptionOfType(UgyldigInputException.class)
         .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag("2017-01-01", "2020-01-01", "2006-12-01", "1.x", "290000")))
@@ -107,7 +108,7 @@ class BeregnForskuddServiceTest {
   @Test
   @DisplayName("Skal kaste UgyldigInputException ved beløp inntekt format")
   void skalKasteUgyldigInputExceptionVedUgyldigBelopInntektFormat() {
-    when(sjablonService.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
+    when(sjablonConsumerMock.hentSjablonSjablontall()).thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummySjablonSjablontallListe()));
 
     assertThatExceptionOfType(UgyldigInputException.class)
         .isThrownBy(() -> beregnForskuddService.beregn(TestUtil.byggForskuddGrunnlag("2017-01-01", "2020-01-01", "2006-12-01", "1.0", "29x000")))
