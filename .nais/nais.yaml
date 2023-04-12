@@ -17,7 +17,7 @@ spec:
           namespace: bidrag
     outbound:
       external:
-        - host: {{ azure.bidraggcpproxy_url }}
+        - host: {{ unsecured.bidragsjablon_url }}
   image: {{ image }}
   liveness:
     path: /actuator/health
@@ -41,10 +41,10 @@ spec:
       memory: 512Mi
   ingresses:
     {{#each ingresses as |url|}}
-     - {{url}}
+       - {{url}}
     {{/each}}
   env:
-    - name: BIDRAGGCPPROXY_URL
-      value: https://{{ azure.bidraggcpproxy_url }}
-    - name: BIDRAGGCPPROXY_SCOPE
-      value: {{ azure.bidraggcpproxy_scope }}
+    - name: BIDRAGSJABLON_URL
+      value: https://{{ unsecured.bidragsjablon_url }}
+    - name: BIDRAGSJABLON_SCOPE
+      value: {{ unsecured.bidragsjablon_scope }}

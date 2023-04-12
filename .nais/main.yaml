@@ -2,7 +2,9 @@ name: bidrag-beregn-forskudd-rest
 ingresses:
   - https://bidrag-beregn-forskudd-rest.intern.dev.nav.no/
 azure:
-  bidraggcpproxy_url: bidrag-gcp-proxy.dev-fss-pub.nais.io
-  bidraggcpproxy_scope: dev-fss.bidrag.bidrag-gcp-proxy
   cucumber_cloud_app: bidrag-cucumber-cloud
   cucumber_cloud_cluster: dev-gcp
+unsecured:
+  bidragsjablon_url: bidrag-sjablon.dev-fss-pub.nais.io
+  bidragsjablon_scope: dev-fss.bidrag.bidrag-sjablon
+  

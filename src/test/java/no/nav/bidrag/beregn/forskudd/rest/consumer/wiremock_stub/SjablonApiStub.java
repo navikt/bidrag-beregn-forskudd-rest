@@ -17,7 +17,7 @@ public class SjablonApiStub {
   }
 
   private void settOppSjablonSjablontallStub() {
-    var url = "/sjablon/sjablontall?all=true";
+    var url = "/bidrag-sjablon/sjablontall/all";
 
     stubFor(
         get(urlEqualTo(url))

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag;
 import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat;
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService;
-import no.nav.security.token.support.core.api.ProtectedWithClaims;
+import no.nav.security.token.support.core.api.Protected;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/beregn")
-@ProtectedWithClaims(issuer = "aad")
+@Protected
 public class BeregnForskuddController {
 
   private final BeregnForskuddService beregnForskuddService;
