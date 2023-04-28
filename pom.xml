@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.5</version>
+    <version>3.0.6</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -17,19 +18,19 @@
 
   <properties>
     <!-- build -->
-    <build-helper-maven.version>3.2.0</build-helper-maven.version>
+    <build-helper-maven.version>3.3.0</build-helper-maven.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>0.7.40</bidrag-commons.version>
-    <bidrag-commons-test.version>0.2.2</bidrag-commons-test.version>
+    <bidrag-commons.version>20230427084654_4121ef0</bidrag-commons.version>
+    <bidrag-commons-test.version>1.20230217164307_1ec9d3f</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.7.0</bidrag-beregn-forskudd-core.version>
-    <springdoc-openapi-uio.version>1.7.0</springdoc-openapi-uio.version>
+    <springdoc-openapi-ui.version>2.1.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.0</wiremock-standalone.version>
-    <springframework-cloud.version>3.1.3</springframework-cloud.version>
-    <token-support.version>2.1.9</token-support.version>
+    <springframework-cloud.version>4.0.2</springframework-cloud.version>
+    <token-support.version>3.0.11</token-support.version>
     <com.squareup.okhttp3.version>4.9.2</com.squareup.okhttp3.version>
     <okhttp3.version>4.9.2</okhttp3.version>
 
@@ -37,6 +38,23 @@
     <java.version>17</java.version>
     <kotlin.version>1.8.10</kotlin.version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/navikt/bidrag-commons</url>
+    </repository>
+  </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>2.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -130,14 +148,8 @@
     <!-- swagger -->
     <dependency>
       <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
-      <version>${springdoc-openapi-uio.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-kotlin</artifactId>
-      <version>${springdoc-openapi-uio.version}</version>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc-openapi-ui.version}</version>
     </dependency>
 
     <!-- avhengigheter for lokal kjøring -->
@@ -160,6 +172,16 @@
       <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
       <version>${springframework-cloud.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-collections</groupId>
+          <artifactId>commons-collections</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
