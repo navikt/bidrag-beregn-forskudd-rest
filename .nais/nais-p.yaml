@@ -15,9 +15,6 @@ spec:
         - application: bidrag-ui
           namespace: bidrag
           cluster: dev-fss
-        - application: bidrag-cucumber-cloud
-          namespace: bidrag
-          cluster: dev-gcp
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io
