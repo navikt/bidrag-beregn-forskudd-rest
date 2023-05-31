@@ -5,9 +5,9 @@ azure_access_inbound:
   - application: bidrag-ui-feature
     namespace: bidrag
     cluster: dev-fss
-azure:
-  cucumber_cloud_app: bidrag-cucumber-cloud-feature
-  cucumber_cloud_cluster: dev-gcp
+  - application: bidrag-cucumber-cloud-feature
+    namespace: bidrag
+    cluster: dev-gcp
 unsecured:
   bidragsjablon_url: bidrag-sjablon.dev-fss-pub.nais.io
   bidragsjablon_scope: dev-fss.bidrag.bidrag-sjablon

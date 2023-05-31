@@ -10,6 +10,13 @@ spec:
     application:
       enabled: true
   accessPolicy:
+    inbound:
+      rules:
+      {{#each azure_access_inbound}}
+          - application: {{this.application}}
+            namespace: {{this.namespace}}
+            cluster: {{this.cluster}}
+      {{/each}}
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io
