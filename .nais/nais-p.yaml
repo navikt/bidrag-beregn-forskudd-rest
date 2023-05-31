@@ -12,11 +12,12 @@ spec:
   accessPolicy:
     inbound:
       rules:
-      {{#each azure_access_inbound}}
-          - application: {{this.application}}
-            namespace: {{this.namespace}}
-            cluster: {{this.cluster}}
-      {{/each}}
+        - application: bidrag-ui
+          namespace: bidrag
+          cluster: dev-fss
+        - application: bidrag-cucumber-cloud
+          namespace: bidrag
+          cluster: dev-gcp
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io
