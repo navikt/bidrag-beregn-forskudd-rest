@@ -10,6 +10,11 @@ spec:
     application:
       enabled: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: bidrag-ui
+          namespace: bidrag
+          cluster: dev-fss
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io

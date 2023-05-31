@@ -12,9 +12,11 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: {{ azure.cucumber_cloud_app }}
-          cluster: {{ azure.cucumber_cloud_cluster }}
-          namespace: bidrag
+      {{#each azure_access_inbound}}
+          - application: {{this.application}}
+            namespace: {{this.namespace}}
+            cluster: {{this.cluster}}
+      {{/each}}
     outbound:
       external:
         - host: {{ unsecured.bidragsjablon_url }}
