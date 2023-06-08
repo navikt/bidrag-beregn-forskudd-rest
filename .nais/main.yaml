@@ -5,6 +5,9 @@ azure_access_inbound:
   - application: bidrag-ui
     namespace: bidrag
     cluster: dev-fss
+  - application: bidrag-behandling
+    namespace: bidrag
+    cluster: dev-gcp
   - application: bidrag-cucumber-cloud
     namespace: bidrag
     cluster: dev-gcp
