@@ -1,5 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest.service;
 
+import static no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskudd.SECURE_LOGGER;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,8 +54,8 @@ public class BeregnForskuddService {
     BeregnetForskuddResultatCore resultatFraCore;
 
     // Kaller core-modulen for beregning av forskudd
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore);
     }
 
     try {
@@ -65,7 +67,9 @@ public class BeregnForskuddService {
     if (!resultatFraCore.getAvvikListe().isEmpty()) {
       LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: " + System.lineSeparator()
           + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining(System.lineSeparator())));
-      LOGGER.info("Forskudd - grunnlag for beregning: " + System.lineSeparator()
+      SECURE_LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: " + System.lineSeparator()
+          + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining(System.lineSeparator())));
+      SECURE_LOGGER.info("Forskudd - grunnlag for beregning: " + System.lineSeparator()
           + "beregnDatoFra= " + grunnlagTilCore.getBeregnDatoFra() + System.lineSeparator()
           + "beregnDatoTil= " + grunnlagTilCore.getBeregnDatoTil() + System.lineSeparator()
           + "soknadBarn= " + grunnlagTilCore.getSoknadBarn() + System.lineSeparator()
@@ -76,8 +80,8 @@ public class BeregnForskuddService {
           + resultatFraCore.getAvvikListe().stream().map(AvvikCore::getAvvikTekst).collect(Collectors.joining("; ")));
     }
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getBeregnetForskuddPeriodeListe());
+    if (SECURE_LOGGER.isDebugEnabled()) {
+      SECURE_LOGGER.debug("Forskudd - resultat av beregning: {}", resultatFraCore.getBeregnetForskuddPeriodeListe());
     }
 
     var grunnlagReferanseListe = lagGrunnlagReferanseListe(grunnlag, resultatFraCore);
