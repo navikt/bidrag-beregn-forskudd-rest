@@ -4,4 +4,6 @@ LABEL maintainer="Team Bidrag" \
 
 COPY ./target/bidrag-beregn-forskudd-rest-*.jar app.jar
 
+ENV SPRING_PROFILES_ACTIVE=nais
+
 EXPOSE 8080
