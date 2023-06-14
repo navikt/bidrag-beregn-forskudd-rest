@@ -14,7 +14,10 @@ spec:
       rules:
         - application: bidrag-ui
           namespace: bidrag
-          cluster: dev-fss
+          cluster: prod-fss
+        - application: bidrag-behandling
+          namespace: bidrag
+          cluster: prod-gcp
     outbound:
       external:
         - host: bidrag-sjablon.prod-fss-pub.nais.io
