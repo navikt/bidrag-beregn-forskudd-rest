@@ -11,6 +11,9 @@ azure_access_inbound:
   - application: bidrag-cucumber-cloud-feature
     namespace: bidrag
     cluster: dev-gcp
+  - application: bidrag-simuler-beregning-feature
+    namespace: bidrag
+    cluster: dev-gcp
 unsecured:
   bidragsjablon_url: bidrag-sjablon.dev-fss-pub.nais.io
   bidragsjablon_scope: dev-fss.bidrag.bidrag-sjablon
