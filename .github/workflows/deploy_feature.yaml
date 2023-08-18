@@ -1,9 +1,8 @@
-name: Deploy to dev
+name: Deploy feature
 on:
-  pull_request:
   push:
     branches:
-      - 'main'
+      - '**'
 
 env:
   GITHUB_USERNAME: x-access-token
@@ -57,31 +56,32 @@ jobs:
             ${{ runner.os }}-maven-
       - run: mvn -B -e --settings .m2/maven-settings.xml clean install
 
-  deploy-main:
+  deploy-feature:
     runs-on: ubuntu-latest
-    name: Deploy main
+    name: Deploy feature
     needs: build
+
     steps:
       - uses: actions/checkout@v3
         with:
           path: deploy
-      - name: Deploy main branch to dev-gcp
+      - name: Deploy to dev-gcp for feature.yaml
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: deploy/.nais/nais.yaml
-          VARS: deploy/.nais/main.yaml
+          VARS: deploy/.nais/feature.yaml
           IMAGE: ${{ needs.build.outputs.image }}
 
   run-cucumber-tests:
     runs-on: ubuntu-latest
     name: Run cucumber tests
-    needs: deploy-main
+    needs: deploy-feature
 
     env:
-      INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
-      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.intern.dev.nav.no
+      INGRESS_CUCUMBER: https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no
+      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest-feature.intern.dev.nav.no
 
     steps:
       - run: |
