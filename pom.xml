@@ -27,6 +27,7 @@
     <bidrag-commons-test.version>1.20230217164307_1ec9d3f</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
     <bidrag-beregn-forskudd-core.version>0.7.0</bidrag-beregn-forskudd-core.version>
+    <bidrag-transport.version>20230821134807_d0642b9</bidrag-transport.version>
     <springdoc-openapi-ui.version>2.1.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.0</wiremock-standalone.version>
     <springframework-cloud.version>4.0.2</springframework-cloud.version>
@@ -73,6 +74,12 @@
       <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-commons</artifactId>
       <version>${bidrag-commons.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-transport</artifactId>
+      <version>${bidrag-transport.version}</version>
     </dependency>
 
     <dependency>
