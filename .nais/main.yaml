@@ -1,6 +1,7 @@
 name: bidrag-beregn-forskudd-rest
 ingresses:
   - https://bidrag-beregn-forskudd-rest.intern.dev.nav.no/
+  - https://bidrag-beregn-forskudd-rest-feature.intern.dev.nav.no/
 azure_access_inbound:
   - application: bidrag-ui
     namespace: bidrag
@@ -12,6 +13,19 @@ azure_access_inbound:
     namespace: bidrag
     cluster: dev-gcp
   - application: bidrag-simuler-beregning
+    namespace: bidrag
+    cluster: dev-gcp
+
+  - application: bidrag-ui-feature
+    namespace: bidrag
+    cluster: dev-fss
+  - application: bidrag-behandling-feature
+    namespace: bidrag
+    cluster: dev-gcp
+  - application: bidrag-cucumber-cloud-feature
+    namespace: bidrag
+    cluster: dev-gcp
+  - application: bidrag-simuler-beregning-feature
     namespace: bidrag
     cluster: dev-gcp
 unsecured:
