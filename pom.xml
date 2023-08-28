@@ -36,7 +36,7 @@
 
     <!-- language -->
     <java.version>17</java.version>
-    <kotlin.version>1.8.21</kotlin.version>
+    <kotlin.version>1.8.22</kotlin.version>
   </properties>
 
   <repositories>
