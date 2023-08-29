@@ -2,6 +2,8 @@ package no.nav.bidrag.beregn.forskudd.rest.dto
 
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.Grunnlag
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -62,4 +64,17 @@ internal class DtoTest {
         val grunnlag = TestUtil.byggDummyForskuddGrunnlag()
         Assertions.assertThatCode { grunnlag.valider() }.doesNotThrowAnyException()
     }
+}
+
+
+fun BeregnForskuddGrunnlag.valider() {
+    if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
+    if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")
+    grunnlagListe?.map { it.valider() } ?: throw UgyldigInputException("grunnlagListe kan ikke være null")
+}
+
+fun Grunnlag.valider() {
+    if (referanse == null) throw UgyldigInputException("referanse kan ikke være null")
+    if (type == null) throw UgyldigInputException("type kan ikke være null")
+    if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
 }

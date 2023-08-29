@@ -1,22 +1,22 @@
 package no.nav.bidrag.beregn.forskudd.rest.service
 
 import com.fasterxml.jackson.databind.JsonNode
-import no.nav.bidrag.beregn.felles.dto.PeriodeCore
-import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore
-import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
 import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn.values
-import no.nav.bidrag.beregn.forskudd.core.dto.BarnIHusstandenPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.BeregnForskuddGrunnlagCore
-import no.nav.bidrag.beregn.forskudd.core.dto.BostatusPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.InntektPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
-import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.Grunnlag
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
+import no.nav.bidrag.transport.beregning.felles.PeriodeCore
+import no.nav.bidrag.transport.beregning.felles.SjablonInnholdCore
+import no.nav.bidrag.transport.beregning.felles.SjablonPeriodeCore
+import no.nav.bidrag.transport.beregning.forskudd.core.request.BarnIHusstandenPeriodeCore
+import no.nav.bidrag.transport.beregning.forskudd.core.request.BeregnForskuddGrunnlagCore
+import no.nav.bidrag.transport.beregning.forskudd.core.request.BostatusPeriodeCore
+import no.nav.bidrag.transport.beregning.forskudd.core.request.InntektPeriodeCore
+import no.nav.bidrag.transport.beregning.forskudd.core.request.SivilstandPeriodeCore
+import no.nav.bidrag.transport.beregning.forskudd.core.request.SoknadBarnCore
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.Grunnlag
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -50,15 +50,17 @@ object CoreMapper {
                 BARN_I_HUSSTAND_TYPE -> barnIHusstandenPeriodeCoreListe.add(mapBarnIHusstanden(grunnlag))
             }
         }
-        val antallSoknadsbarn = beregnForskuddGrunnlag.grunnlagListe.stream()
-            .filter { (_, type): Grunnlag -> type == SOKNADSBARN_TYPE }
-            .count()
+        val antallSoknadsbarn = beregnForskuddGrunnlag.grunnlagListe?.stream()
+            ?.filter { (_, type): Grunnlag -> type == SOKNADSBARN_TYPE }
+            ?.count()
 
         // Validerer at alle nødvendige grunnlag er med
-        validerGrunnlag(
-            antallSoknadsbarn > 1, soknadbarnCore != null, !bostatusPeriodeCoreListe.isEmpty(), !inntektPeriodeCoreListe.isEmpty(),
-            !sivilstandPeriodeCoreListe.isEmpty()
-        )
+        if (antallSoknadsbarn != null) {
+            validerGrunnlag(
+                antallSoknadsbarn > 1, soknadbarnCore != null, bostatusPeriodeCoreListe.isNotEmpty(), inntektPeriodeCoreListe.isNotEmpty(),
+                sivilstandPeriodeCoreListe.isNotEmpty()
+            )
+        }
         val sjablonPeriodeCoreListe = mapSjablonVerdier(
             beregnForskuddGrunnlag.beregnDatoFra, beregnForskuddGrunnlag.beregnDatoTil,
             sjablontallListe, sjablontallMap
@@ -87,21 +89,21 @@ object CoreMapper {
     }
 
     private fun mapSoknadsbarn(grunnlag: Grunnlag): SoknadBarnCore {
-        val fodselsdato = (if (grunnlag.innhold!!["fodselsdato"] != null) grunnlag.innhold["fodselsdato"].asText() else null)
+        val fodselsdato = (if (grunnlag.innhold!!["fodselsdato"] != null) grunnlag.innhold!!["fodselsdato"].asText() else null)
             ?: throw UgyldigInputException("fødselsdato mangler i objekt av type " + SOKNADSBARN_TYPE)
         return SoknadBarnCore(grunnlag.referanse!!, formaterDato(fodselsdato, "fodselsdato", SOKNADSBARN_TYPE)!!)
     }
 
     private fun mapBostatus(grunnlag: Grunnlag): BostatusPeriodeCore {
-        val bostatusKode = (if (grunnlag.innhold!!["bostatusKode"] != null) grunnlag.innhold["bostatusKode"].asText() else null)
+        val bostatusKode = (if (grunnlag.innhold!!["bostatusKode"] != null) grunnlag.innhold!!["bostatusKode"].asText() else null)
             ?: throw UgyldigInputException("bostatusKode mangler i objekt av type " + BOSTATUS_TYPE)
         return BostatusPeriodeCore(grunnlag.referanse!!, mapPeriode(grunnlag.innhold, grunnlag.type), bostatusKode)
     }
 
     private fun mapInntekt(grunnlag: Grunnlag): InntektPeriodeCore {
-        val inntektType = (if (grunnlag.innhold!!["inntektType"] != null) grunnlag.innhold["inntektType"].asText() else null)
+        val inntektType = (if (grunnlag.innhold!!["inntektType"] != null) grunnlag.innhold!!["inntektType"].asText() else null)
             ?: throw UgyldigInputException("inntektType mangler i objekt av type " + INNTEKT_TYPE)
-        val belop = (if (grunnlag.innhold["belop"] != null) grunnlag.innhold["belop"].asText() else null)
+        val belop = (if (grunnlag.innhold!!["belop"] != null) grunnlag.innhold!!["belop"].asText() else null)
             ?: throw UgyldigInputException("belop mangler i objekt av type " + INNTEKT_TYPE)
         return InntektPeriodeCore(
             grunnlag.referanse!!, mapPeriode(grunnlag.innhold, grunnlag.type), inntektType,
@@ -110,13 +112,13 @@ object CoreMapper {
     }
 
     private fun mapSivilstand(grunnlag: Grunnlag): SivilstandPeriodeCore {
-        val sivilstandKode = (if (grunnlag.innhold!!["sivilstandKode"] != null) grunnlag.innhold["sivilstandKode"].asText() else null)
+        val sivilstandKode = (if (grunnlag.innhold!!["sivilstandKode"] != null) grunnlag.innhold!!["sivilstandKode"].asText() else null)
             ?: throw UgyldigInputException("sivilstandKode mangler i objekt av type " + SIVILSTAND_TYPE)
         return SivilstandPeriodeCore(grunnlag.referanse!!, mapPeriode(grunnlag.innhold, grunnlag.type), sivilstandKode)
     }
 
     private fun mapBarnIHusstanden(grunnlag: Grunnlag): BarnIHusstandenPeriodeCore {
-        val antall = (if (grunnlag.innhold!!["antall"] != null) grunnlag.innhold["antall"].asText() else null)
+        val antall = (if (grunnlag.innhold!!["antall"] != null) grunnlag.innhold!!["antall"].asText() else null)
             ?: throw UgyldigInputException("antall mangler i objekt av type " + BARN_I_HUSSTAND_TYPE)
         return BarnIHusstandenPeriodeCore(
             grunnlag.referanse!!, mapPeriode(grunnlag.innhold, grunnlag.type),

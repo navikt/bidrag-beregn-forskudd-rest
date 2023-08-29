@@ -32,6 +32,7 @@ const val LIVE_PROFILE = "live"
 
 @Import(CorrelationIdFilter::class, UserMdcFilter::class, DefaultCorsFilter::class)
 open class BeregnForskuddConfig {
+
     @Bean
     open fun forskuddCore(): ForskuddCore {
         return ForskuddCore.getInstance()

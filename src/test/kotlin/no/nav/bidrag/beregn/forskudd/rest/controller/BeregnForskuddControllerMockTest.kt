@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus.OK
 import java.time.LocalDate
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
+import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

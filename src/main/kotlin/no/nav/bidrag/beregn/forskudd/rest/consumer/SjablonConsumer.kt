@@ -12,11 +12,6 @@ private const val SJABLONTALL_URL = "/bidrag-sjablon/sjablontall/all"
 
 
 open class SjablonConsumer(private val restTemplate: RestTemplate) {
-//    private val sjablonSjablontallUrl: String
-//
-//    init {
-//        sjablonSjablontallUrl = "$sjablonBaseUrl/bidrag-sjablon/sjablontall/all"
-//    }
 
     open fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>?> {
         return try {

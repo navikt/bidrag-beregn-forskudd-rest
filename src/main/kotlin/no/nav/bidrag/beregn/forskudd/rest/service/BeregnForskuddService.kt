@@ -1,27 +1,23 @@
 package no.nav.bidrag.beregn.forskudd.rest.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.beregn.felles.dto.SjablonResultatGrunnlagCore
-import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
-import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
-import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskudd
-//import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskudd.SECURE_LOGGER
 import no.nav.bidrag.beregn.forskudd.rest.SECURE_LOGGER
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.Grunnlag
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.ResultatGrunnlag
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
+import no.nav.bidrag.transport.beregning.felles.SjablonResultatGrunnlagCore
+import no.nav.bidrag.transport.beregning.forskudd.core.response.BeregnetForskuddResultatCore
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.Grunnlag
+import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
+import no.nav.bidrag.transport.beregning.forskudd.rest.response.ResultatGrunnlag
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.util.stream.Collectors
 
 @Service
 class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, private val forskuddCore: ForskuddCore) {
@@ -102,15 +98,16 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                 .toList())
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
-        resultatGrunnlagListe.addAll(resultatFraCore.sjablonListe.stream()
-            .map { (referanse, periode, navn, verdi): SjablonResultatGrunnlagCore ->
-                val map = LinkedHashMap<String, Any>()
-                map["datoFom"] = mapDato(periode.datoFom)
-                map["datoTil"] = mapDato(periode.datoTil)
-                map["sjablonNavn"] = navn
-                map["sjablonVerdi"] = verdi.toInt()
-                ResultatGrunnlag(referanse, "SJABLON", mapper.valueToTree(map))
-            }
+        resultatGrunnlagListe.addAll(
+            resultatFraCore.sjablonListe.stream()
+                .map { (referanse, periode, navn, verdi): SjablonResultatGrunnlagCore ->
+                    val map = LinkedHashMap<String, Any>()
+                    map["datoFom"] = mapDato(periode.datoFom)
+                    map["datoTil"] = mapDato(periode.datoTil)
+                    map["sjablonNavn"] = navn
+                    map["sjablonVerdi"] = verdi.toInt()
+                    ResultatGrunnlag(referanse, "SJABLON", mapper.valueToTree(map))
+                }
             .toList())
         return resultatGrunnlagListe
     }
@@ -123,4 +120,16 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
             return if (dato!!.isAfter(LocalDate.parse("9999-12-31"))) "9999-12-31" else dato.toString()
         }
     }
+}
+
+fun BeregnForskuddGrunnlag.valider() {
+    if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
+    if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")
+    grunnlagListe?.map { it.valider() } ?: throw UgyldigInputException("grunnlagListe kan ikke være null")
+}
+
+fun Grunnlag.valider() {
+    if (referanse == null) throw UgyldigInputException("referanse kan ikke være null")
+    if (type == null) throw UgyldigInputException("type kan ikke være null")
+    if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
 }

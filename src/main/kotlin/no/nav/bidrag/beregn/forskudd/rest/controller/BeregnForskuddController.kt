@@ -2,9 +2,9 @@ package no.nav.bidrag.beregn.forskudd.rest.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnForskuddGrunnlag
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService
+import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
+import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
 import no.nav.security.token.support.core.api.Protected
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

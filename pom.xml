@@ -26,7 +26,7 @@
     <bidrag-commons.version>20230427084654_4121ef0</bidrag-commons.version>
     <bidrag-commons-test.version>1.20230217164307_1ec9d3f</bidrag-commons-test.version>
     <bidrag-beregn-felles.version>0.19.1</bidrag-beregn-felles.version>
-    <bidrag-beregn-forskudd-core.version>0.7.0</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-forskudd-core.version>1.0.3</bidrag-beregn-forskudd-core.version>
     <bidrag-transport.version>20230821134807_d0642b9</bidrag-transport.version>
     <springdoc-openapi-ui.version>2.2.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.0</wiremock-standalone.version>

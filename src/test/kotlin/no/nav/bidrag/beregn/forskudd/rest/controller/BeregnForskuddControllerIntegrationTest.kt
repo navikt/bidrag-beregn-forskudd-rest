@@ -8,8 +8,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub
-import no.nav.bidrag.beregn.forskudd.rest.dto.http.BeregnetForskuddResultat
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
+import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
