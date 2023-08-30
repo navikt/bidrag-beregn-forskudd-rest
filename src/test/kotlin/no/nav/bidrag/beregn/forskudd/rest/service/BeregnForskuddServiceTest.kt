@@ -1,6 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest.service
 
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
@@ -21,9 +22,11 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.ActiveProfiles
 
 @ExtendWith(MockitoExtension::class)
 @DisplayName("BeregnForskuddServiceTest")
+@ActiveProfiles(BidragBeregnForskuddTest.TEST_PROFILE)
 internal class BeregnForskuddServiceTest {
     @InjectMocks
     private val beregnForskuddService: BeregnForskuddService? = null

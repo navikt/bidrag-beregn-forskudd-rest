@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus.OK
 import java.nio.file.Files
 import java.nio.file.Paths
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
@@ -25,10 +26,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [BidragBeregnForskuddTest::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 8096)
 @EnableMockOAuth2Server
+@ActiveProfiles(TEST_PROFILE)
 internal class BeregnForskuddControllerIntegrationTest {
     @Autowired
     private val httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate? = null

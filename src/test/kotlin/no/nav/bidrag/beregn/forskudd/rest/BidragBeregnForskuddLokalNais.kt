@@ -1,25 +1,24 @@
 package no.nav.bidrag.beregn.forskudd.rest
 
-import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
+import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.context.annotation.Profile
 
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
-@ActiveProfiles(TEST_PROFILE)
-@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnForskudd::class, BidragBeregnForskuddLocal::class])])
-open class BidragBeregnForskuddTest {
-    companion object {
-        const val TEST_PROFILE = "test"
-    }
-}
+@EnableMockOAuth2Server
+@EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
+@ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnForskudd::class])])
+@Profile("lokal-nais")
+open class BidragBeregnForskuddLokalNais
+
 fun main(args: Array<String>) {
-    val profile = if (args.isEmpty()) TEST_PROFILE else args[0]
-    val app = SpringApplication(BidragBeregnForskuddTest::class.java)
-    app.setAdditionalProfiles(profile)
+    val app = SpringApplication(BidragBeregnForskuddLokalNais::class.java)
+    app.setAdditionalProfiles("lokal-nais", "lokal-nais-secrets")
     app.run(*args)
 }

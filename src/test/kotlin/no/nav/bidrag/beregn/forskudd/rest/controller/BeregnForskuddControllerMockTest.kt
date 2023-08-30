@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.OK
 import java.time.LocalDate
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
+import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService
 import no.nav.bidrag.commons.web.HttpResponse
@@ -26,10 +27,12 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.test.context.ActiveProfiles
 
 @DisplayName("BeregnForskuddControllerTest")
 @SpringBootTest(classes = [BidragBeregnForskuddTest::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 8096)
+@ActiveProfiles(TEST_PROFILE)
 @Disabled
 internal class BeregnForskuddControllerMockTest {
     @Autowired
