@@ -1,12 +1,7 @@
 package no.nav.bidrag.beregn.forskudd.rest.controller
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertAll
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.OK
-import java.time.LocalDate
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil
@@ -15,9 +10,12 @@ import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
 import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
-import org.junit.jupiter.api.Disabled
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
@@ -27,13 +25,18 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
+import org.springframework.http.HttpStatus.OK
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import java.time.LocalDate
 
 @DisplayName("BeregnForskuddControllerTest")
 @SpringBootTest(classes = [BidragBeregnForskuddTest::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 8096)
 @ActiveProfiles(TEST_PROFILE)
-@Disabled
+@EnableMockOAuth2Server
+@ExtendWith(SpringExtension::class)
 internal class BeregnForskuddControllerMockTest {
     @Autowired
     private val httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate? = null
@@ -41,13 +44,12 @@ internal class BeregnForskuddControllerMockTest {
     @LocalServerPort
     private val port = 0
 
-    @MockBean
-    private val beregnForskuddServiceMock: BeregnForskuddService? = null
+    @MockkBean
+    lateinit var beregnForskuddServiceMock: BeregnForskuddService
     @Test
     @DisplayName("Skal returnere forskudd resultat")
     fun skalReturnereForskuddResultat() {
-        `when`(beregnForskuddServiceMock?.beregn(any(BeregnForskuddGrunnlag::class.java)))
-            .thenReturn(HttpResponse.Companion.from(OK, TestUtil.dummyForskuddResultat()))
+        every { beregnForskuddServiceMock.beregn(any()) } returns HttpResponse.Companion.from(OK, TestUtil.dummyForskuddResultat())
         val url = "http://localhost:$port/beregn/forskudd"
         val request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag())
         val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat::class.java)
@@ -80,19 +82,18 @@ internal class BeregnForskuddControllerMockTest {
     @Test
     @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
     fun skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
-        `when`(beregnForskuddServiceMock?.beregn(any(BeregnForskuddGrunnlag::class.java))).thenReturn(
-            HttpResponse.Companion.from(
-                INTERNAL_SERVER_ERROR,
-                BeregnetForskuddResultat()
-            )
+        every { beregnForskuddServiceMock.beregn(any()) } returns  HttpResponse.Companion.from(
+            INTERNAL_SERVER_ERROR,
+            BeregnetForskuddResultat()
         )
+
         val url = "http://localhost:$port/beregn/forskudd"
         val request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag())
         val responseEntity = httpHeaderTestRestTemplate?.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat::class.java)
         val forskuddResultat = responseEntity?.body
         assertAll(
             { assertThat(responseEntity?.statusCode).isEqualTo(INTERNAL_SERVER_ERROR) },
-            { assertThat(forskuddResultat).isNull() }
+            { assertThat(forskuddResultat).isEqualTo(BeregnetForskuddResultat()) }
         )
     }
 

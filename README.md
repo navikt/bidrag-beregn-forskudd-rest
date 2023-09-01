@@ -56,3 +56,14 @@ Deretter kan et gyldig Azure AD JWT-token hentes med følgende kall (main-branch
 ```
 curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'client_id=<AZURE_APP_CLIENT_ID>&scope=api://dev-gcp.bidrag.bidrag-beregn-forskudd-rest/.default&client_secret=<AZURE_APP_CLIENT_SECRET>&grant_type=client_credentials' 'https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/oauth2/v2.0/token'
 ```
+### Kjøre lokalt
+Kjør ```initLocalEnv.sh``` skriptet for å sette opp miljøvariabler for lokal kjøring.
+<br/>
+Dette vil hente Azure hemmeligheter og diverse miljøvariabler fra POD kjørende i dev
+
+Hvis du ikke får `permission denied` når du prøver å kjøre skriptet så må du gi deg selv tilgang til å kjøre shell skript med følgende kommand:
+```bash
+Kjør chmod +x ./initLocalEnv.sh
+```
+
+Du kan da starte opp applikasjonen ved å kjøre [BidragBeregnForskuddLokalNais.kt](src/test/kotlin/no/nav/bidrag/beregn/forskudd/rest/BidragBeregnForskuddLokalNais.kt)
