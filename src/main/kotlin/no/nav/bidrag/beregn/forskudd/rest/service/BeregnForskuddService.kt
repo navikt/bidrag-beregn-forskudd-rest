@@ -22,7 +22,6 @@ import java.time.LocalDate
 @Service
 class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, private val forskuddCore: ForskuddCore) {
     fun beregn(grunnlag: BeregnForskuddGrunnlag): HttpResponse<BeregnetForskuddResultat> {
-
         // Kontroll av inputdata
         grunnlag.valider()
 
@@ -51,13 +50,13 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                 LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
                 SECURE_LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
                 SECURE_LOGGER.info(
-                    "Forskudd - grunnlag for beregning: " + System.lineSeparator()
-                        + "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator()
-                        + "beregnDatoTil= " + grunnlagTilCore.beregnDatoTil + System.lineSeparator()
-                        + "soknadBarn= " + grunnlagTilCore.soknadBarn + System.lineSeparator()
-                        + "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator()
-                        + "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator()
-                        + "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator()
+                    "Forskudd - grunnlag for beregning: " + System.lineSeparator() +
+                        "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator() +
+                        "beregnDatoTil= " + grunnlagTilCore.beregnDatoTil + System.lineSeparator() +
+                        "soknadBarn= " + grunnlagTilCore.soknadBarn + System.lineSeparator() +
+                        "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator() +
+                        "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
+                        "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator()
                 )
                 throw UgyldigInputException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
             }
@@ -66,11 +65,11 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
             }
             val grunnlagReferanseListe = lagGrunnlagReferanseListe(grunnlag, resultatFraCore)
             return from(HttpStatus.OK, BeregnetForskuddResultat(resultatFraCore, grunnlagReferanseListe))
-        }
-        else
+        } else {
             LOGGER.error("Klarte ikke å hente sjabloner")
-            SECURE_LOGGER.error("Klarte ikke å hente sjabloner")
-            return from(HttpStatus.OK, BeregnetForskuddResultat())
+        }
+        SECURE_LOGGER.error("Klarte ikke å hente sjabloner")
+        return from(HttpStatus.OK, BeregnetForskuddResultat())
     }
 
     // Lager en liste over resultatgrunnlag som inneholder:
@@ -92,10 +91,13 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                 .filter { (referanse): Grunnlag -> grunnlagReferanseListe.contains(referanse) }
                 .map { (referanse, type, innhold): Grunnlag ->
                     ResultatGrunnlag(
-                        referanse!!, type!!, innhold!!
+                        referanse!!,
+                        type!!,
+                        innhold!!
                     )
                 }
-                .toList())
+                .toList()
+        )
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
         resultatGrunnlagListe.addAll(
@@ -108,7 +110,8 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                     map["sjablonVerdi"] = verdi.toInt()
                     ResultatGrunnlag(referanse, "SJABLON", mapper.valueToTree(map))
                 }
-            .toList())
+                .toList()
+        )
         return resultatGrunnlagListe
     }
 

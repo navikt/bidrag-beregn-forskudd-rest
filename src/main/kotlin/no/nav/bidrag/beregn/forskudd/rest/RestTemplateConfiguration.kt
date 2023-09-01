@@ -1,14 +1,14 @@
-//package no.nav.bidrag.beregn.forskudd.rest
+// package no.nav.bidrag.beregn.forskudd.rest
 //
-//import no.nav.bidrag.commons.web.CorrelationIdFilter
-//import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
-//import org.springframework.context.annotation.Bean
-//import org.springframework.context.annotation.Configuration
-//import org.springframework.context.annotation.Scope
-//import org.springframework.web.client.RestTemplate
+// import no.nav.bidrag.commons.web.CorrelationIdFilter
+// import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
+// import org.springframework.context.annotation.Bean
+// import org.springframework.context.annotation.Configuration
+// import org.springframework.context.annotation.Scope
+// import org.springframework.web.client.RestTemplate
 //
-//@Configuration
-//class RestTemplateConfiguration {
+// @Configuration
+// class RestTemplateConfiguration {
 //    @Bean
 //    @Scope("prototype")
 //    fun restTemplate(): RestTemplate {
@@ -16,4 +16,4 @@
 //        httpHeaderRestTemplate.addHeaderGenerator(CorrelationIdFilter.CORRELATION_ID_HEADER) { CorrelationIdFilter.fetchCorrelationIdForThread() }
 //        return httpHeaderRestTemplate
 //    }
-//}
+// }

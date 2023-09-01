@@ -59,15 +59,19 @@ object TestUtil {
         val beregnDatoTil = if (nullVerdi == "beregnDatoTil") null else LocalDate.parse("2020-01-01")
         val referanse = if (nullVerdi == "referanse") null else "Mottatt_BM_Inntekt_AG_20201201"
         val type = if (nullVerdi == "type") null else "Inntekt"
-        val innhold = if (nullVerdi == "innhold") null else mapper.valueToTree<JsonNode>(
-            Map.of(
-                "rolle", "BM",
-                "datoFom", "2017-01-01",
-                "datoTil", "2020-01-01",
-                "inntektType", "INNTEKTTYPE",
-                "belop", 290000
+        val innhold = if (nullVerdi == "innhold") {
+            null
+        } else {
+            mapper.valueToTree<JsonNode>(
+                Map.of(
+                    "rolle", "BM",
+                    "datoFom", "2017-01-01",
+                    "datoTil", "2020-01-01",
+                    "inntektType", "INNTEKTTYPE",
+                    "belop", 290000
+                )
             )
-        )
+        }
         val grunnlagListe: List<Grunnlag>?
         grunnlagListe = if (nullVerdi == "grunnlagListe") {
             null
@@ -95,23 +99,32 @@ object TestUtil {
         val mapper = ObjectMapper()
         val barnIHusstandInnhold = mapper.valueToTree<JsonNode>(
             Map.of(
-                "datoFom", datoFom,
-                "datoTil", datoTom,
-                "antall", antall
+                "datoFom",
+                datoFom,
+                "datoTil",
+                datoTom,
+                "antall",
+                antall
             )
         )
         val soknadsbarnInnhold = mapper.valueToTree<JsonNode>(
             Map.of(
-                "soknadsbarnId", 1,
-                "fodselsdato", fodselsdato
+                "soknadsbarnId",
+                1,
+                "fodselsdato",
+                fodselsdato
             )
         )
         val bostatusInnhold = mapper.valueToTree<JsonNode>(
             Map.of(
-                "datoFom", datoFom,
-                "datoTil", datoTom,
-                "rolle", "SOKNADSBARN",
-                "bostatusKode", "MED_FORELDRE"
+                "datoFom",
+                datoFom,
+                "datoTil",
+                datoTom,
+                "rolle",
+                "SOKNADSBARN",
+                "bostatusKode",
+                "MED_FORELDRE"
             )
         )
         val inntektInnhold = mapper.valueToTree<JsonNode>(
@@ -125,10 +138,14 @@ object TestUtil {
         )
         val sivilstandInnhold = mapper.valueToTree<JsonNode>(
             Map.of(
-                "datoFom", datoFom,
-                "datoTil", datoTom,
-                "rolle", "BIDRAGSMOTTAKER",
-                "sivilstandKode", "GIFT"
+                "datoFom",
+                datoFom,
+                "datoTil",
+                datoTom,
+                "rolle",
+                "BIDRAGSMOTTAKER",
+                "sivilstandKode",
+                "GIFT"
             )
         )
         val beregnDatoFra = LocalDate.parse("2017-01-01")

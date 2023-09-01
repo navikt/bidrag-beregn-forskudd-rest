@@ -66,7 +66,6 @@ internal class DtoTest {
     }
 }
 
-
 fun BeregnForskuddGrunnlag.valider() {
     if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
     if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")

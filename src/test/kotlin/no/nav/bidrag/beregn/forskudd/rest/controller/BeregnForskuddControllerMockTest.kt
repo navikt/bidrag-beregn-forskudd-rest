@@ -8,7 +8,6 @@ import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.transport.beregning.forskudd.rest.request.BeregnForskuddGrunnlag
 import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpEntity
@@ -46,6 +44,7 @@ internal class BeregnForskuddControllerMockTest {
 
     @MockkBean
     lateinit var beregnForskuddServiceMock: BeregnForskuddService
+
     @Test
     @DisplayName("Skal returnere forskudd resultat")
     fun skalReturnereForskuddResultat() {
@@ -82,7 +81,7 @@ internal class BeregnForskuddControllerMockTest {
     @Test
     @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
     fun skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
-        every { beregnForskuddServiceMock.beregn(any()) } returns  HttpResponse.Companion.from(
+        every { beregnForskuddServiceMock.beregn(any()) } returns HttpResponse.Companion.from(
             INTERNAL_SERVER_ERROR,
             BeregnetForskuddResultat()
         )

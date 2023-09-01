@@ -28,7 +28,6 @@ object CoreMapper {
     private const val SIVILSTAND_TYPE = "SIVILSTAND"
     private const val BARN_I_HUSSTAND_TYPE = "BARN_I_HUSSTAND"
     fun mapGrunnlagTilCore(beregnForskuddGrunnlag: BeregnForskuddGrunnlag, sjablontallListe: List<Sjablontall>): BeregnForskuddGrunnlagCore {
-
         // Lager en map for sjablontall (id og navn)
         val sjablontallMap = HashMap<String?, SjablonTallNavn>()
         for (sjablonTallNavn in values()) {
@@ -57,22 +56,36 @@ object CoreMapper {
         // Validerer at alle nødvendige grunnlag er med
         if (antallSoknadsbarn != null) {
             validerGrunnlag(
-                antallSoknadsbarn > 1, soknadbarnCore != null, bostatusPeriodeCoreListe.isNotEmpty(), inntektPeriodeCoreListe.isNotEmpty(),
+                antallSoknadsbarn > 1,
+                soknadbarnCore != null,
+                bostatusPeriodeCoreListe.isNotEmpty(),
+                inntektPeriodeCoreListe.isNotEmpty(),
                 sivilstandPeriodeCoreListe.isNotEmpty()
             )
         }
         val sjablonPeriodeCoreListe = mapSjablonVerdier(
-            beregnForskuddGrunnlag.beregnDatoFra, beregnForskuddGrunnlag.beregnDatoTil,
-            sjablontallListe, sjablontallMap
+            beregnForskuddGrunnlag.beregnDatoFra,
+            beregnForskuddGrunnlag.beregnDatoTil,
+            sjablontallListe,
+            sjablontallMap
         )
         return BeregnForskuddGrunnlagCore(
-            beregnForskuddGrunnlag.beregnDatoFra!!, beregnForskuddGrunnlag.beregnDatoTil!!, soknadbarnCore!!,
-            bostatusPeriodeCoreListe, inntektPeriodeCoreListe, sivilstandPeriodeCoreListe, barnIHusstandenPeriodeCoreListe, sjablonPeriodeCoreListe
+            beregnForskuddGrunnlag.beregnDatoFra!!,
+            beregnForskuddGrunnlag.beregnDatoTil!!,
+            soknadbarnCore!!,
+            bostatusPeriodeCoreListe,
+            inntektPeriodeCoreListe,
+            sivilstandPeriodeCoreListe,
+            barnIHusstandenPeriodeCoreListe,
+            sjablonPeriodeCoreListe
         )
     }
 
     private fun validerGrunnlag(
-        merEnnEttSoknadsbarn: Boolean, soknadbarnGrunnlag: Boolean, bostatusGrunnlag: Boolean, inntektGrunnlag: Boolean,
+        merEnnEttSoknadsbarn: Boolean,
+        soknadbarnGrunnlag: Boolean,
+        bostatusGrunnlag: Boolean,
+        inntektGrunnlag: Boolean,
         sivilstandGrunnlag: Boolean
     ) {
         if (merEnnEttSoknadsbarn) {
@@ -106,7 +119,9 @@ object CoreMapper {
         val belop = (if (grunnlag.innhold!!["belop"] != null) grunnlag.innhold!!["belop"].asText() else null)
             ?: throw UgyldigInputException("belop mangler i objekt av type " + INNTEKT_TYPE)
         return InntektPeriodeCore(
-            grunnlag.referanse!!, mapPeriode(grunnlag.innhold, grunnlag.type), inntektType,
+            grunnlag.referanse!!,
+            mapPeriode(grunnlag.innhold, grunnlag.type),
+            inntektType,
             formaterBelop(belop, INNTEKT_TYPE)!!
         )
     }
@@ -121,7 +136,8 @@ object CoreMapper {
         val antall = (if (grunnlag.innhold!!["antall"] != null) grunnlag.innhold!!["antall"].asText() else null)
             ?: throw UgyldigInputException("antall mangler i objekt av type " + BARN_I_HUSSTAND_TYPE)
         return BarnIHusstandenPeriodeCore(
-            grunnlag.referanse!!, mapPeriode(grunnlag.innhold, grunnlag.type),
+            grunnlag.referanse!!,
+            mapPeriode(grunnlag.innhold, grunnlag.type),
             formaterAntall(antall, BARN_I_HUSSTAND_TYPE)!!
         )
     }
@@ -135,7 +151,8 @@ object CoreMapper {
 
     // Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
     private fun mapSjablonVerdier(
-        beregnDatoFra: LocalDate?, beregnDatoTil: LocalDate?,
+        beregnDatoFra: LocalDate?,
+        beregnDatoTil: LocalDate?,
         sjablonSjablontallListe: List<Sjablontall>,
         sjablontallMap: HashMap<String?, SjablonTallNavn>
     ): List<SjablonPeriodeCore> {
@@ -162,30 +179,36 @@ object CoreMapper {
     private fun formaterDato(dato: String?, datoType: String, grunnlagType: String?): LocalDate? {
         return if (dato == null || dato == "null") {
             null
-        } else try {
-            LocalDate.parse(dato)
-        } catch (e: DateTimeParseException) {
-            throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
+        } else {
+            try {
+                LocalDate.parse(dato)
+            } catch (e: DateTimeParseException) {
+                throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
+            }
         }
     }
 
     private fun formaterBelop(belop: String?, grunnlagType: String): BigDecimal? {
         return if (belop == null || belop == "null") {
             null
-        } else try {
-            BigDecimal(belop)
-        } catch (e: NumberFormatException) {
-            throw UgyldigInputException("belop $belop i objekt av type $grunnlagType har feil format")
+        } else {
+            try {
+                BigDecimal(belop)
+            } catch (e: NumberFormatException) {
+                throw UgyldigInputException("belop $belop i objekt av type $grunnlagType har feil format")
+            }
         }
     }
 
     private fun formaterAntall(antall: String?, grunnlagType: String): Double? {
         return if (antall == null || antall == "null") {
             null
-        } else try {
-            antall.toDouble()
-        } catch (e: NumberFormatException) {
-            throw UgyldigInputException("antall $antall i objekt av type $grunnlagType har feil format")
+        } else {
+            try {
+                antall.toDouble()
+            } catch (e: NumberFormatException) {
+                throw UgyldigInputException("antall $antall i objekt av type $grunnlagType har feil format")
+            }
         }
     }
 }

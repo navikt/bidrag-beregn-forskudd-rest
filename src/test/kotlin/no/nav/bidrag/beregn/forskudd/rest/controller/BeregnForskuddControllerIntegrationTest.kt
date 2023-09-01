@@ -1,17 +1,14 @@
 package no.nav.bidrag.beregn.forskudd.rest.controller
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.Assertions.fail
-import org.springframework.http.HttpStatus.OK
-import java.nio.file.Files
-import java.nio.file.Paths
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
-import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub
+import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremockstub.SjablonApiStub
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.transport.beregning.forskudd.rest.response.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -25,8 +22,11 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
+import java.nio.file.Files
+import java.nio.file.Paths
 
 @SpringBootTest(classes = [BidragBeregnForskuddTest::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 8096)
@@ -390,7 +390,8 @@ internal class BeregnForskuddControllerIntegrationTest {
             Executable { assertThat(responseEntity?.statusCode).isEqualTo(HttpStatus.BAD_REQUEST) },
             Executable {
                 assertThat(
-                    responseEntity?.headers?.get("Error")?.stream()?.anyMatch { s -> s.contains("UgyldigInputException") }).isTrue()
+                    responseEntity?.headers?.get("Error")?.stream()?.anyMatch { s -> s.contains("UgyldigInputException") }
+                ).isTrue()
             },
             Executable { assertThat(responseEntity?.headers?.get("Error")?.stream()?.anyMatch { s -> s.contains("BOR_MED_BESTEMOR") }).isTrue() }
         )
@@ -405,7 +406,7 @@ internal class BeregnForskuddControllerIntegrationTest {
 
         assertAll(
             Executable { assertThat(responseEntity?.statusCode).isEqualTo(OK) },
-            Executable { assertThat(forskuddResultat).isNotNull() },  // Sjekk resultat av beregningnen
+            Executable { assertThat(forskuddResultat).isNotNull() }, // Sjekk resultat av beregningnen
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).isNotNull() },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).hasSize(1) },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat).isNotNull() },

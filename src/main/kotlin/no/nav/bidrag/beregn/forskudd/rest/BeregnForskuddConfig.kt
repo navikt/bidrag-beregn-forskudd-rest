@@ -29,7 +29,6 @@ const val LIVE_PROFILE = "live"
     info = Info(title = "bidrag-beregn-forskudd-rest", version = "v1"),
     security = [SecurityRequirement(name = "bearer-key")]
 )
-
 @Import(CorrelationIdFilter::class, UserMdcFilter::class, DefaultCorsFilter::class)
 open class BeregnForskuddConfig {
 
@@ -50,7 +49,7 @@ open class BeregnForskuddConfig {
     open fun sjablonConsumer(
         @Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String,
         restTemplate: RestTemplate
-        ): SjablonConsumer {
+    ): SjablonConsumer {
         restTemplate.uriTemplateHandler = RootUriTemplateHandler(sjablonBaseUrl)
         return SjablonConsumer(restTemplate)
     }

@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.forskudd.rest
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal.Companion.LOCAL_PROFILE
-import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremock_stub.SjablonApiStub
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.springframework.boot.SpringApplication
@@ -19,15 +18,13 @@ import org.springframework.test.context.ActiveProfiles
 @ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnForskudd::class, BidragBeregnForskuddTest::class])])
 @EnableMockOAuth2Server
 @ActiveProfiles(LOCAL_PROFILE)
-
-open class BidragBeregnForskuddLocal {
+class BidragBeregnForskuddLocal {
     companion object {
         const val LOCAL_PROFILE = "local"
     }
 }
 
 fun main(args: Array<String>) {
-
     val wireMockServer = WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort().dynamicHttpsPort()) // No-args constructor will start on port 8080, no HTTPS
     wireMockServer.start()
 
@@ -38,5 +35,4 @@ fun main(args: Array<String>) {
 
     wireMockServer.resetAll()
     wireMockServer.stop()
-
 }
