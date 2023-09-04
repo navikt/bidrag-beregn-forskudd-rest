@@ -3,8 +3,10 @@ package no.nav.bidrag.beregn.forskudd.rest
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.util.StdDateFormat
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.security.SecurityScheme
 import no.nav.bidrag.beregn.forskudd.core.ForskuddCore
 import no.nav.bidrag.beregn.forskudd.rest.consumer.SjablonConsumer
 import no.nav.bidrag.commons.CorrelationId
@@ -29,24 +31,30 @@ const val LIVE_PROFILE = "live"
     info = Info(title = "bidrag-beregn-forskudd-rest", version = "v1"),
     security = [SecurityRequirement(name = "bearer-key")]
 )
+@SecurityScheme(
+    bearerFormat = "JWT",
+    name = "bearer-key",
+    scheme = "bearer",
+    type = SecuritySchemeType.HTTP
+)
 @Import(CorrelationIdFilter::class, UserMdcFilter::class, DefaultCorsFilter::class)
-open class BeregnForskuddConfig {
+class BeregnForskuddConfig {
 
     @Bean
-    open fun forskuddCore(): ForskuddCore {
+    fun forskuddCore(): ForskuddCore {
         return ForskuddCore.getInstance()
     }
 
     @Bean
     @Scope("prototype")
-    open fun restTemplate(): HttpHeaderRestTemplate {
+    fun restTemplate(): HttpHeaderRestTemplate {
         val httpHeaderRestTemplate = HttpHeaderRestTemplate()
         httpHeaderRestTemplate.addHeaderGenerator(CorrelationIdFilter.CORRELATION_ID_HEADER) { CorrelationId.fetchCorrelationIdForThread() }
         return httpHeaderRestTemplate
     }
 
     @Bean
-    open fun sjablonConsumer(
+    fun sjablonConsumer(
         @Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String,
         restTemplate: RestTemplate
     ): SjablonConsumer {
@@ -55,17 +63,17 @@ open class BeregnForskuddConfig {
     }
 
     @Bean
-    open fun exceptionLogger(): ExceptionLogger {
+    fun exceptionLogger(): ExceptionLogger {
         return ExceptionLogger(BidragBeregnForskudd::class.java.simpleName)
     }
 
     @Bean
-    open fun correlationIdFilter(): CorrelationIdFilter {
+    fun correlationIdFilter(): CorrelationIdFilter {
         return CorrelationIdFilter()
     }
 
     @Bean
-    open fun jackson2ObjectMapperBuilder(): Jackson2ObjectMapperBuilder {
+    fun jackson2ObjectMapperBuilder(): Jackson2ObjectMapperBuilder {
         return Jackson2ObjectMapperBuilder()
             .dateFormat(StdDateFormat())
             .failOnUnknownProperties(false)
