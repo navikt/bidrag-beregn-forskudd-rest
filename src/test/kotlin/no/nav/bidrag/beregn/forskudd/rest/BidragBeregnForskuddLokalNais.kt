@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile
 @EnableJwtTokenValidation(ignore = ["org.springdoc", "org.springframework"])
 @ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnForskudd::class])])
 @Profile("lokal-nais")
-open class BidragBeregnForskuddLokalNais
+class BidragBeregnForskuddLokalNais
 
 fun main(args: Array<String>) {
     val app = SpringApplication(BidragBeregnForskuddLokalNais::class.java)

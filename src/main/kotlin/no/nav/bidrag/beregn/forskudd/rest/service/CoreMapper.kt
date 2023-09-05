@@ -29,8 +29,8 @@ object CoreMapper {
     private const val BARN_I_HUSSTAND_TYPE = "BARN_I_HUSSTAND"
     fun mapGrunnlagTilCore(beregnForskuddGrunnlag: BeregnForskuddGrunnlag, sjablontallListe: List<Sjablontall>): BeregnForskuddGrunnlagCore {
         // Lager en map for sjablontall (id og navn)
-        val sjablontallMap = HashMap<String?, SjablonTallNavn>()
-        for (sjablonTallNavn in values()) {
+        val sjablontallMap = HashMap<String, SjablonTallNavn>()
+        for (sjablonTallNavn in SjablonTallNavn.entries) {
             sjablontallMap[sjablonTallNavn.id] = sjablonTallNavn
         }
         var soknadbarnCore: SoknadBarnCore? = null
@@ -154,7 +154,7 @@ object CoreMapper {
         beregnDatoFra: LocalDate?,
         beregnDatoTil: LocalDate?,
         sjablonSjablontallListe: List<Sjablontall>,
-        sjablontallMap: HashMap<String?, SjablonTallNavn>
+        sjablontallMap: HashMap<String, SjablonTallNavn>
     ): List<SjablonPeriodeCore> {
         return sjablonSjablontallListe
             .stream()
