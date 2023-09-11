@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @ActiveProfiles(TEST_PROFILE)
 @ComponentScan(excludeFilters = [ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = [BidragBeregnForskudd::class, BidragBeregnForskuddLocal::class])])
-open class BidragBeregnForskuddTest {
+class BidragBeregnForskuddTest {
     companion object {
         const val TEST_PROFILE = "test"
     }

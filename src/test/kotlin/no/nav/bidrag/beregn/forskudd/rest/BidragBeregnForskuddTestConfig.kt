@@ -25,7 +25,7 @@ private val LOGGER = LoggerFactory.getLogger(BidragBeregnForskuddTestConfig::cla
     security = [SecurityRequirement(name = "bearer-key")]
 )
 @Profile(TEST_PROFILE, LOCAL_PROFILE)
-open class BidragBeregnForskuddTestConfig {
+class BidragBeregnForskuddTestConfig {
 
     @Autowired
     private lateinit var mockOAuth2Server: MockOAuth2Server
