@@ -10,9 +10,9 @@ import org.springframework.web.client.RestTemplate
 
 private const val SJABLONTALL_URL = "/bidrag-sjablon/sjablontall/all"
 
-open class SjablonConsumer(private val restTemplate: RestTemplate) {
+class SjablonConsumer(private val restTemplate: RestTemplate) {
 
-    open fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>?> {
+    fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>?> {
         return try {
             val sjablonResponse = restTemplate.exchange(
                 SJABLONTALL_URL,
