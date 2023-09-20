@@ -6,6 +6,8 @@
 # Mocks OIDC.
 #
 ####################################################################
+BIDRAGSJABLON_URL: http://localhost:${wiremock.server.port}/bidrag-sjablon
+
 spring:
   config.activate.on-profile: test, local
   security:
