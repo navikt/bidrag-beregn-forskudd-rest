@@ -1,5 +1,3 @@
-BIDRAGSJABLON_URL: https://bidrag-sjablon.dev-fss-pub.nais.io
-
 springdoc:
   packages-to-scan: no.nav.bidrag.beregn.forskudd.rest.controller
   swagger-ui:

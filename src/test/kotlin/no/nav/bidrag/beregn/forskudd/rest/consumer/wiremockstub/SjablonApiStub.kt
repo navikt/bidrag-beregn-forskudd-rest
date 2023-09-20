@@ -1,10 +1,13 @@
 package no.nav.bidrag.beregn.forskudd.rest.consumer.wiremockstub
 
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import org.springframework.cloud.contract.spec.internal.HttpStatus
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 
@@ -12,6 +15,12 @@ import org.springframework.stereotype.Component
 class SjablonApiStub {
     fun settOppSjablonStub() {
         settOppSjablonSjablontallStub()
+    }
+
+    private fun aClosedJsonResponse(): ResponseDefinitionBuilder {
+        return WireMock.aResponse()
+            .withHeader(HttpHeaders.CONNECTION, "close")
+            .withHeader(HttpHeaders.CONTENT_TYPE, "application/json")
     }
 
     private fun settOppSjablonSjablontallStub() {
@@ -72,8 +81,7 @@ class SjablonApiStub {
         stubFor(
             get(urlEqualTo(url))
                 .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                    aClosedJsonResponse()
                         .withStatus(HttpStatus.OK)
                         .withBody(
                             sjablonliste.joinToString()

@@ -50,6 +50,6 @@ spec:
     {{/each}}
   env:
     - name: BIDRAGSJABLON_URL
-      value: https://{{ unsecured.bidragsjablon_url }}
+      value: https://{{ unsecured.bidragsjablon_url }}/bidrag-sjablon
     - name: BIDRAGSJABLON_SCOPE
       value: {{ unsecured.bidragsjablon_scope }}
