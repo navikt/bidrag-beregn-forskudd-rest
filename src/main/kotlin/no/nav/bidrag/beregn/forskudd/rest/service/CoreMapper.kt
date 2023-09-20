@@ -3,7 +3,6 @@ package no.nav.bidrag.beregn.forskudd.rest.service
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.bidrag.beregn.felles.enums.SjablonInnholdNavn
 import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn
-import no.nav.bidrag.beregn.felles.enums.SjablonTallNavn.values
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.transport.beregning.felles.PeriodeCore
