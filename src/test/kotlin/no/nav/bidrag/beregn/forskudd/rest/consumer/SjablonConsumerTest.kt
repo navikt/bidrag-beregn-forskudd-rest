@@ -26,17 +26,18 @@ import org.springframework.web.client.RestTemplate
 @SuppressWarnings("unchecked")
 @DisplayName("SjablonConsumerTest")
 internal class SjablonConsumerTest {
+
     @InjectMocks
-    private val sjablonConsumer: SjablonConsumer? = null
+    private lateinit var sjablonConsumer: SjablonConsumer
 
     @Mock
-    private val restTemplateMock: RestTemplate? = null
+    private lateinit var restTemplateMock: RestTemplate
 
     @Test
     @DisplayName("Skal hente liste av Sjablontall når respons fra tjenesten er OK")
     fun skalHenteListeAvSjablontallNaarResponsFraTjenestenErOk() {
         `when`(
-            restTemplateMock?.exchange(
+            restTemplateMock.exchange(
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
@@ -44,25 +45,24 @@ internal class SjablonConsumerTest {
             )
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK))
-        val sjablonResponse = sjablonConsumer?.hentSjablonSjablontall()
+
+        val sjablonResponse = sjablonConsumer.hentSjablonSjablontall()
+
         assertAll(
             { assertThat(sjablonResponse).isNotNull() },
-            { assertThat(sjablonResponse?.responseEntity?.statusCode).isNotNull() },
-            { assertThat(sjablonResponse?.responseEntity?.statusCode).isEqualTo(HttpStatus.OK) },
-            { assertThat(sjablonResponse?.responseEntity?.body).isNotNull() },
-            { assertThat(sjablonResponse?.responseEntity?.body?.size).isEqualTo(TestUtil.dummySjablonSjablontallListe().size) },
-            {
-                assertThat(sjablonResponse?.responseEntity?.body?.get(0)?.typeSjablon)
-                    .isEqualTo(TestUtil.dummySjablonSjablontallListe()[0].typeSjablon)
-            }
+            { assertThat(sjablonResponse.responseEntity.statusCode).isNotNull() },
+            { assertThat(sjablonResponse.responseEntity.statusCode).isEqualTo(HttpStatus.OK) },
+            { assertThat(sjablonResponse.responseEntity.body).isNotNull() },
+            { assertThat(sjablonResponse.responseEntity.body?.size).isEqualTo(TestUtil.dummySjablonSjablontallListe().size) },
+            { assertThat(sjablonResponse.responseEntity.body?.get(0)?.typeSjablon).isEqualTo(TestUtil.dummySjablonSjablontallListe()[0].typeSjablon) }
         )
     }
 
     @Test
     @DisplayName("Skal kaste SjablonConsumerException når respons fra tjenesten ikke er OK for Sjablontall")
     fun skalKasteRestClientExceptionNaarResponsFraTjenestenIkkeErOkForSjablontall() {
-        `when`(restTemplateMock?.exchange(anyString(), eq(HttpMethod.GET), eq(null), any<ParameterizedTypeReference<List<Sjablontall>>>()))
+        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), eq(null), any<ParameterizedTypeReference<List<Sjablontall>>>()))
             .thenThrow(HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
-        assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer?.hentSjablonSjablontall() }
+        assertThatExceptionOfType(SjablonConsumerException::class.java).isThrownBy { sjablonConsumer.hentSjablonSjablontall() }
     }
 }

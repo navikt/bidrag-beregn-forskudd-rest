@@ -1,12 +1,12 @@
 package no.nav.bidrag.beregn.forskudd.rest.exception
 
-import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.web.client.RestClientResponseException
 
 class SjablonConsumerException(exception: RestClientResponseException) : RuntimeException(exception) {
-    val statusCode: HttpStatus
+    val statusCode: HttpStatusCode
 
     init {
-        statusCode = HttpStatus.valueOf(exception.rawStatusCode)
+        statusCode = exception.statusCode
     }
 }

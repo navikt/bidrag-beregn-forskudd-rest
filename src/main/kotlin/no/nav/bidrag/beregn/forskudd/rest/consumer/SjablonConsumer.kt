@@ -12,22 +12,14 @@ private const val SJABLONTALL_URL = "/bidrag-sjablon/sjablontall/all"
 
 class SjablonConsumer(private val restTemplate: RestTemplate) {
 
-    fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>?> {
-        return try {
-            val sjablonResponse = restTemplate.exchange(
-                SJABLONTALL_URL,
-                HttpMethod.GET,
-                null,
-                SJABLON_SJABLONTALL_LISTE
-            )
-
-            LOGGER.info("hentSjablonSjablontall fikk http status {} fra bidrag-sjablon", sjablonResponse.statusCode)
-            HttpResponse(sjablonResponse)
+    fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>> {
+        try {
+            val sjablonResponse = restTemplate.exchange(SJABLONTALL_URL, HttpMethod.GET, null, SJABLON_SJABLONTALL_LISTE)
+            LOGGER.info("hentSjablonSjablontall fikk http status ${sjablonResponse.statusCode} fra bidrag-sjablon")
+            return HttpResponse(sjablonResponse)
         } catch (exception: RestClientResponseException) {
             LOGGER.error(
-                "hentSjablonSjablontall fikk følgende feilkode fra bidrag-sjablon: {}, med melding {}",
-                exception.statusText,
-                exception.message
+                "hentSjablonSjablontall fikk følgende feilkode fra bidrag-sjablon: ${exception.statusText}, med melding ${exception.message}"
             )
             throw SjablonConsumerException(exception)
         }

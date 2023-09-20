@@ -17,7 +17,6 @@ class SjablonApiStub {
     private fun settOppSjablonSjablontallStub() {
         val url = "/bidrag-sjablon/sjablontall/all"
         val sjablonliste = listOf(
-//            "\n",
             " [  " +
                 "{\"typeSjablon\": \"0005\"," +
                 "\"datoFom\": \"2020-07-01\"," +
