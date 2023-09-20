@@ -8,7 +8,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
-private const val SJABLONTALL_URL = "/bidrag-sjablon/sjablontall/all"
+private const val SJABLONTALL_URL = "/sjablontall/all"
 
 class SjablonConsumer(private val restTemplate: RestTemplate) {
 
