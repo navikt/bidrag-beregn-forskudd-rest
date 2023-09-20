@@ -20,13 +20,6 @@ class BidragBeregnForskudd
 const val ISSUER = "aad"
 val SECURE_LOGGER: Logger = LoggerFactory.getLogger("secureLogger")
 
-//    val SECURE_LOGGER = LoggerFactory.getLogger("secureLogger")
-//    @JvmStatic
-//    fun main(args: Array<String>) {
-//        SpringApplication.run(BidragBeregnForskudd::class.java, *args)
-//    }
-// }
-
 fun main(args: Array<String>) {
     val profile = if (args.isEmpty()) LIVE_PROFILE else args[0]
     val app = SpringApplication(BidragBeregnForskudd::class.java)
