@@ -37,7 +37,7 @@ object CoreMapper {
         // Mapper grunnlagstyper til input for core
         beregnForskuddGrunnlag.grunnlagListe!!.forEach {
             when (it.type) {
-                GrunnlagType.SOKNADSBARN_INFO -> soknadbarnCore = mapSoknadsbarn(it)
+                GrunnlagType.SOKNADSBARN_INFO -> soknadbarnCore = mapSoknadsbarn(it.innhold!!, it.referanse!!)
                 GrunnlagType.BOSTATUS -> bostatusPeriodeCoreListe.add(mapBostatus(it))
                 GrunnlagType.INNTEKT -> inntektPeriodeCoreListe.add(mapInntekt(it))
                 GrunnlagType.SIVILSTAND -> sivilstandPeriodeCoreListe.add(mapSivilstand(it))
@@ -106,18 +106,16 @@ object CoreMapper {
         }
     }
 
-    private fun mapSoknadsbarn(grunnlag: Grunnlag): SoknadBarnCore {
-        val fodselsdato = (if (grunnlag.innhold!!["fodselsdato"] != null) grunnlag.innhold!!["fodselsdato"].asText() else null)
-            ?: throw UgyldigInputException("fødselsdato mangler i objekt av type ${GrunnlagType.SOKNADSBARN_INFO.value}")
+    private fun mapSoknadsbarn(grunnlagInnhold: JsonNode, referanse: String): SoknadBarnCore {
+        val fodselsdato = grunnlagInnhold.getOrThrow("fodselsdato", "fødselsdato mangler i objekt av type ${GrunnlagType.SOKNADSBARN_INFO.value}")
         return SoknadBarnCore(
-            referanse = grunnlag.referanse!!,
-            fodselsdato = formaterDato(dato = fodselsdato, datoType = "fodselsdato", grunnlagType = GrunnlagType.SOKNADSBARN_INFO.value)!!
+            referanse = referanse,
+            fodselsdato = formaterDato(dato = fodselsdato, datoType = "fodselsdato", grunnlagType = GrunnlagType.SOKNADSBARN_INFO.value)
         )
     }
 
     private fun mapBostatus(grunnlag: Grunnlag): BostatusPeriodeCore {
-        val bostatusKode = (if (grunnlag.innhold!!["bostatusKode"] != null) grunnlag.innhold!!["bostatusKode"].asText() else null)
-            ?: throw UgyldigInputException("bostatusKode mangler i objekt av type ${GrunnlagType.BOSTATUS.value}")
+        val bostatusKode = grunnlag.innhold!!.getOrThrow("bostatusKode", "bostatusKode mangler i objekt av type ${GrunnlagType.BOSTATUS.value}")
         return BostatusPeriodeCore(
             referanse = grunnlag.referanse!!,
             periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
@@ -126,10 +124,8 @@ object CoreMapper {
     }
 
     private fun mapInntekt(grunnlag: Grunnlag): InntektPeriodeCore {
-        val inntektType = (if (grunnlag.innhold!!["inntektType"] != null) grunnlag.innhold!!["inntektType"].asText() else null)
-            ?: throw UgyldigInputException("inntektType mangler i objekt av type ${GrunnlagType.INNTEKT.value}")
-        val belop = (if (grunnlag.innhold!!["belop"] != null) grunnlag.innhold!!["belop"].asText() else null)
-            ?: throw UgyldigInputException("belop mangler i objekt av type ${GrunnlagType.INNTEKT.value}")
+        val inntektType = grunnlag.innhold!!.getOrThrow("inntektType", "inntektType mangler i objekt av type ${GrunnlagType.INNTEKT.value}")
+        val belop = grunnlag.innhold!!.getOrThrow("belop", "belop mangler i objekt av type ${GrunnlagType.INNTEKT.value}")
         return InntektPeriodeCore(
             referanse = grunnlag.referanse!!,
             periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
@@ -139,8 +135,7 @@ object CoreMapper {
     }
 
     private fun mapSivilstand(grunnlag: Grunnlag): SivilstandPeriodeCore {
-        val sivilstandKode = (if (grunnlag.innhold!!["sivilstandKode"] != null) grunnlag.innhold!!["sivilstandKode"].asText() else null)
-            ?: throw UgyldigInputException("sivilstandKode mangler i objekt av type ${GrunnlagType.SIVILSTAND.value}")
+        val sivilstandKode = grunnlag.innhold!!.getOrThrow("sivilstandKode", "sivilstandKode mangler i objekt av type ${GrunnlagType.SIVILSTAND.value}")
         return SivilstandPeriodeCore(
             referanse = grunnlag.referanse!!,
             periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
@@ -149,8 +144,7 @@ object CoreMapper {
     }
 
     private fun mapBarnIHusstanden(grunnlag: Grunnlag): BarnIHusstandenPeriodeCore {
-        val antall = (if (grunnlag.innhold!!["antall"] != null) grunnlag.innhold!!["antall"].asText() else null)
-            ?: throw UgyldigInputException("antall mangler i objekt av type ${GrunnlagType.BARN_I_HUSSTAND.value}")
+        val antall = grunnlag.innhold!!.getOrThrow("antall", "antall mangler i objekt av type ${GrunnlagType.BARN_I_HUSSTAND.value}")
         return BarnIHusstandenPeriodeCore(
             referanse = grunnlag.referanse!!,
             periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
@@ -159,12 +153,14 @@ object CoreMapper {
     }
 
     private fun mapPeriode(grunnlagInnhold: JsonNode, grunnlagType: String): PeriodeCore {
-        val datoFom = (if (grunnlagInnhold["datoFom"] != null) grunnlagInnhold["datoFom"].asText() else null)
-            ?: throw UgyldigInputException("datoFom mangler i objekt av type $grunnlagType")
-        val datoTil = if (grunnlagInnhold["datoTil"] != null) grunnlagInnhold["datoTil"].asText() else null
+        val datoFom = grunnlagInnhold.getOrThrow("datoFom", "datoFom mangler i objekt av type $grunnlagType")
+        val datoTil = if (grunnlagInnhold["datoTil"] != null && !grunnlagInnhold["datoTil"].isNull) {
+            formaterDato(dato = grunnlagInnhold["datoTil"].asText(), datoType = "datoTil", grunnlagType = grunnlagType)
+        } else null
+
         return PeriodeCore(
-            datoFom = formaterDato(dato = datoFom, datoType = "datoFom", grunnlagType = grunnlagType)!!,
-            datoTil = formaterDato(dato = datoTil, datoType = "datoTil", grunnlagType = grunnlagType)
+            datoFom = formaterDato(dato = datoFom, datoType = "datoFom", grunnlagType = grunnlagType),
+            datoTil = datoTil
         )
     }
 
@@ -188,20 +184,23 @@ object CoreMapper {
             }
     }
 
-    private fun formaterDato(dato: String?, datoType: String, grunnlagType: String) =
-        if (dato == null || dato == "null") {
-            null
-        } else {
-            try {
-                LocalDate.parse(dato)
-            } catch (e: DateTimeParseException) {
-                throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
-            }
-        }
+    private fun formaterDato(dato: String, datoType: String, grunnlagType: String): LocalDate =
+    try {
+        LocalDate.parse(dato)
+    } catch (e: DateTimeParseException) {
+        throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
+    }
 
     private fun formaterBelop(belop: String, grunnlagType: String) =
         belop.toBigDecimalOrNull() ?: throw UgyldigInputException("belop $belop i objekt av type $grunnlagType har feil format")
 
     private fun formaterAntall(antall: String, grunnlagType: String) =
         antall.toDoubleOrNull() ?: throw UgyldigInputException("antall $antall i objekt av type $grunnlagType har feil format")
+}
+
+private fun JsonNode.getOrThrow(felt: String, message: String): String {
+    val value = this[felt]
+    if (value == null || value.isNull) throw UgyldigInputException(message)
+
+    return value.asText()
 }
