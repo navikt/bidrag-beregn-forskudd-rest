@@ -62,8 +62,8 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
 
         if (resultatFraCore.avvikListe.isNotEmpty()) {
             val avvikTekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
-            LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
-            SECURE_LOGGER.error("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
+            LOGGER.warn("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
+            SECURE_LOGGER.warn("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
             SECURE_LOGGER.info(
                 "Forskudd - grunnlag for beregning: " + System.lineSeparator() +
                     "beregnDatoFra= " + grunnlagTilCore.beregnDatoFra + System.lineSeparator() +

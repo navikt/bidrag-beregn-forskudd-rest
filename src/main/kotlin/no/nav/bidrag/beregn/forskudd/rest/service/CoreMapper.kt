@@ -156,7 +156,9 @@ object CoreMapper {
         val datoFom = grunnlagInnhold.getOrThrow("datoFom", "datoFom mangler i objekt av type $grunnlagType")
         val datoTil = if (grunnlagInnhold["datoTil"] != null && !grunnlagInnhold["datoTil"].isNull) {
             formaterDato(dato = grunnlagInnhold["datoTil"].asText(), datoType = "datoTil", grunnlagType = grunnlagType)
-        } else null
+        } else {
+            null
+        }
 
         return PeriodeCore(
             datoFom = formaterDato(dato = datoFom, datoType = "datoFom", grunnlagType = grunnlagType),
@@ -185,11 +187,11 @@ object CoreMapper {
     }
 
     private fun formaterDato(dato: String, datoType: String, grunnlagType: String): LocalDate =
-    try {
-        LocalDate.parse(dato)
-    } catch (e: DateTimeParseException) {
-        throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
-    }
+        try {
+            LocalDate.parse(dato)
+        } catch (e: DateTimeParseException) {
+            throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
+        }
 
     private fun formaterBelop(belop: String, grunnlagType: String) =
         belop.toBigDecimalOrNull() ?: throw UgyldigInputException("belop $belop i objekt av type $grunnlagType har feil format")
