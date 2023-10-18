@@ -9,7 +9,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-internal  class CoreMapperTest {
+internal class CoreMapperTest {
     @Test
     @DisplayName("Skal kaste UgyldigInputException når fodselsdato er null")
     fun mapFodselsdatoNull() {
