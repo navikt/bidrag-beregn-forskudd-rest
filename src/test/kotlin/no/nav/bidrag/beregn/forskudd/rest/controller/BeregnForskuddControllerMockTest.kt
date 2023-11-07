@@ -6,9 +6,9 @@ import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.forskudd.BeregnetForskuddResultat
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -29,7 +29,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.time.LocalDate
+import java.time.YearMonth
 
 @SpringBootTest(classes = [BidragBeregnForskuddTest::class], webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 8096)
@@ -50,7 +50,7 @@ internal class BeregnForskuddControllerMockTest {
     @DisplayName("Skal returnere forskudd resultat")
     fun skalReturnereForskuddResultat() {
         `when`(beregnForskuddServiceMock.beregn(any(BeregnGrunnlag::class.java)))
-            .thenReturn(HttpResponse.Companion.from(HttpStatus.OK, TestUtil.dummyForskuddResultat()))
+            .thenReturn(HttpResponse.from(HttpStatus.OK, TestUtil.dummyForskuddResultat()))
 
         val url = "http://localhost:$port/beregn/forskudd"
         val request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag())
@@ -62,12 +62,12 @@ internal class BeregnForskuddControllerMockTest {
             { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe)?.isNotNull() },
             { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe)?.hasSize(1) },
             {
-                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.periode?.datoFom)
-                    .isEqualTo(LocalDate.parse("2017-01-01"))
+                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.periode?.fom)
+                    .isEqualTo(YearMonth.parse("2017-01"))
             },
             {
-                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.periode?.datoTil)
-                    .isEqualTo(LocalDate.parse("2019-01-01"))
+                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.periode?.til)
+                    .isEqualTo(YearMonth.parse("2019-01"))
             },
             {
                 assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.belop?.toInt())
@@ -85,7 +85,7 @@ internal class BeregnForskuddControllerMockTest {
     @DisplayName("Skal returnere 500 Internal Server Error når kall til servicen feiler")
     fun skalReturnere500InternalServerErrorNaarKallTilServicenFeiler() {
         `when`(beregnForskuddServiceMock.beregn(any(BeregnGrunnlag::class.java)))
-            .thenReturn(HttpResponse.Companion.from(HttpStatus.INTERNAL_SERVER_ERROR, BeregnetForskuddResultat()))
+            .thenReturn(HttpResponse.from(HttpStatus.INTERNAL_SERVER_ERROR, BeregnetForskuddResultat()))
 
         val url = "http://localhost:$port/beregn/forskudd"
         val request = initHttpEntity(TestUtil.byggDummyForskuddGrunnlag())

@@ -1,6 +1,5 @@
 package no.nav.bidrag.beregn.forskudd.rest.service
 
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.felles.dto.SjablonInnholdCore
 import no.nav.bidrag.beregn.felles.dto.SjablonPeriodeCore
@@ -12,13 +11,18 @@ import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.domain.enums.sjablon.SjablonInnholdNavn
-import no.nav.bidrag.domain.enums.sjablon.SjablonTallNavn
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.felles.Grunnlag
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.Grunnlagstype
+import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
+import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.felles.grunnlag.InntektRapporteringPeriode
+import no.nav.bidrag.transport.behandling.beregning.felles.hentInnholdBasertPåNavn
+import no.nav.bidrag.transport.behandling.beregning.felles.hentInnholdBasertPåReferanse
+import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
+import no.nav.bidrag.transport.behandling.felles.grunnlag.Person
+import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import java.time.LocalDate
-import java.time.format.DateTimeParseException
 
 object CoreMapper {
 
@@ -28,45 +32,34 @@ object CoreMapper {
         SjablonTallNavn.entries.forEach {
             sjablontallMap[it.id] = it
         }
-        var soknadbarnCore: SoknadBarnCore? = null
-        val bostatusPeriodeCoreListe = mutableListOf<BostatusPeriodeCore>()
-        val inntektPeriodeCoreListe = mutableListOf<InntektPeriodeCore>()
-        val sivilstandPeriodeCoreListe = mutableListOf<SivilstandPeriodeCore>()
-        val barnIHusstandenPeriodeCoreListe = mutableListOf<BarnIHusstandenPeriodeCore>()
 
         // Mapper grunnlagstyper til input for core
-        beregnForskuddGrunnlag.grunnlagListe!!.forEach {
-            when (it.type) {
-                GrunnlagType.SOKNADSBARN_INFO -> soknadbarnCore = mapSoknadsbarn(it.innhold!!, it.referanse!!)
-                GrunnlagType.BOSTATUS -> bostatusPeriodeCoreListe.add(mapBostatus(it))
-                GrunnlagType.INNTEKT -> inntektPeriodeCoreListe.add(mapInntekt(it))
-                GrunnlagType.SIVILSTAND -> sivilstandPeriodeCoreListe.add(mapSivilstand(it))
-                GrunnlagType.BARN_I_HUSSTAND -> barnIHusstandenPeriodeCoreListe.add(mapBarnIHusstanden(it))
-                else -> throw UgyldigInputException("Grunnlagstype ${it.type!!.value} er ikke gyldig")
-            }
-        }
-
-        val antallSoknadsbarn = beregnForskuddGrunnlag.grunnlagListe!!.count { it.type == GrunnlagType.SOKNADSBARN_INFO }
+        val soknadbarnCore = mapSoknadsbarnNy(beregnForskuddGrunnlag)
+        val bostatusPeriodeCoreListe = mapBostatusNy(beregnForskuddGrunnlag)
+        val inntektPeriodeCoreListe = mapInntektNy(beregnForskuddGrunnlag)
+        val sivilstandPeriodeCoreListe = mapSivilstandNy(beregnForskuddGrunnlag)
+        val barnIHusstandenPeriodeCoreListe = mapBarnIHusstandenNy(beregnForskuddGrunnlag)
 
         // Validerer at alle nødvendige grunnlag er med
-        validerGrunnlag(
-            merEnnEttSoknadsbarn = antallSoknadsbarn > 1,
-            soknadbarnGrunnlag = soknadbarnCore != null,
-            bostatusGrunnlag = bostatusPeriodeCoreListe.isNotEmpty(),
-            inntektGrunnlag = inntektPeriodeCoreListe.isNotEmpty(),
-            sivilstandGrunnlag = sivilstandPeriodeCoreListe.isNotEmpty()
-        )
+//        validerGrunnlag(
+//            merEnnEttSoknadsbarn = antallSoknadsbarn > 1,
+//            merEnnEttSoknadsbarn = false,
+//            soknadbarnGrunnlag = soknadbarnCore != null,
+//            bostatusGrunnlag = bostatusPeriodeCoreListe.isNotEmpty(),
+//            inntektGrunnlag = inntektPeriodeCoreListe.isNotEmpty(),
+//            sivilstandGrunnlag = sivilstandPeriodeCoreListe.isNotEmpty()
+//        )
 
         val sjablonPeriodeCoreListe = mapSjablonVerdier(
-            beregnDatoFra = beregnForskuddGrunnlag.beregnDatoFra!!,
-            beregnDatoTil = beregnForskuddGrunnlag.beregnDatoTil!!,
+            beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
+            beregnDatoTil = beregnForskuddGrunnlag.periode!!.tilDato!!.verdi,
             sjablonSjablontallListe = sjablontallListe,
             sjablontallMap = sjablontallMap
         )
 
         return BeregnForskuddGrunnlagCore(
-            beregnDatoFra = beregnForskuddGrunnlag.beregnDatoFra!!,
-            beregnDatoTil = beregnForskuddGrunnlag.beregnDatoTil!!,
+            beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
+            beregnDatoTil = beregnForskuddGrunnlag.periode!!.tilDato!!.verdi,
             soknadBarn = soknadbarnCore!!,
             bostatusPeriodeListe = bostatusPeriodeCoreListe,
             inntektPeriodeListe = inntektPeriodeCoreListe,
@@ -74,6 +67,98 @@ object CoreMapper {
             barnIHusstandenPeriodeListe = barnIHusstandenPeriodeCoreListe,
             sjablonPeriodeListe = sjablonPeriodeCoreListe
         )
+    }
+
+    private fun mapSoknadsbarnNy(beregnForskuddGrunnlag: BeregnGrunnlag): SoknadBarnCore? {
+        val soknadsbarnGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåNavn(
+            grunnlagType = Grunnlagstype.PERSON,
+            clazz = Person::class.java,
+            navn = beregnForskuddGrunnlag.søknadsbarnReferanse!!
+        )
+
+        return if (soknadsbarnGrunnlag.isEmpty() || soknadsbarnGrunnlag.count() > 1) {
+            null
+        } else {
+            SoknadBarnCore(
+                referanse = soknadsbarnGrunnlag[0].navn,
+                fodselsdato = soknadsbarnGrunnlag[0].innhold.fødselsdato.verdi
+            )
+        }
+    }
+
+    private fun mapBostatusNy(beregnForskuddGrunnlag: BeregnGrunnlag): List<BostatusPeriodeCore> {
+        val bostatusGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåReferanse(
+            grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
+            clazz = BostatusPeriode::class.java,
+            referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!
+        )
+
+        return bostatusGrunnlag.map {
+            BostatusPeriodeCore(
+                referanse = it.navn,
+                periode = PeriodeCore(
+                    datoFom = it.innhold.periode.toDatoperiode().fom,
+                    datoTil = it.innhold.periode.toDatoperiode().til
+                ),
+                kode = it.innhold.bostatus.name
+            )
+        }
+    }
+
+    private fun mapInntektNy(beregnForskuddGrunnlag: BeregnGrunnlag): List<InntektPeriodeCore> {
+        val inntektGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåNavn(
+            grunnlagType = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+            clazz = InntektRapporteringPeriode::class.java
+        )
+
+        return inntektGrunnlag.map {
+            InntektPeriodeCore(
+                referanse = it.navn,
+                periode = PeriodeCore(
+                    datoFom = it.innhold.periode.toDatoperiode().fom,
+                    datoTil = it.innhold.periode.toDatoperiode().til
+                ),
+                type = it.innhold.inntektRapportering.name,
+                belop = it.innhold.beløp
+            )
+        }
+    }
+
+    private fun mapSivilstandNy(beregnForskuddGrunnlag: BeregnGrunnlag): List<SivilstandPeriodeCore> {
+        val sivilstandGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåNavn(
+            grunnlagType = Grunnlagstype.SIVILSTAND_PERIODE,
+            clazz = SivilstandPeriode::class.java
+        )
+
+        return sivilstandGrunnlag.map {
+            SivilstandPeriodeCore(
+                referanse = it.navn,
+                periode = PeriodeCore(
+                    datoFom = it.innhold.periode.toDatoperiode().fom,
+                    datoTil = it.innhold.periode.toDatoperiode().til
+                ),
+                kode = it.innhold.sivilstand.name
+            )
+        }
+    }
+
+    private fun mapBarnIHusstandenNy(beregnForskuddGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
+        val barnIHusstandenGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåNavn(
+            grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
+            clazz = BostatusPeriode::class.java
+        )
+
+        return barnIHusstandenGrunnlag
+            .filter { it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG }
+            .map {
+                BarnIHusstandenPeriodeCore(
+                    referanse = it.navn,
+                    periode = PeriodeCore(
+                        datoFom = it.innhold.periode.toDatoperiode().fom,
+                        datoTil = it.innhold.periode.toDatoperiode().til
+                    )
+                )
+            }
     }
 
     private fun validerGrunnlag(
@@ -106,66 +191,6 @@ object CoreMapper {
         }
     }
 
-    private fun mapSoknadsbarn(grunnlagInnhold: JsonNode, referanse: String): SoknadBarnCore {
-        val fodselsdato = grunnlagInnhold.getOrThrow("fodselsdato", "fødselsdato mangler i objekt av type ${GrunnlagType.SOKNADSBARN_INFO.value}")
-        return SoknadBarnCore(
-            referanse = referanse,
-            fodselsdato = formaterDato(dato = fodselsdato, datoType = "fodselsdato", grunnlagType = GrunnlagType.SOKNADSBARN_INFO.value)
-        )
-    }
-
-    private fun mapBostatus(grunnlag: Grunnlag): BostatusPeriodeCore {
-        val bostatusKode = grunnlag.innhold!!.getOrThrow("bostatusKode", "bostatusKode mangler i objekt av type ${GrunnlagType.BOSTATUS.value}")
-        return BostatusPeriodeCore(
-            referanse = grunnlag.referanse!!,
-            periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
-            kode = bostatusKode
-        )
-    }
-
-    private fun mapInntekt(grunnlag: Grunnlag): InntektPeriodeCore {
-        val inntektType = grunnlag.innhold!!.getOrThrow("inntektType", "inntektType mangler i objekt av type ${GrunnlagType.INNTEKT.value}")
-        val belop = grunnlag.innhold!!.getOrThrow("belop", "belop mangler i objekt av type ${GrunnlagType.INNTEKT.value}")
-        return InntektPeriodeCore(
-            referanse = grunnlag.referanse!!,
-            periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
-            type = inntektType,
-            belop = formaterBelop(belop = belop, grunnlagType = GrunnlagType.INNTEKT.value)
-        )
-    }
-
-    private fun mapSivilstand(grunnlag: Grunnlag): SivilstandPeriodeCore {
-        val sivilstandKode = grunnlag.innhold!!.getOrThrow("sivilstandKode", "sivilstandKode mangler i objekt av type ${GrunnlagType.SIVILSTAND.value}")
-        return SivilstandPeriodeCore(
-            referanse = grunnlag.referanse!!,
-            periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
-            kode = sivilstandKode
-        )
-    }
-
-    private fun mapBarnIHusstanden(grunnlag: Grunnlag): BarnIHusstandenPeriodeCore {
-        val antall = grunnlag.innhold!!.getOrThrow("antall", "antall mangler i objekt av type ${GrunnlagType.BARN_I_HUSSTAND.value}")
-        return BarnIHusstandenPeriodeCore(
-            referanse = grunnlag.referanse!!,
-            periode = mapPeriode(grunnlagInnhold = grunnlag.innhold!!, grunnlagType = grunnlag.type!!.value),
-            antall = formaterAntall(antall = antall, grunnlagType = GrunnlagType.BARN_I_HUSSTAND.value)
-        )
-    }
-
-    private fun mapPeriode(grunnlagInnhold: JsonNode, grunnlagType: String): PeriodeCore {
-        val datoFom = grunnlagInnhold.getOrThrow("datoFom", "datoFom mangler i objekt av type $grunnlagType")
-        val datoTil = if (grunnlagInnhold["datoTil"] != null && !grunnlagInnhold["datoTil"].isNull) {
-            formaterDato(dato = grunnlagInnhold["datoTil"].asText(), datoType = "datoTil", grunnlagType = grunnlagType)
-        } else {
-            null
-        }
-
-        return PeriodeCore(
-            datoFom = formaterDato(dato = datoFom, datoType = "datoFom", grunnlagType = grunnlagType),
-            datoTil = datoTil
-        )
-    }
-
     // Plukker ut aktuelle sjabloner og flytter inn i inputen til core-modulen
     private fun mapSjablonVerdier(
         beregnDatoFra: LocalDate,
@@ -185,24 +210,4 @@ object CoreMapper {
                 )
             }
     }
-
-    private fun formaterDato(dato: String, datoType: String, grunnlagType: String): LocalDate =
-        try {
-            LocalDate.parse(dato)
-        } catch (e: DateTimeParseException) {
-            throw UgyldigInputException("Dato $dato av type $datoType i objekt av type $grunnlagType har feil format")
-        }
-
-    private fun formaterBelop(belop: String, grunnlagType: String) =
-        belop.toBigDecimalOrNull() ?: throw UgyldigInputException("belop $belop i objekt av type $grunnlagType har feil format")
-
-    private fun formaterAntall(antall: String, grunnlagType: String) =
-        antall.toDoubleOrNull() ?: throw UgyldigInputException("antall $antall i objekt av type $grunnlagType har feil format")
-}
-
-private fun JsonNode.getOrThrow(felt: String, message: String): String {
-    val value = this[felt]
-    if (value == null || value.isNull) throw UgyldigInputException(message)
-
-    return value.asText()
 }

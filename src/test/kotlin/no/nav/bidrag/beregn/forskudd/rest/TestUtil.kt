@@ -8,17 +8,20 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
-import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.felles.Grunnlag
-import no.nav.bidrag.transport.beregning.felles.Periode
-import no.nav.bidrag.transport.beregning.forskudd.BeregnetForskuddResultat
-import no.nav.bidrag.transport.beregning.forskudd.ResultatBeregning
-import no.nav.bidrag.transport.beregning.forskudd.ResultatPeriode
+import no.nav.bidrag.domene.enums.Bostatuskode
+import no.nav.bidrag.domene.enums.Grunnlagstype
+import no.nav.bidrag.domene.enums.InntektRapportering
+import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
+import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
+import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.Map
+import java.time.YearMonth
 
 object TestUtil {
     private const val INNTEKT_REFERANSE_1 = "INNTEKT_REFERANSE_1"
@@ -31,12 +34,8 @@ object TestUtil {
         return byggDummyForskuddGrunnlag("")
     }
 
-    fun byggForskuddGrunnlagUtenBeregnDatoFra(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("beregnDatoFra")
-    }
-
-    fun byggForskuddGrunnlagUtenBeregnDatoTil(): BeregnGrunnlag {
-        return byggDummyForskuddGrunnlag("beregnDatoTil")
+    fun byggForskuddGrunnlagUtenBeregningsperiodeTil(): BeregnGrunnlag {
+        return byggDummyForskuddGrunnlag("beregningsperiodeTil")
     }
 
     fun byggForskuddGrunnlagUtenGrunnlagListe(): BeregnGrunnlag {
@@ -58,21 +57,23 @@ object TestUtil {
     // Bygger opp BeregnGrunnlag
     private fun byggDummyForskuddGrunnlag(nullVerdi: String): BeregnGrunnlag {
         val mapper = ObjectMapper()
-        val beregnDatoFra = if (nullVerdi == "beregnDatoFra") null else LocalDate.parse("2017-01-01")
-        val beregnDatoTil = if (nullVerdi == "beregnDatoTil") null else LocalDate.parse("2020-01-01")
+        val beregningsperiodeFom = YearMonth.parse("2017-01")
+        val beregningsperiodeTil = if (nullVerdi == "beregningsperiodeTil") null else YearMonth.parse("2020-01")
         val referanse = if (nullVerdi == "referanse") null else "Mottatt_BM_Inntekt_AG_20201201"
-        val type = if (nullVerdi == "type") null else GrunnlagType.INNTEKT
+        val type = if (nullVerdi == "type") null else Grunnlagstype.INNTEKT
         val innhold =
             if (nullVerdi == "innhold") {
                 null
             } else {
                 mapper.valueToTree<JsonNode>(
-                    Map.of(
-                        "rolle", "BM",
-                        "datoFom", "2017-01-01",
-                        "datoTil", "2020-01-01",
-                        "inntektType", "INNTEKTTYPE",
-                        "belop", 290000
+                    mapOf(
+                        "rolle" to "BM",
+                        "datoFom" to "2017-01",
+                        "datoTil" to "2020-01",
+                        "inntektRapportering" to "INNTEKT_RAPPORTERING",
+                        "belop" to 290000,
+                        "manueltRegistrert" to false,
+                        "valgt" to true
                     )
                 )
             }
@@ -82,88 +83,111 @@ object TestUtil {
             } else {
                 listOf(
                     Grunnlag(
-                        referanse = referanse,
+                        navn = referanse,
                         type = type,
+                        grunnlagsreferanseListe = emptyList(),
                         innhold = innhold
                     )
                 )
             }
-        return BeregnGrunnlag(beregnDatoFra = beregnDatoFra, beregnDatoTil = beregnDatoTil, grunnlagListe = grunnlagListe)
+
+        return BeregnGrunnlag(
+            periode = ÅrMånedsperiode(fom = beregningsperiodeFom, til = beregningsperiodeTil),
+            søknadsbarnReferanse = "1",
+            grunnlagListe = grunnlagListe
+        )
     }
 
     // Bygger opp fullt BeregnGrunnlag
     @JvmOverloads
     fun byggForskuddGrunnlag(
-        datoFom: String = "2017-01-01",
-        datoTom: String = "2020-01-01",
-        fodselsdato: String = "2006-12-01",
-        antall: String = "1.0",
-        belop: String = "290000"
+        periodeFom: String = "2017-01",
+        periodeTil: String = "2020-01",
+        fødselsdato: String = "2006-12-01",
+        beløp: String = "290000"
     ): BeregnGrunnlag {
         val mapper = ObjectMapper()
-        val barnIHusstandInnhold = mapper.valueToTree<JsonNode>(
-            Map.of(
-                "datoFom",
-                datoFom,
-                "datoTil",
-                datoTom,
-                "antall",
-                antall
-            )
-        )
-        val soknadsbarnInnhold = mapper.valueToTree<JsonNode>(
-            Map.of(
-                "soknadsbarnId",
-                1,
-                "fodselsdato",
-                fodselsdato
+        val personSøknadsbarnInnhold = mapper.valueToTree<JsonNode>(
+            mapOf(
+                "ident" to "11111111111",
+                "navn" to "Søknadsbarn",
+                "fødselsdato" to fødselsdato
             )
         )
         val bostatusInnhold = mapper.valueToTree<JsonNode>(
-            Map.of(
-                "datoFom",
-                datoFom,
-                "datoTil",
-                datoTom,
-                "rolle",
-                "SOKNADSBARN",
-                "bostatusKode",
-                "MED_FORELDRE"
+            mapOf(
+                "periode" to mapOf(
+                    "fom" to periodeFom,
+                    "til" to periodeTil
+                ),
+                "bostatus" to Bostatuskode.MED_FORELDER.name,
+                "manueltRegistrert" to false
             )
         )
         val inntektInnhold = mapper.valueToTree<JsonNode>(
-            Map.of(
-                "datoFom", datoFom,
-                "datoTil", datoTom,
-                "rolle", "BIDRAGSMOTTAKER",
-                "inntektType", "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-                "belop", belop
+            mapOf(
+                "periode" to mapOf(
+                    "fom" to periodeFom,
+                    "til" to periodeTil
+                ),
+                "inntektRapportering" to InntektRapportering.AINNTEKT.name,
+                "beløp" to beløp,
+                "manueltRegistrert" to false,
+                "valgt" to true
             )
         )
         val sivilstandInnhold = mapper.valueToTree<JsonNode>(
-            Map.of(
-                "datoFom",
-                datoFom,
-                "datoTil",
-                datoTom,
-                "rolle",
-                "BIDRAGSMOTTAKER",
-                "sivilstandKode",
-                "GIFT"
+            mapOf(
+                "periode" to mapOf(
+                    "fom" to periodeFom,
+                    "til" to periodeTil
+                ),
+                "sivilstand" to SivilstandskodeBeregning.GIFT_SAMBOER.name
             )
         )
 
-        val beregnDatoFra = LocalDate.parse("2017-01-01")
-        val beregnDatoTil = LocalDate.parse("2020-01-01")
+        val beregningsperiodeFom = YearMonth.parse(periodeFom)
+        val beregningsperiodeTil = YearMonth.parse(periodeTil)
         val grunnlagListe = mutableListOf<Grunnlag>()
 
-        grunnlagListe.add(Grunnlag(referanse = "Mottatt_BarnIHusstand", type = GrunnlagType.BARN_I_HUSSTAND, innhold = barnIHusstandInnhold))
-        grunnlagListe.add(Grunnlag(referanse = "Mottatt_BarnIHusstand", type = GrunnlagType.SOKNADSBARN_INFO, innhold = soknadsbarnInnhold))
-        grunnlagListe.add(Grunnlag(referanse = "Mottatt_Bostatus_20170101", type = GrunnlagType.BOSTATUS, innhold = bostatusInnhold))
-        grunnlagListe.add(Grunnlag(referanse = "Mottatt_Inntekt_AG_20170101", type = GrunnlagType.INNTEKT, innhold = inntektInnhold))
-        grunnlagListe.add(Grunnlag(referanse = "Mottatt_Sivilstand_20201201", type = GrunnlagType.SIVILSTAND, innhold = sivilstandInnhold))
+        grunnlagListe.add(
+            Grunnlag(
+                navn = "Person_Søknadsbarn",
+                type = Grunnlagstype.PERSON,
+                grunnlagsreferanseListe = emptyList(),
+                innhold = personSøknadsbarnInnhold
+            )
+        )
+        grunnlagListe.add(
+            Grunnlag(
+                navn = "Bostatus_20170101",
+                type = Grunnlagstype.BOSTATUS_PERIODE,
+                grunnlagsreferanseListe = emptyList(),
+                innhold = bostatusInnhold
+            )
+        )
+        grunnlagListe.add(
+            Grunnlag(
+                navn = "BeregningInntektRapportering_Ainntekt_20170101",
+                type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                grunnlagsreferanseListe = emptyList(),
+                innhold = inntektInnhold
+            )
+        )
+        grunnlagListe.add(
+            Grunnlag(
+                navn = "Sivilstand_20170101",
+                type = Grunnlagstype.SIVILSTAND_PERIODE,
+                grunnlagsreferanseListe = emptyList(),
+                innhold = sivilstandInnhold
+            )
+        )
 
-        return BeregnGrunnlag(beregnDatoFra = beregnDatoFra, beregnDatoTil = beregnDatoTil, grunnlagListe = grunnlagListe)
+        return BeregnGrunnlag(
+            periode = ÅrMånedsperiode(fom = beregningsperiodeFom, til = beregningsperiodeTil),
+            søknadsbarnReferanse = "Person_Søknadsbarn",
+            grunnlagListe = grunnlagListe
+        )
     }
 
     // Bygger opp BeregnForskuddResultatCore
@@ -213,7 +237,7 @@ object TestUtil {
         val beregnetForskuddPeriodeListe = mutableListOf<ResultatPeriode>()
         beregnetForskuddPeriodeListe.add(
             ResultatPeriode(
-                periode = Periode(LocalDate.parse("2017-01-01"), LocalDate.parse("2019-01-01")),
+                periode = ÅrMånedsperiode(fom = LocalDate.parse("2017-01-01"), til = LocalDate.parse("2019-01-01")),
                 resultat = ResultatBeregning(
                     belop = BigDecimal.valueOf(100),
                     kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,

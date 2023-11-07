@@ -10,14 +10,15 @@ import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
-import no.nav.bidrag.domain.enums.GrunnlagType
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.transport.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.beregning.felles.Grunnlag
-import no.nav.bidrag.transport.beregning.felles.Periode
-import no.nav.bidrag.transport.beregning.forskudd.BeregnetForskuddResultat
-import no.nav.bidrag.transport.beregning.forskudd.ResultatBeregning
-import no.nav.bidrag.transport.beregning.forskudd.ResultatPeriode
+import no.nav.bidrag.domene.enums.Grunnlagstype
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.tid.ÅrMånedsperiode
+import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
+import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
+import no.nav.bidrag.transport.behandling.beregning.felles.valider
+import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
+import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
+import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -27,7 +28,11 @@ import java.time.LocalDate
 class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, private val forskuddCore: ForskuddCore) {
     fun beregn(grunnlag: BeregnGrunnlag): HttpResponse<BeregnetForskuddResultat> {
         // Kontroll av inputdata
-        grunnlag.valider()
+        try {
+            grunnlag.valider()
+        } catch (e: IllegalArgumentException) {
+            throw UgyldigInputException("Ugyldig input ved beregning av forskudd: " + e.message)
+        }
 
         // Henter sjabloner
         val sjablonSjablontallResponse: HttpResponse<List<Sjablontall>> = sjablonConsumer.hentSjablonSjablontall()
@@ -94,7 +99,7 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
     private fun mapFraResultatPeriodeCore(resultatPeriodeCoreListe: List<ResultatPeriodeCore>) =
         resultatPeriodeCoreListe.map {
             ResultatPeriode(
-                periode = Periode(datoFom = it.periode.datoFom, datoTil = it.periode.datoTil),
+                periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
                 resultat = ResultatBeregning(
                     belop = it.resultat.belop,
                     kode = ResultatKodeForskudd.valueOf(it.resultat.kode),
@@ -117,8 +122,8 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
         resultatGrunnlagListe.addAll(
             forskuddGrunnlag.grunnlagListe!!
-                .filter { grunnlagReferanseListe.contains(it.referanse) }
-                .map { Grunnlag(referanse = it.referanse, type = it.type, innhold = it.innhold) }
+                .filter { grunnlagReferanseListe.contains(it.navn) }
+                .map { Grunnlag(navn = it.navn, type = it.type, innhold = it.innhold) }
         )
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
@@ -130,7 +135,7 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                     map["datoTil"] = mapDato(it.periode.datoTil!!)
                     map["sjablonNavn"] = it.navn
                     map["sjablonVerdi"] = it.verdi.toInt()
-                    Grunnlag(referanse = it.referanse, type = GrunnlagType.SJABLON, innhold = mapper.valueToTree(map))
+                    Grunnlag(navn = it.referanse, type = Grunnlagstype.SJABLON, innhold = mapper.valueToTree(map))
                 }
         )
 
@@ -145,16 +150,4 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
             return if (dato.isAfter(LocalDate.parse("9999-12-31"))) "9999-12-31" else dato.toString()
         }
     }
-}
-
-fun BeregnGrunnlag.valider() {
-    if (beregnDatoFra == null) throw UgyldigInputException("beregnDatoFra kan ikke være null")
-    if (beregnDatoTil == null) throw UgyldigInputException("beregnDatoTil kan ikke være null")
-    grunnlagListe?.map { it.valider() } ?: throw UgyldigInputException("grunnlagListe kan ikke være null")
-}
-
-fun Grunnlag.valider() {
-    if (referanse == null) throw UgyldigInputException("referanse kan ikke være null")
-    if (type == null) throw UgyldigInputException("type kan ikke være null")
-    if (innhold == null) throw UgyldigInputException("innhold kan ikke være null")
 }
