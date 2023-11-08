@@ -26,7 +26,12 @@ import java.time.LocalDate
 
 @Service
 class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, private val forskuddCore: ForskuddCore) {
+
     fun beregn(grunnlag: BeregnGrunnlag): HttpResponse<BeregnetForskuddResultat> {
+        if (SECURE_LOGGER.isDebugEnabled) {
+            SECURE_LOGGER.debug("Mottatt følgende request: {}", grunnlag)
+        }
+
         // Kontroll av inputdata
         try {
             grunnlag.valider()
@@ -39,7 +44,7 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
 
         if (sjablonSjablontallResponse.responseEntity.body.isNullOrEmpty()) {
             LOGGER.error("Klarte ikke å hente sjabloner")
-            return from(HttpStatus.OK, BeregnetForskuddResultat())
+            return from(httpStatus = HttpStatus.OK, body = BeregnetForskuddResultat())
         }
 
         val sjablonTallListe = sjablonSjablontallResponse.responseEntity.body!!
@@ -87,13 +92,16 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
 
         val grunnlagReferanseListe = lagGrunnlagReferanseListe(forskuddGrunnlag = grunnlag, resultatFraCore = resultatFraCore)
 
-        return from(
-            HttpStatus.OK,
-            BeregnetForskuddResultat(
-                beregnetForskuddPeriodeListe = mapFraResultatPeriodeCore(resultatFraCore.beregnetForskuddPeriodeListe),
-                grunnlagListe = grunnlagReferanseListe
-            )
+        val respons = BeregnetForskuddResultat(
+            beregnetForskuddPeriodeListe = mapFraResultatPeriodeCore(resultatFraCore.beregnetForskuddPeriodeListe),
+            grunnlagListe = grunnlagReferanseListe
         )
+
+        if (SECURE_LOGGER.isDebugEnabled) {
+            SECURE_LOGGER.debug("Returnerer følgende respons: {}", respons)
+        }
+
+        return from(httpStatus = HttpStatus.OK, body = respons)
     }
 
     private fun mapFraResultatPeriodeCore(resultatPeriodeCoreListe: List<ResultatPeriodeCore>) =

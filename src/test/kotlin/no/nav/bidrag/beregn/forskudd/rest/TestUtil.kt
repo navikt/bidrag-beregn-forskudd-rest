@@ -162,7 +162,7 @@ object TestUtil {
             Grunnlag(
                 navn = "Bostatus_20170101",
                 type = Grunnlagstype.BOSTATUS_PERIODE,
-                grunnlagsreferanseListe = emptyList(),
+                grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                 innhold = bostatusInnhold
             )
         )

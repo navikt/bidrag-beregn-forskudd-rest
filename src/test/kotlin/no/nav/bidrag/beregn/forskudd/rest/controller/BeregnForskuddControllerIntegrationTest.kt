@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
@@ -23,7 +22,6 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
@@ -141,19 +139,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         url = "http://localhost:$port/beregn/forskudd"
     }
 
-//    @Test
-//    @DisplayName("skal kalle core og returnere et resultat - eksempel 1")
-//    fun skalKalleCoreOgReturnereEtResultat_Eksempel01Ny() {
-//        // Forhøyet forskudd ved 11 år: SB alder > 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus gift
-//        filnavn = "src/test/resources/testfiler/forskudd_eksempel1_ny.json"
-//        forventetForskuddBelop = 2080
-//        forventetForskuddResultatkode = ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT
-//        forventetForskuddRegel = "REGEL 5"
-//        utfoerBeregningerOgEvaluerResultat()
-//    }
-
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 1")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel01() {
         // Forhøyet forskudd ved 11 år: SB alder > 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -165,7 +151,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 2")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel02() {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 300000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -177,7 +162,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 3")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel03() {
         // Redusert forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -189,7 +173,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 4")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel04() {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 2; BM sivilstatus gift
@@ -201,7 +184,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 5")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel05() {
         // Redusert forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -213,7 +195,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 6")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel06() {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus enslig
@@ -225,7 +206,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 7")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel07() {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 3; BM sivilstatus gift
@@ -237,7 +217,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 8")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel08() {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 3; BM sivilstatus enslig
@@ -249,7 +228,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 9")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel09() {
         // Redusert forskudd: SB alder > 11 år; BM inntekt 530000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -261,7 +239,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 10")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel10() {
         // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus enslig
@@ -273,7 +250,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 11")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel11() {
         // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -285,7 +261,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 12")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel12() {
         // Forhøyet forskudd: SB alder < 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus enslig
@@ -297,7 +272,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 13")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel13() {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 290000+13000; BM antall barn egen husstand 1; BM sivilstatus enslig
@@ -309,7 +283,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 14")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel14() {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -321,7 +294,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 15")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel15() {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus enslig
@@ -333,7 +305,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 16")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel16() {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus enslig
@@ -345,7 +316,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 17")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel17() {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus gift
@@ -357,7 +327,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 18")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel18() {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 429000; BM antall barn egen husstand 2; BM sivilstatus enslig
@@ -369,7 +338,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 19")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel19() {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 429000; BM antall barn egen husstand 2; BM sivilstatus gift
@@ -381,7 +349,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 20")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel20() {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 430000; BM antall barn egen husstand 2; BM sivilstatus gift
@@ -393,7 +360,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 22")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel22() {
         // Avslag: SB alder < 11 år; BM inntekt 489000+60000; BM antall barn egen husstand 2; BM sivilstatus gift
@@ -405,7 +371,6 @@ internal class BeregnForskuddControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("skal kalle core og returnere et resultat - eksempel 23")
     fun skalKalleCoreOgReturnereEtResultat_Eksempel23() {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 489000; BM antall barn egen husstand 2; BM sivilstatus gift
@@ -414,23 +379,6 @@ internal class BeregnForskuddControllerIntegrationTest {
         forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 14"
         utfoerBeregningerOgEvaluerResultat()
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("skal feile med exception ved kall til core - eksempel 1")
-    fun skalFeileMedExceptionVedKallTilCore_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/forskudd_eksempel1_med_feil_verdi_i_enum.json"
-        val request = lesFilOgByggRequest(filnavn)
-
-        // Kall rest-API for forskudd
-        val responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat::class.java)
-
-        assertAll(
-            Executable { assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.BAD_REQUEST) },
-            Executable { assertThat(responseEntity.headers["Error"]?.stream()?.anyMatch { it.contains("UgyldigInputException") }).isTrue() },
-            Executable { assertThat(responseEntity.headers["Error"]?.stream()?.anyMatch { it.contains("BOR_MED_BESTEMOR") }).isTrue() }
-        )
     }
 
     private fun utfoerBeregningerOgEvaluerResultat() {
