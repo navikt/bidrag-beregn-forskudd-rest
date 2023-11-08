@@ -130,8 +130,8 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
         resultatGrunnlagListe.addAll(
             forskuddGrunnlag.grunnlagListe!!
-                .filter { grunnlagReferanseListe.contains(it.navn) }
-                .map { Grunnlag(navn = it.navn, type = it.type, innhold = it.innhold) }
+                .filter { grunnlagReferanseListe.contains(it.referanse) }
+                .map { Grunnlag(referanse = it.referanse, type = it.type, innhold = it.innhold) }
         )
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
@@ -143,7 +143,7 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                     map["datoTil"] = mapDato(it.periode.datoTil!!)
                     map["sjablonNavn"] = it.navn
                     map["sjablonVerdi"] = it.verdi.toInt()
-                    Grunnlag(navn = it.referanse, type = Grunnlagstype.SJABLON, innhold = mapper.valueToTree(map))
+                    Grunnlag(referanse = it.referanse, type = Grunnlagstype.SJABLON, innhold = mapper.valueToTree(map))
                 }
         )
 

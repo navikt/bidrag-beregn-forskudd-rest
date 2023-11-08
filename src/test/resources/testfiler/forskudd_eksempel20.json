@@ -6,7 +6,7 @@
   "søknadsbarnReferanse": "Person_Søknadsbarn_20201201",
   "grunnlagListe": [
     {
-      "navn": "Person_Søknadsbarn_20201201",
+      "referanse": "Person_Søknadsbarn_20201201",
       "type": "PERSON",
       "grunnlagsreferanseListe": [],
       "innhold": {
@@ -16,7 +16,7 @@
       }
     },
     {
-      "navn": "Person_Husstandsbarn_01_20201201",
+      "referanse": "Person_Husstandsbarn_01_20201201",
       "type": "PERSON",
       "grunnlagsreferanseListe": [],
       "innhold": {
@@ -26,7 +26,7 @@
       }
     },
     {
-      "navn": "Person_Bidragsmottaker_20201201",
+      "referanse": "Person_Bidragsmottaker_20201201",
       "type": "PERSON",
       "grunnlagsreferanseListe": [],
       "innhold": {
@@ -36,7 +36,7 @@
       }
     },
     {
-      "navn": "Bostatus_Søknadsbarn_20201201",
+      "referanse": "Bostatus_Søknadsbarn_20201201",
       "type": "BOSTATUS_PERIODE",
       "grunnlagsreferanseListe": [
         "Person_Søknadsbarn_20201201"
@@ -51,7 +51,7 @@
       }
     },
     {
-      "navn": "Bostatus_Husstandsbarn_01_20201201",
+      "referanse": "Bostatus_Husstandsbarn_01_20201201",
       "type": "BOSTATUS_PERIODE",
       "grunnlagsreferanseListe": [
         "Person_Husstandsbarn_20201201"
@@ -66,7 +66,7 @@
       }
     },
     {
-      "navn": "BeregningInntektRapportering_Ainntekt_20201201",
+      "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
       "type": "BEREGNING_INNTEKT_RAPPORTERING_PERIODE",
       "grunnlagsreferanseListe": [
         "Person_Bidragsmottaker_20201201"
@@ -77,13 +77,14 @@
           "til": "2021-01"
         },
         "inntektRapportering": "AINNTEKT",
+        "gjelderBarn": null,
         "beløp": 430000,
         "manueltRegistrert": false,
         "valgt": true
       }
     },
     {
-      "navn": "Sivilstand_20201201",
+      "referanse": "Sivilstand_20201201",
       "type": "SIVILSTAND_PERIODE",
       "grunnlagsreferanseListe": [
         "Person_Bidragsmottaker_20201201"

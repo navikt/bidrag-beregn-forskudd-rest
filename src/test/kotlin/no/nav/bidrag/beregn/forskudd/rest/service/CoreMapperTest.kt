@@ -21,7 +21,7 @@ internal class CoreMapperTest {
             søknadsbarnReferanse = "Person_Søknadsbarn",
             grunnlagListe = listOf(
                 Grunnlag(
-                    navn = "Person_Søknadsbarn",
+                    referanse = "Person_Søknadsbarn",
                     type = Grunnlagstype.PERSON,
                     grunnlagsreferanseListe = emptyList(),
                     innhold = innholdPersonMedFeil
@@ -45,13 +45,13 @@ internal class CoreMapperTest {
             søknadsbarnReferanse = "Person_Søknadsbarn",
             grunnlagListe = listOf(
                 Grunnlag(
-                    navn = "Person_Søknadsbarn",
+                    referanse = "Person_Søknadsbarn",
                     type = Grunnlagstype.PERSON,
                     grunnlagsreferanseListe = emptyList(),
                     innhold = innholdPerson
                 ),
                 Grunnlag(
-                    navn = "Bostatus_Søknadsbarn",
+                    referanse = "Bostatus_Søknadsbarn",
                     type = Grunnlagstype.BOSTATUS_PERIODE,
                     grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                     innhold = innholdBostatusMedFeil
@@ -76,19 +76,19 @@ internal class CoreMapperTest {
             søknadsbarnReferanse = "Person_Søknadsbarn",
             grunnlagListe = listOf(
                 Grunnlag(
-                    navn = "Person_Søknadsbarn",
+                    referanse = "Person_Søknadsbarn",
                     type = Grunnlagstype.PERSON,
                     grunnlagsreferanseListe = emptyList(),
                     innhold = innholdPerson
                 ),
                 Grunnlag(
-                    navn = "Bostatus_Søknadsbarn",
+                    referanse = "Bostatus_Søknadsbarn",
                     type = Grunnlagstype.BOSTATUS_PERIODE,
                     grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                     innhold = innholdBostatus
                 ),
                 Grunnlag(
-                    navn = "BeregningInntektRapportering_Ainntekt",
+                    referanse = "BeregningInntektRapportering_Ainntekt",
                     type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
                     grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
                     innhold = innholdInntektMedFeil
@@ -114,25 +114,25 @@ internal class CoreMapperTest {
             søknadsbarnReferanse = "Person_Søknadsbarn",
             grunnlagListe = listOf(
                 Grunnlag(
-                    navn = "Person_Søknadsbarn",
+                    referanse = "Person_Søknadsbarn",
                     type = Grunnlagstype.PERSON,
                     grunnlagsreferanseListe = emptyList(),
                     innhold = innholdPerson
                 ),
                 Grunnlag(
-                    navn = "Bostatus_Søknadsbarn",
+                    referanse = "Bostatus_Søknadsbarn",
                     type = Grunnlagstype.BOSTATUS_PERIODE,
                     grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                     innhold = innholdBostatus
                 ),
                 Grunnlag(
-                    navn = "BeregningInntektRapportering_Ainntekt",
+                    referanse = "BeregningInntektRapportering_Ainntekt",
                     type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
                     grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
                     innhold = innholdInntekt
                 ),
                 Grunnlag(
-                    navn = "Sivilstand",
+                    referanse = "Sivilstand",
                     type = Grunnlagstype.SIVILSTAND_PERIODE,
                     grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
                     innhold = innholdSivilstandMedFeil
@@ -158,10 +158,10 @@ internal class CoreMapperTest {
         mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_FORELDER\"," + "\"manueltRegistrert\": false}")
 
     private fun innholdInntektMedFeil(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," + "\"beløp\": \"29x000\"," + "\"manueltRegistrert\": false," + "\"valgt\": true}")
+        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," + "\"gjelderBarn\": null," + "\"beløp\": \"29x000\"," + "\"manueltRegistrert\": false," + "\"valgt\": true}")
 
     private fun innholdInntektOK(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," + "\"beløp\": 290000," + "\"manueltRegistrert\": false," + "\"valgt\": true}")
+        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," + "\"gjelderBarn\": null," + "\"beløp\": 290000," + "\"manueltRegistrert\": false," + "\"valgt\": true}")
 
     private fun innholdSivilstandMedFeil(mapper: ObjectMapper) =
         mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"sivilstand\": \"UGIFT\"}")

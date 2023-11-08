@@ -83,7 +83,7 @@ object TestUtil {
             } else {
                 listOf(
                     Grunnlag(
-                        navn = referanse,
+                        referanse = referanse,
                         type = type,
                         grunnlagsreferanseListe = emptyList(),
                         innhold = innhold
@@ -131,6 +131,7 @@ object TestUtil {
                     "til" to periodeTil
                 ),
                 "inntektRapportering" to InntektRapportering.AINNTEKT.name,
+                "gjelderBarn" to null,
                 "beløp" to beløp,
                 "manueltRegistrert" to false,
                 "valgt" to true
@@ -152,7 +153,7 @@ object TestUtil {
 
         grunnlagListe.add(
             Grunnlag(
-                navn = "Person_Søknadsbarn",
+                referanse = "Person_Søknadsbarn",
                 type = Grunnlagstype.PERSON,
                 grunnlagsreferanseListe = emptyList(),
                 innhold = personSøknadsbarnInnhold
@@ -160,7 +161,7 @@ object TestUtil {
         )
         grunnlagListe.add(
             Grunnlag(
-                navn = "Bostatus_20170101",
+                referanse = "Bostatus_20170101",
                 type = Grunnlagstype.BOSTATUS_PERIODE,
                 grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
                 innhold = bostatusInnhold
@@ -168,7 +169,7 @@ object TestUtil {
         )
         grunnlagListe.add(
             Grunnlag(
-                navn = "BeregningInntektRapportering_Ainntekt_20170101",
+                referanse = "BeregningInntektRapportering_Ainntekt_20170101",
                 type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
                 grunnlagsreferanseListe = emptyList(),
                 innhold = inntektInnhold
@@ -176,7 +177,7 @@ object TestUtil {
         )
         grunnlagListe.add(
             Grunnlag(
-                navn = "Sivilstand_20170101",
+                referanse = "Sivilstand_20170101",
                 type = Grunnlagstype.SIVILSTAND_PERIODE,
                 grunnlagsreferanseListe = emptyList(),
                 innhold = sivilstandInnhold

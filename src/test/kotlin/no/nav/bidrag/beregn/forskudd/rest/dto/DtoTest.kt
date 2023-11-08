@@ -28,7 +28,7 @@ internal class DtoTest {
     fun skalKasteIllegalArgumentExceptionNaarReferanseErNull() {
         val grunnlag = TestUtil.byggForskuddGrunnlagUtenReferanse()
         Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy { grunnlag.valider() }
-            .withMessage("navn kan ikke være null")
+            .withMessage("referanse kan ikke være null")
     }
 
     @Test
