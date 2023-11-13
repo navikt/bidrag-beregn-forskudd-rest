@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - 'main'
-env:
-  GITHUB_USERNAME: x-access-token
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build-deploy:
@@ -15,13 +12,16 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    uses: navikt/bidrag-workflow/.github/workflows/deploy_main.yaml@main
+    uses: navikt/bidrag-workflow/.github/workflows/deploy.yaml@main
     secrets: inherit
+    with:
+      nais_variabler_filnavn: main.yaml
 
   run-cucumber-tests:
     runs-on: ubuntu-latest
     name: Run cucumber tests
     needs: build-deploy
+    if: ${{ always() && needs.build-deploy.outputs.deploy_suksess == 'true' }}
 
     env:
       INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
