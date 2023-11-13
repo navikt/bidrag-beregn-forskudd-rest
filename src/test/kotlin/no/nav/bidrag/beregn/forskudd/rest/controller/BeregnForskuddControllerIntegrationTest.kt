@@ -2,6 +2,7 @@ package no.nav.bidrag.beregn.forskudd.rest.controller
 
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
+import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremockstub.SjablonApiStub
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
 import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
@@ -386,6 +387,8 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Kall rest-API for forskudd
         val responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat::class.java)
         val forskuddResultat = responseEntity.body
+
+        TestUtil.printJson(forskuddResultat)
 
         assertAll(
             Executable { assertThat(responseEntity.statusCode).isEqualTo(OK) },

@@ -22,3 +22,8 @@ wiremock.server:
 ---
 # Profil for integrasjonstest
 spring.config.activate.on-profile: integrationtest
+
+# Inkluderer alle felter i JSON-responsen
+spring:
+  jackson:
+    default-property-inclusion: ALWAYS

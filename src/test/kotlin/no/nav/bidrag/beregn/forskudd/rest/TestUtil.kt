@@ -2,6 +2,8 @@ package no.nav.bidrag.beregn.forskudd.rest
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.bidrag.beregn.felles.dto.AvvikCore
 import no.nav.bidrag.beregn.felles.dto.PeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
@@ -20,6 +22,7 @@ import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddRes
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatBeregning
 import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -573,5 +576,14 @@ object TestUtil {
         )
 
         return sjablonSjablontallListe
+    }
+
+    fun <T> printJson(json: T) {
+        val objectMapper = ObjectMapper()
+        objectMapper.registerKotlinModule()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        println(objectMapper.writeValueAsString(json))
     }
 }
