@@ -250,11 +250,21 @@ object CoreMapper {
             .filter { (sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY)).forskudd }
             .map {
                 SjablonPeriodeCore(
-                    periode = PeriodeCore(it.datoFom!!, if (it.datoTom == MAX_DATO) null else it.datoTom),
+                    periode = PeriodeCore(it.datoFom!!, justerTilDato(it.datoTom)),
                     navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
                     nokkelListe = emptyList(),
                     innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
                 )
             }
+    }
+
+    private fun justerTilDato(dato: LocalDate?): LocalDate? {
+        return if (dato == null || dato == MAX_DATO) {
+            null
+        } else if (dato.dayOfMonth != 1) {
+            dato.plusMonths(1).withDayOfMonth(1)
+        } else {
+            dato
+        }
     }
 }
