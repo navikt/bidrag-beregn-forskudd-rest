@@ -19,7 +19,9 @@ class BeregnForskuddController(private val beregnForskuddService: BeregnForskudd
     @PostMapping(path = ["/forskudd"])
     @Operation(summary = "Beregner forskudd")
     @SecurityRequirement(name = "bearer-key")
-    fun beregnForskudd(@RequestBody beregnForskuddGrunnlag: BeregnGrunnlag): ResponseEntity<BeregnetForskuddResultat> {
+    fun beregnForskudd(
+        @RequestBody beregnForskuddGrunnlag: BeregnGrunnlag,
+    ): ResponseEntity<BeregnetForskuddResultat> {
         val resultat = beregnForskuddService.beregn(beregnForskuddGrunnlag)
         return ResponseEntity(resultat.responseEntity.body, resultat.responseEntity.statusCode)
     }

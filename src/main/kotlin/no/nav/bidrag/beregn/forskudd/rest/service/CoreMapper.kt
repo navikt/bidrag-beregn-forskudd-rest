@@ -16,7 +16,7 @@ import no.nav.bidrag.domene.enums.Grunnlagstype
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
-import no.nav.bidrag.transport.behandling.beregning.felles.grunnlag.InntektRapporteringPeriode
+import no.nav.bidrag.transport.behandling.beregning.felles.grunnlag.BeregningInntektRapporteringPeriode
 import no.nav.bidrag.transport.behandling.beregning.felles.hentInnholdBasertPåEgenReferanse
 import no.nav.bidrag.transport.behandling.beregning.felles.hentInnholdBasertPåFremmedReferanse
 import no.nav.bidrag.transport.behandling.felles.grunnlag.BostatusPeriode
@@ -25,8 +25,12 @@ import no.nav.bidrag.transport.behandling.felles.grunnlag.SivilstandPeriode
 import java.time.LocalDate
 
 object CoreMapper {
+    private val MAX_DATO = LocalDate.parse("9999-12-31")
 
-    fun mapGrunnlagTilCore(beregnForskuddGrunnlag: BeregnGrunnlag, sjablontallListe: List<Sjablontall>): BeregnForskuddGrunnlagCore {
+    fun mapGrunnlagTilCore(
+        beregnForskuddGrunnlag: BeregnGrunnlag,
+        sjablontallListe: List<Sjablontall>,
+    ): BeregnForskuddGrunnlagCore {
         // Lager en map for sjablontall (id og navn)
         val sjablontallMap = HashMap<String, SjablonTallNavn>()
         SjablonTallNavn.entries.forEach {
@@ -46,15 +50,16 @@ object CoreMapper {
             bostatusGrunnlag = bostatusPeriodeCoreListe.isNotEmpty(),
             inntektGrunnlag = inntektPeriodeCoreListe.isNotEmpty(),
             sivilstandGrunnlag = sivilstandPeriodeCoreListe.isNotEmpty(),
-            barnIHusstandenGrunnlag = barnIHusstandenPeriodeCoreListe.isNotEmpty()
+            barnIHusstandenGrunnlag = barnIHusstandenPeriodeCoreListe.isNotEmpty(),
         )
 
-        val sjablonPeriodeCoreListe = mapSjablonVerdier(
-            beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
-            beregnDatoTil = beregnForskuddGrunnlag.periode!!.tilDato!!.verdi,
-            sjablonSjablontallListe = sjablontallListe,
-            sjablontallMap = sjablontallMap
-        )
+        val sjablonPeriodeCoreListe =
+            mapSjablonVerdier(
+                beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
+                beregnDatoTil = beregnForskuddGrunnlag.periode!!.tilDato!!.verdi,
+                sjablonSjablontallListe = sjablontallListe,
+                sjablontallMap = sjablontallMap,
+            )
 
         return BeregnForskuddGrunnlagCore(
             beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
@@ -64,128 +69,141 @@ object CoreMapper {
             inntektPeriodeListe = inntektPeriodeCoreListe,
             sivilstandPeriodeListe = sivilstandPeriodeCoreListe,
             barnIHusstandenPeriodeListe = barnIHusstandenPeriodeCoreListe,
-            sjablonPeriodeListe = sjablonPeriodeCoreListe
+            sjablonPeriodeListe = sjablonPeriodeCoreListe,
         )
     }
 
     private fun mapSoknadsbarn(beregnForskuddGrunnlag: BeregnGrunnlag): SoknadBarnCore? {
         try {
-            val soknadsbarnGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                grunnlagType = Grunnlagstype.PERSON,
-                clazz = Person::class.java,
-                referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!
-            )
+            val soknadsbarnGrunnlag =
+                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
+                    grunnlagType = Grunnlagstype.PERSON,
+                    clazz = Person::class.java,
+                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!,
+                )
 
             return if (soknadsbarnGrunnlag.isEmpty() || soknadsbarnGrunnlag.count() > 1) {
                 null
             } else {
                 SoknadBarnCore(
                     referanse = soknadsbarnGrunnlag[0].referanse,
-                    fodselsdato = soknadsbarnGrunnlag[0].innhold.fødselsdato.verdi
+                    fodselsdato = soknadsbarnGrunnlag[0].innhold.fødselsdato.verdi,
                 )
             }
         } catch (e: Exception) {
-            throw UgyldigInputException("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON er ikke gyldig: " + e.message)
+            throw UgyldigInputException(
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.PERSON er ikke gyldig: " + e.message,
+            )
         }
     }
 
     private fun mapBostatus(beregnForskuddGrunnlag: BeregnGrunnlag): List<BostatusPeriodeCore> {
         try {
-            val bostatusGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåFremmedReferanse(
-                grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
-                clazz = BostatusPeriode::class.java,
-                referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!
-            )
+            val bostatusGrunnlag =
+                beregnForskuddGrunnlag.hentInnholdBasertPåFremmedReferanse(
+                    grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
+                    clazz = BostatusPeriode::class.java,
+                    referanse = beregnForskuddGrunnlag.søknadsbarnReferanse!!,
+                )
 
             return bostatusGrunnlag.map {
                 BostatusPeriodeCore(
                     referanse = it.referanse,
-                    periode = PeriodeCore(
-                        datoFom = it.innhold.periode.toDatoperiode().fom,
-                        datoTil = it.innhold.periode.toDatoperiode().til
-                    ),
-                    kode = it.innhold.bostatus.name
+                    periode =
+                        PeriodeCore(
+                            datoFom = it.innhold.periode.toDatoperiode().fom,
+                            datoTil = it.innhold.periode.toDatoperiode().til,
+                        ),
+                    kode = it.innhold.bostatus.name,
                 )
             }
         } catch (e: Exception) {
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }
 
     private fun mapInntekt(beregnForskuddGrunnlag: BeregnGrunnlag): List<InntektPeriodeCore> {
         try {
-            val inntektGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                grunnlagType = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
-                clazz = InntektRapporteringPeriode::class.java
-            )
+            val inntektGrunnlag =
+                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
+                    grunnlagType = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                    clazz = BeregningInntektRapporteringPeriode::class.java,
+                )
 
             return inntektGrunnlag
                 .filter { it.innhold.valgt }
+                .filter { it.innhold.gjelderBarn == null || it.innhold.gjelderBarn == beregnForskuddGrunnlag.søknadsbarnReferanse }
                 .map {
                     InntektPeriodeCore(
                         referanse = it.referanse,
-                        periode = PeriodeCore(
-                            datoFom = it.innhold.periode.toDatoperiode().fom,
-                            datoTil = it.innhold.periode.toDatoperiode().til
-                        ),
+                        periode =
+                            PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
                         type = it.innhold.inntektRapportering.name,
-                        belop = it.innhold.beløp
+                        belop = it.innhold.beløp,
                     )
                 }
         } catch (e: Exception) {
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " + e.message
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig: " +
+                    e.message,
             )
         }
     }
 
     private fun mapSivilstand(beregnForskuddGrunnlag: BeregnGrunnlag): List<SivilstandPeriodeCore> {
         try {
-            val sivilstandGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                grunnlagType = Grunnlagstype.SIVILSTAND_PERIODE,
-                clazz = SivilstandPeriode::class.java
-            )
+            val sivilstandGrunnlag =
+                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
+                    grunnlagType = Grunnlagstype.SIVILSTAND_PERIODE,
+                    clazz = SivilstandPeriode::class.java,
+                )
 
             return sivilstandGrunnlag.map {
                 SivilstandPeriodeCore(
                     referanse = it.referanse,
-                    periode = PeriodeCore(
-                        datoFom = it.innhold.periode.toDatoperiode().fom,
-                        datoTil = it.innhold.periode.toDatoperiode().til
-                    ),
-                    kode = it.innhold.sivilstand.name
+                    periode =
+                        PeriodeCore(
+                            datoFom = it.innhold.periode.toDatoperiode().fom,
+                            datoTil = it.innhold.periode.toDatoperiode().til,
+                        ),
+                    kode = it.innhold.sivilstand.name,
                 )
             }
         } catch (e: Exception) {
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.SIVILSTAND_PERIODE er ikke gyldig: " + e.message
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.SIVILSTAND_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }
 
     private fun mapBarnIHusstanden(beregnForskuddGrunnlag: BeregnGrunnlag): List<BarnIHusstandenPeriodeCore> {
         try {
-            val barnIHusstandenGrunnlag = beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
-                grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
-                clazz = BostatusPeriode::class.java
-            )
+            val barnIHusstandenGrunnlag =
+                beregnForskuddGrunnlag.hentInnholdBasertPåEgenReferanse(
+                    grunnlagType = Grunnlagstype.BOSTATUS_PERIODE,
+                    clazz = BostatusPeriode::class.java,
+                )
 
             return barnIHusstandenGrunnlag
                 .filter { it.innhold.bostatus == Bostatuskode.MED_FORELDER || it.innhold.bostatus == Bostatuskode.DOKUMENTERT_SKOLEGANG }
                 .map {
                     BarnIHusstandenPeriodeCore(
                         referanse = it.referanse,
-                        periode = PeriodeCore(
-                            datoFom = it.innhold.periode.toDatoperiode().fom,
-                            datoTil = it.innhold.periode.toDatoperiode().til
-                        )
+                        periode =
+                            PeriodeCore(
+                                datoFom = it.innhold.periode.toDatoperiode().fom,
+                                datoTil = it.innhold.periode.toDatoperiode().til,
+                            ),
                     )
                 }
         } catch (e: Exception) {
             throw UgyldigInputException(
-                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BOSTATUS_PERIODE er ikke gyldig: " + e.message,
             )
         }
     }
@@ -195,7 +213,7 @@ object CoreMapper {
         bostatusGrunnlag: Boolean,
         inntektGrunnlag: Boolean,
         sivilstandGrunnlag: Boolean,
-        barnIHusstandenGrunnlag: Boolean
+        barnIHusstandenGrunnlag: Boolean,
     ) {
         when {
             !soknadbarnGrunnlag -> {
@@ -225,17 +243,17 @@ object CoreMapper {
         beregnDatoFra: LocalDate,
         beregnDatoTil: LocalDate,
         sjablonSjablontallListe: List<Sjablontall>,
-        sjablontallMap: HashMap<String, SjablonTallNavn>
+        sjablontallMap: HashMap<String, SjablonTallNavn>,
     ): List<SjablonPeriodeCore> {
         return sjablonSjablontallListe
             .filter { !(it.datoFom!!.isAfter(beregnDatoTil) || it.datoTom!!.isBefore(beregnDatoFra)) }
             .filter { (sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY)).forskudd }
             .map {
                 SjablonPeriodeCore(
-                    periode = PeriodeCore(it.datoFom!!, it.datoTom),
+                    periode = PeriodeCore(it.datoFom!!, if (it.datoTom == MAX_DATO) null else it.datoTom),
                     navn = sjablontallMap.getOrDefault(it.typeSjablon, SjablonTallNavn.DUMMY).navn,
                     nokkelListe = emptyList(),
-                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!))
+                    innholdListe = listOf(SjablonInnholdCore(navn = SjablonInnholdNavn.SJABLON_VERDI.navn, verdi = it.verdi!!)),
                 )
             }
     }

@@ -33,7 +33,6 @@ import java.nio.file.Paths
 @EnableMockOAuth2Server
 @ActiveProfiles(TEST_PROFILE)
 internal class BeregnForskuddControllerIntegrationTest {
-
     @Autowired
     private lateinit var httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate
 
@@ -128,7 +127,7 @@ internal class BeregnForskuddControllerIntegrationTest {
       Betingelse 2	Bidragsmottakers sivilstand er GIFT
       Betingelse 3	Antall barn i husstand er mer enn 1
       Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
-    */
+     */
 
     @BeforeEach
     fun init() {
@@ -390,7 +389,7 @@ internal class BeregnForskuddControllerIntegrationTest {
 
         assertAll(
             Executable { assertThat(responseEntity.statusCode).isEqualTo(OK) },
-            Executable { assertThat(forskuddResultat).isNotNull() }, // Sjekk resultat av beregningnen
+            Executable { assertThat(forskuddResultat).isNotNull() },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).isNotNull() },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).hasSize(1) },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat).isNotNull() },
@@ -398,23 +397,35 @@ internal class BeregnForskuddControllerIntegrationTest {
                 assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.belop?.intValueExact())
                     .isEqualTo(forventetForskuddBelop)
             },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode).isEqualTo(forventetForskuddResultatkode) },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel).isEqualTo(forventetForskuddRegel) },
+            Executable {
+                assertThat(
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode,
+                ).isEqualTo(forventetForskuddResultatkode)
+            },
+            Executable {
+                assertThat(
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel,
+                ).isEqualTo(forventetForskuddRegel)
+            },
             Executable {
                 assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.distinct()).size().isEqualTo(
-                    forskuddResultat?.grunnlagListe?.size
+                    forskuddResultat?.grunnlagListe?.size,
                 )
             },
             Executable {
                 assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.count { it.startsWith("Mottatt") }?.toLong()
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(
+                        0,
+                    )?.grunnlagReferanseListe?.count { it.startsWith("Mottatt") }?.toLong(),
                 ).isEqualTo(request.body?.split("Mottatt".toRegex())?.size?.minus(1)?.toLong())
             },
             Executable {
                 assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.count { it.startsWith("Sjablon") }?.toLong()
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(
+                        0,
+                    )?.grunnlagReferanseListe?.count { it.startsWith("Sjablon") }?.toLong(),
                 ).isEqualTo(7)
-            }
+            },
         )
     }
 

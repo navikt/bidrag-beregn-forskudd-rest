@@ -16,18 +16,20 @@ internal class CoreMapperTest {
     fun mapPersonUgyldig() {
         val mapper = ObjectMapper()
         val innholdPersonMedFeil = innholdPersonMedFeil(mapper)
-        val beregnForskuddGrunnlag = BeregnGrunnlag(
-            periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
-            søknadsbarnReferanse = "Person_Søknadsbarn",
-            grunnlagListe = listOf(
-                Grunnlag(
-                    referanse = "Person_Søknadsbarn",
-                    type = Grunnlagstype.PERSON,
-                    grunnlagsreferanseListe = emptyList(),
-                    innhold = innholdPersonMedFeil
-                )
+        val beregnForskuddGrunnlag =
+            BeregnGrunnlag(
+                periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
+                søknadsbarnReferanse = "Person_Søknadsbarn",
+                grunnlagListe =
+                    listOf(
+                        Grunnlag(
+                            referanse = "Person_Søknadsbarn",
+                            type = Grunnlagstype.PERSON,
+                            grunnlagsreferanseListe = emptyList(),
+                            innhold = innholdPersonMedFeil,
+                        ),
+                    ),
             )
-        )
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
@@ -40,24 +42,26 @@ internal class CoreMapperTest {
         val mapper = ObjectMapper()
         val innholdPerson = innholdPersonOK(mapper)
         val innholdBostatusMedFeil = innholdBostatusMedFeil(mapper)
-        val beregnForskuddGrunnlag = BeregnGrunnlag(
-            periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
-            søknadsbarnReferanse = "Person_Søknadsbarn",
-            grunnlagListe = listOf(
-                Grunnlag(
-                    referanse = "Person_Søknadsbarn",
-                    type = Grunnlagstype.PERSON,
-                    grunnlagsreferanseListe = emptyList(),
-                    innhold = innholdPerson
-                ),
-                Grunnlag(
-                    referanse = "Bostatus_Søknadsbarn",
-                    type = Grunnlagstype.BOSTATUS_PERIODE,
-                    grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
-                    innhold = innholdBostatusMedFeil
-                )
+        val beregnForskuddGrunnlag =
+            BeregnGrunnlag(
+                periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
+                søknadsbarnReferanse = "Person_Søknadsbarn",
+                grunnlagListe =
+                    listOf(
+                        Grunnlag(
+                            referanse = "Person_Søknadsbarn",
+                            type = Grunnlagstype.PERSON,
+                            grunnlagsreferanseListe = emptyList(),
+                            innhold = innholdPerson,
+                        ),
+                        Grunnlag(
+                            referanse = "Bostatus_Søknadsbarn",
+                            type = Grunnlagstype.BOSTATUS_PERIODE,
+                            grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
+                            innhold = innholdBostatusMedFeil,
+                        ),
+                    ),
             )
-        )
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
@@ -71,34 +75,38 @@ internal class CoreMapperTest {
         val innholdPerson = innholdPersonOK(mapper)
         val innholdBostatus = innholdBostatusOK(mapper)
         val innholdInntektMedFeil = innholdInntektMedFeil(mapper)
-        val beregnForskuddGrunnlag = BeregnGrunnlag(
-            periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
-            søknadsbarnReferanse = "Person_Søknadsbarn",
-            grunnlagListe = listOf(
-                Grunnlag(
-                    referanse = "Person_Søknadsbarn",
-                    type = Grunnlagstype.PERSON,
-                    grunnlagsreferanseListe = emptyList(),
-                    innhold = innholdPerson
-                ),
-                Grunnlag(
-                    referanse = "Bostatus_Søknadsbarn",
-                    type = Grunnlagstype.BOSTATUS_PERIODE,
-                    grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
-                    innhold = innholdBostatus
-                ),
-                Grunnlag(
-                    referanse = "BeregningInntektRapportering_Ainntekt",
-                    type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
-                    grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
-                    innhold = innholdInntektMedFeil
-                )
+        val beregnForskuddGrunnlag =
+            BeregnGrunnlag(
+                periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
+                søknadsbarnReferanse = "Person_Søknadsbarn",
+                grunnlagListe =
+                    listOf(
+                        Grunnlag(
+                            referanse = "Person_Søknadsbarn",
+                            type = Grunnlagstype.PERSON,
+                            grunnlagsreferanseListe = emptyList(),
+                            innhold = innholdPerson,
+                        ),
+                        Grunnlag(
+                            referanse = "Bostatus_Søknadsbarn",
+                            type = Grunnlagstype.BOSTATUS_PERIODE,
+                            grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
+                            innhold = innholdBostatus,
+                        ),
+                        Grunnlag(
+                            referanse = "BeregningInntektRapportering_Ainntekt",
+                            type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                            grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
+                            innhold = innholdInntektMedFeil,
+                        ),
+                    ),
             )
-        )
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
-            .withMessageContaining("Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig")
+            .withMessageContaining(
+                "Ugyldig input ved beregning av forskudd. Innhold i Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE er ikke gyldig",
+            )
     }
 
     @Test
@@ -109,36 +117,38 @@ internal class CoreMapperTest {
         val innholdBostatus = innholdBostatusOK(mapper)
         val innholdInntekt = innholdInntektOK(mapper)
         val innholdSivilstandMedFeil = innholdSivilstandMedFeil(mapper)
-        val beregnForskuddGrunnlag = BeregnGrunnlag(
-            periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
-            søknadsbarnReferanse = "Person_Søknadsbarn",
-            grunnlagListe = listOf(
-                Grunnlag(
-                    referanse = "Person_Søknadsbarn",
-                    type = Grunnlagstype.PERSON,
-                    grunnlagsreferanseListe = emptyList(),
-                    innhold = innholdPerson
-                ),
-                Grunnlag(
-                    referanse = "Bostatus_Søknadsbarn",
-                    type = Grunnlagstype.BOSTATUS_PERIODE,
-                    grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
-                    innhold = innholdBostatus
-                ),
-                Grunnlag(
-                    referanse = "BeregningInntektRapportering_Ainntekt",
-                    type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
-                    grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
-                    innhold = innholdInntekt
-                ),
-                Grunnlag(
-                    referanse = "Sivilstand",
-                    type = Grunnlagstype.SIVILSTAND_PERIODE,
-                    grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
-                    innhold = innholdSivilstandMedFeil
-                )
+        val beregnForskuddGrunnlag =
+            BeregnGrunnlag(
+                periode = ÅrMånedsperiode(fom = "2020-12", til = "2021-01"),
+                søknadsbarnReferanse = "Person_Søknadsbarn",
+                grunnlagListe =
+                    listOf(
+                        Grunnlag(
+                            referanse = "Person_Søknadsbarn",
+                            type = Grunnlagstype.PERSON,
+                            grunnlagsreferanseListe = emptyList(),
+                            innhold = innholdPerson,
+                        ),
+                        Grunnlag(
+                            referanse = "Bostatus_Søknadsbarn",
+                            type = Grunnlagstype.BOSTATUS_PERIODE,
+                            grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
+                            innhold = innholdBostatus,
+                        ),
+                        Grunnlag(
+                            referanse = "BeregningInntektRapportering_Ainntekt",
+                            type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
+                            grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
+                            innhold = innholdInntekt,
+                        ),
+                        Grunnlag(
+                            referanse = "Sivilstand",
+                            type = Grunnlagstype.SIVILSTAND_PERIODE,
+                            grunnlagsreferanseListe = listOf("Person_Bidragsmottaker"),
+                            innhold = innholdSivilstandMedFeil,
+                        ),
+                    ),
             )
-        )
 
         assertThatExceptionOfType(UgyldigInputException::class.java)
             .isThrownBy { CoreMapper.mapGrunnlagTilCore(beregnForskuddGrunnlag = beregnForskuddGrunnlag, sjablontallListe = emptyList()) }
@@ -152,16 +162,28 @@ internal class CoreMapperTest {
         mapper.readTree("{\"ident\": \"11111111111\"," + "\"navn\": \"Søknadsbarn\"," + "\"fødselsdato\": \"2010-01-01\"}")
 
     private fun innholdBostatusMedFeil(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_BESTEMOR\"," + "\"manueltRegistrert\": false}")
+        mapper.readTree(
+            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_BESTEMOR\"," +
+                "\"manueltRegistrert\": false}",
+        )
 
     private fun innholdBostatusOK(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_FORELDER\"," + "\"manueltRegistrert\": false}")
+        mapper.readTree(
+            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"bostatus\": \"MED_FORELDER\"," +
+                "\"manueltRegistrert\": false}",
+        )
 
     private fun innholdInntektMedFeil(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," + "\"gjelderBarn\": null," + "\"beløp\": \"29x000\"," + "\"manueltRegistrert\": false," + "\"valgt\": true}")
+        mapper.readTree(
+            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," +
+                "\"gjelderBarn\": null," + "\"beløp\": \"29x000\"," + "\"manueltRegistrert\": false," + "\"valgt\": true}",
+        )
 
     private fun innholdInntektOK(mapper: ObjectMapper) =
-        mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," + "\"gjelderBarn\": null," + "\"beløp\": 290000," + "\"manueltRegistrert\": false," + "\"valgt\": true}")
+        mapper.readTree(
+            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," +
+                "\"gjelderBarn\": null," + "\"beløp\": 290000," + "\"manueltRegistrert\": false," + "\"valgt\": true}",
+        )
 
     private fun innholdSivilstandMedFeil(mapper: ObjectMapper) =
         mapper.readTree("{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"sivilstand\": \"UGIFT\"}")

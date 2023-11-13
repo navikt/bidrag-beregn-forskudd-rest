@@ -55,7 +55,7 @@ internal class BeregnForskuddServiceTest {
             Executable { assertThat(beregnForskuddResultat.responseEntity.body?.beregnetForskuddPeriodeListe).isNotNull() },
             Executable { assertThat(beregnForskuddResultat.responseEntity.body?.beregnetForskuddPeriodeListe).hasSize(1) },
             // Sjablontyper som ikke er gyldige for forskudd og sjabloner som ikke er innenfor beregn-fra-til-dato filtreres bort
-            Executable { assertThat(grunnlagTilCore.sjablonPeriodeListe).hasSize(21) }
+            Executable { assertThat(grunnlagTilCore.sjablonPeriodeListe).hasSize(21) },
         )
     }
 

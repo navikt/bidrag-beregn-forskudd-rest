@@ -73,8 +73,8 @@ object TestUtil {
                         "inntektRapportering" to "INNTEKT_RAPPORTERING",
                         "belop" to 290000,
                         "manueltRegistrert" to false,
-                        "valgt" to true
-                    )
+                        "valgt" to true,
+                    ),
                 )
             }
         val grunnlagListe =
@@ -86,15 +86,15 @@ object TestUtil {
                         referanse = referanse,
                         type = type,
                         grunnlagsreferanseListe = emptyList(),
-                        innhold = innhold
-                    )
+                        innhold = innhold,
+                    ),
                 )
             }
 
         return BeregnGrunnlag(
             periode = ÅrMånedsperiode(fom = beregningsperiodeFom, til = beregningsperiodeTil),
             søknadsbarnReferanse = "1",
-            grunnlagListe = grunnlagListe
+            grunnlagListe = grunnlagListe,
         )
     }
 
@@ -104,48 +104,55 @@ object TestUtil {
         periodeFom: String = "2017-01",
         periodeTil: String = "2020-01",
         fødselsdato: String = "2006-12-01",
-        beløp: String = "290000"
+        beløp: String = "290000",
     ): BeregnGrunnlag {
         val mapper = ObjectMapper()
-        val personSøknadsbarnInnhold = mapper.valueToTree<JsonNode>(
-            mapOf(
-                "ident" to "11111111111",
-                "navn" to "Søknadsbarn",
-                "fødselsdato" to fødselsdato
-            )
-        )
-        val bostatusInnhold = mapper.valueToTree<JsonNode>(
-            mapOf(
-                "periode" to mapOf(
-                    "fom" to periodeFom,
-                    "til" to periodeTil
+        val personSøknadsbarnInnhold =
+            mapper.valueToTree<JsonNode>(
+                mapOf(
+                    "ident" to "11111111111",
+                    "navn" to "Søknadsbarn",
+                    "fødselsdato" to fødselsdato,
                 ),
-                "bostatus" to Bostatuskode.MED_FORELDER.name,
-                "manueltRegistrert" to false
             )
-        )
-        val inntektInnhold = mapper.valueToTree<JsonNode>(
-            mapOf(
-                "periode" to mapOf(
-                    "fom" to periodeFom,
-                    "til" to periodeTil
+        val bostatusInnhold =
+            mapper.valueToTree<JsonNode>(
+                mapOf(
+                    "periode" to
+                        mapOf(
+                            "fom" to periodeFom,
+                            "til" to periodeTil,
+                        ),
+                    "bostatus" to Bostatuskode.MED_FORELDER.name,
+                    "manueltRegistrert" to false,
                 ),
-                "inntektRapportering" to InntektRapportering.AINNTEKT.name,
-                "gjelderBarn" to null,
-                "beløp" to beløp,
-                "manueltRegistrert" to false,
-                "valgt" to true
             )
-        )
-        val sivilstandInnhold = mapper.valueToTree<JsonNode>(
-            mapOf(
-                "periode" to mapOf(
-                    "fom" to periodeFom,
-                    "til" to periodeTil
+        val inntektInnhold =
+            mapper.valueToTree<JsonNode>(
+                mapOf(
+                    "periode" to
+                        mapOf(
+                            "fom" to periodeFom,
+                            "til" to periodeTil,
+                        ),
+                    "inntektRapportering" to InntektRapportering.AINNTEKT.name,
+                    "gjelderBarn" to null,
+                    "beløp" to beløp,
+                    "manueltRegistrert" to false,
+                    "valgt" to true,
                 ),
-                "sivilstand" to SivilstandskodeBeregning.GIFT_SAMBOER.name
             )
-        )
+        val sivilstandInnhold =
+            mapper.valueToTree<JsonNode>(
+                mapOf(
+                    "periode" to
+                        mapOf(
+                            "fom" to periodeFom,
+                            "til" to periodeTil,
+                        ),
+                    "sivilstand" to SivilstandskodeBeregning.GIFT_SAMBOER.name,
+                ),
+            )
 
         val beregningsperiodeFom = YearMonth.parse(periodeFom)
         val beregningsperiodeTil = YearMonth.parse(periodeTil)
@@ -156,38 +163,38 @@ object TestUtil {
                 referanse = "Person_Søknadsbarn",
                 type = Grunnlagstype.PERSON,
                 grunnlagsreferanseListe = emptyList(),
-                innhold = personSøknadsbarnInnhold
-            )
+                innhold = personSøknadsbarnInnhold,
+            ),
         )
         grunnlagListe.add(
             Grunnlag(
                 referanse = "Bostatus_20170101",
                 type = Grunnlagstype.BOSTATUS_PERIODE,
                 grunnlagsreferanseListe = listOf("Person_Søknadsbarn"),
-                innhold = bostatusInnhold
-            )
+                innhold = bostatusInnhold,
+            ),
         )
         grunnlagListe.add(
             Grunnlag(
                 referanse = "BeregningInntektRapportering_Ainntekt_20170101",
                 type = Grunnlagstype.BEREGNING_INNTEKT_RAPPORTERING_PERIODE,
                 grunnlagsreferanseListe = emptyList(),
-                innhold = inntektInnhold
-            )
+                innhold = inntektInnhold,
+            ),
         )
         grunnlagListe.add(
             Grunnlag(
                 referanse = "Sivilstand_20170101",
                 type = Grunnlagstype.SIVILSTAND_PERIODE,
                 grunnlagsreferanseListe = emptyList(),
-                innhold = sivilstandInnhold
-            )
+                innhold = sivilstandInnhold,
+            ),
         )
 
         return BeregnGrunnlag(
             periode = ÅrMånedsperiode(fom = beregningsperiodeFom, til = beregningsperiodeTil),
             søknadsbarnReferanse = "Person_Søknadsbarn",
-            grunnlagListe = grunnlagListe
+            grunnlagListe = grunnlagListe,
         )
     }
 
@@ -197,25 +204,27 @@ object TestUtil {
         beregnetForskuddPeriodeListe.add(
             ResultatPeriodeCore(
                 periode = PeriodeCore(datoFom = LocalDate.parse("2017-01-01"), datoTil = LocalDate.parse("2019-01-01")),
-                resultat = ResultatBeregningCore(
-                    belop = BigDecimal.valueOf(100),
-                    kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT.name,
-                    regel = "REGEL 1"
-                ),
-                grunnlagReferanseListe = listOf(
-                    INNTEKT_REFERANSE_1,
-                    SIVILSTAND_REFERANSE_ENSLIG,
-                    BARN_REFERANSE_1,
-                    SOKNADBARN_REFERANSE,
-                    BOSTATUS_REFERANSE_MED_FORELDRE_1
-                )
-            )
+                resultat =
+                    ResultatBeregningCore(
+                        belop = BigDecimal.valueOf(100),
+                        kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT.name,
+                        regel = "REGEL 1",
+                    ),
+                grunnlagReferanseListe =
+                    listOf(
+                        INNTEKT_REFERANSE_1,
+                        SIVILSTAND_REFERANSE_ENSLIG,
+                        BARN_REFERANSE_1,
+                        SOKNADBARN_REFERANSE,
+                        BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    ),
+            ),
         )
 
         return BeregnetForskuddResultatCore(
             beregnetForskuddPeriodeListe = beregnetForskuddPeriodeListe,
             sjablonListe = emptyList(),
-            avvikListe = emptyList()
+            avvikListe = emptyList(),
         )
     }
 
@@ -225,9 +234,11 @@ object TestUtil {
         avvikListe.add(AvvikCore(avvikTekst = "beregnDatoFra kan ikke være null", avvikType = "NULL_VERDI_I_DATO"))
         avvikListe.add(
             AvvikCore(
-                avvikTekst = "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, periodeDatoTil=2018-03-01",
-                avvikType = "DATO_FRA_ETTER_DATO_TIL"
-            )
+                avvikTekst =
+                    "periodeDatoTil må være etter periodeDatoFra i bidragMottakInntektPeriodeListe: periodeDatoFra=2018-04-01, " +
+                        "periodeDatoTil=2018-03-01",
+                avvikType = "DATO_FRA_ETTER_DATO_TIL",
+            ),
         )
 
         return BeregnetForskuddResultatCore(beregnetForskuddPeriodeListe = emptyList(), sjablonListe = emptyList(), avvikListe = avvikListe)
@@ -239,19 +250,21 @@ object TestUtil {
         beregnetForskuddPeriodeListe.add(
             ResultatPeriode(
                 periode = ÅrMånedsperiode(fom = LocalDate.parse("2017-01-01"), til = LocalDate.parse("2019-01-01")),
-                resultat = ResultatBeregning(
-                    belop = BigDecimal.valueOf(100),
-                    kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
-                    regel = "REGEL 1"
-                ),
-                grunnlagReferanseListe = listOf(
-                    INNTEKT_REFERANSE_1,
-                    SIVILSTAND_REFERANSE_ENSLIG,
-                    BARN_REFERANSE_1,
-                    SOKNADBARN_REFERANSE,
-                    BOSTATUS_REFERANSE_MED_FORELDRE_1
-                )
-            )
+                resultat =
+                    ResultatBeregning(
+                        belop = BigDecimal.valueOf(100),
+                        kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
+                        regel = "REGEL 1",
+                    ),
+                grunnlagReferanseListe =
+                    listOf(
+                        INNTEKT_REFERANSE_1,
+                        SIVILSTAND_REFERANSE_ENSLIG,
+                        BARN_REFERANSE_1,
+                        SOKNADBARN_REFERANSE,
+                        BOSTATUS_REFERANSE_MED_FORELDRE_1,
+                    ),
+            ),
         )
 
         return BeregnetForskuddResultat(beregnetForskuddPeriodeListe = beregnetForskuddPeriodeListe, grunnlagListe = emptyList())
@@ -265,248 +278,248 @@ object TestUtil {
                 typeSjablon = "0005",
                 datoFom = LocalDate.parse("2015-07-01"),
                 datoTom = LocalDate.parse("2016-06-30"),
-                verdi = BigDecimal.valueOf(1490)
-            )
+                verdi = BigDecimal.valueOf(1490),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0005",
                 datoFom = LocalDate.parse("2016-07-01"),
                 datoTom = LocalDate.parse("2017-06-30"),
-                verdi = BigDecimal.valueOf(1530)
-            )
+                verdi = BigDecimal.valueOf(1530),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0005",
                 datoFom = LocalDate.parse("2017-07-01"),
                 datoTom = LocalDate.parse("2018-06-30"),
-                verdi = BigDecimal.valueOf(1570)
-            )
+                verdi = BigDecimal.valueOf(1570),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0005",
                 datoFom = LocalDate.parse("2018-07-01"),
                 datoTom = LocalDate.parse("2019-06-30"),
-                verdi = BigDecimal.valueOf(1600)
-            )
+                verdi = BigDecimal.valueOf(1600),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0005",
                 datoFom = LocalDate.parse("2019-07-01"),
                 datoTom = LocalDate.parse("2020-06-30"),
-                verdi = BigDecimal.valueOf(1640)
-            )
+                verdi = BigDecimal.valueOf(1640),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0005",
                 datoFom = LocalDate.parse("2020-07-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(1670)
-            )
+                verdi = BigDecimal.valueOf(1670),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0013",
                 datoFom = LocalDate.parse("2003-01-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(320)
-            )
+                verdi = BigDecimal.valueOf(320),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0033",
                 datoFom = LocalDate.parse("2015-07-01"),
                 datoTom = LocalDate.parse("2016-06-30"),
-                verdi = BigDecimal.valueOf(241600)
-            )
+                verdi = BigDecimal.valueOf(241600),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0033",
                 datoFom = LocalDate.parse("2016-07-01"),
                 datoTom = LocalDate.parse("2017-06-30"),
-                verdi = BigDecimal.valueOf(264200)
-            )
+                verdi = BigDecimal.valueOf(264200),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0033",
                 datoFom = LocalDate.parse("2017-07-01"),
                 datoTom = LocalDate.parse("2018-06-30"),
-                verdi = BigDecimal.valueOf(271000)
-            )
+                verdi = BigDecimal.valueOf(271000),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0033",
                 datoFom = LocalDate.parse("2018-07-01"),
                 datoTom = LocalDate.parse("2019-06-30"),
-                verdi = BigDecimal.valueOf(270200)
-            )
+                verdi = BigDecimal.valueOf(270200),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0033",
                 datoFom = LocalDate.parse("2019-07-01"),
                 datoTom = LocalDate.parse("2020-06-30"),
-                verdi = BigDecimal.valueOf(277600)
-            )
+                verdi = BigDecimal.valueOf(277600),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0033",
                 datoFom = LocalDate.parse("2020-07-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(297500)
-            )
+                verdi = BigDecimal.valueOf(297500),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0034",
                 datoFom = LocalDate.parse("2015-07-01"),
                 datoTom = LocalDate.parse("2016-06-30"),
-                verdi = BigDecimal.valueOf(370200)
-            )
+                verdi = BigDecimal.valueOf(370200),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0034",
                 datoFom = LocalDate.parse("2016-07-01"),
                 datoTom = LocalDate.parse("2017-06-30"),
-                verdi = BigDecimal.valueOf(399100)
-            )
+                verdi = BigDecimal.valueOf(399100),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0034",
                 datoFom = LocalDate.parse("2017-07-01"),
                 datoTom = LocalDate.parse("2018-06-30"),
-                verdi = BigDecimal.valueOf(408200)
-            )
+                verdi = BigDecimal.valueOf(408200),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0034",
                 datoFom = LocalDate.parse("2018-07-01"),
                 datoTom = LocalDate.parse("2019-06-30"),
-                verdi = BigDecimal.valueOf(419700)
-            )
+                verdi = BigDecimal.valueOf(419700),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0034",
                 datoFom = LocalDate.parse("2019-07-01"),
                 datoTom = LocalDate.parse("2020-06-30"),
-                verdi = BigDecimal.valueOf(430000)
-            )
+                verdi = BigDecimal.valueOf(430000),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0034",
                 datoFom = LocalDate.parse("2020-07-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(468500)
-            )
+                verdi = BigDecimal.valueOf(468500),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0035",
                 datoFom = LocalDate.parse("2015-07-01"),
                 datoTom = LocalDate.parse("2016-06-30"),
-                verdi = BigDecimal.valueOf(314800)
-            )
+                verdi = BigDecimal.valueOf(314800),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0035",
                 datoFom = LocalDate.parse("2016-07-01"),
                 datoTom = LocalDate.parse("2017-06-30"),
-                verdi = BigDecimal.valueOf(328700)
-            )
+                verdi = BigDecimal.valueOf(328700),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0035",
                 datoFom = LocalDate.parse("2017-07-01"),
                 datoTom = LocalDate.parse("2018-06-30"),
-                verdi = BigDecimal.valueOf(335900)
-            )
+                verdi = BigDecimal.valueOf(335900),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0035",
                 datoFom = LocalDate.parse("2018-07-01"),
                 datoTom = LocalDate.parse("2019-06-30"),
-                verdi = BigDecimal.valueOf(336500)
-            )
+                verdi = BigDecimal.valueOf(336500),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0035",
                 datoFom = LocalDate.parse("2019-07-01"),
                 datoTom = LocalDate.parse("2020-06-30"),
-                verdi = BigDecimal.valueOf(344900)
-            )
+                verdi = BigDecimal.valueOf(344900),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0035",
                 datoFom = LocalDate.parse("2020-07-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(360800)
-            )
+                verdi = BigDecimal.valueOf(360800),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0036",
                 datoFom = LocalDate.parse("2015-07-01"),
                 datoTom = LocalDate.parse("2016-06-30"),
-                verdi = BigDecimal.valueOf(58400)
-            )
+                verdi = BigDecimal.valueOf(58400),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0036",
                 datoFom = LocalDate.parse("2016-07-01"),
                 datoTom = LocalDate.parse("2017-06-30"),
-                verdi = BigDecimal.valueOf(60200)
-            )
+                verdi = BigDecimal.valueOf(60200),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0036",
                 datoFom = LocalDate.parse("2017-07-01"),
                 datoTom = LocalDate.parse("2018-06-30"),
-                verdi = BigDecimal.valueOf(61100)
-            )
+                verdi = BigDecimal.valueOf(61100),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0036",
                 datoFom = LocalDate.parse("2018-07-01"),
                 datoTom = LocalDate.parse("2019-06-30"),
-                verdi = BigDecimal.valueOf(61700)
-            )
+                verdi = BigDecimal.valueOf(61700),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0036",
                 datoFom = LocalDate.parse("2019-07-01"),
                 datoTom = LocalDate.parse("2020-06-30"),
-                verdi = BigDecimal.valueOf(62700)
-            )
+                verdi = BigDecimal.valueOf(62700),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0036",
                 datoFom = LocalDate.parse("2020-07-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(69100)
-            )
+                verdi = BigDecimal.valueOf(69100),
+            ),
         )
 
         // Ikke i bruk for forskudd
@@ -515,48 +528,48 @@ object TestUtil {
                 typeSjablon = "0028",
                 datoFom = LocalDate.parse("2015-07-01"),
                 datoTom = LocalDate.parse("2016-06-30"),
-                verdi = BigDecimal.valueOf(74250)
-            )
+                verdi = BigDecimal.valueOf(74250),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0028",
                 datoFom = LocalDate.parse("2016-07-01"),
                 datoTom = LocalDate.parse("2017-06-30"),
-                verdi = BigDecimal.valueOf(76250)
-            )
+                verdi = BigDecimal.valueOf(76250),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0028",
                 datoFom = LocalDate.parse("2017-07-01"),
                 datoTom = LocalDate.parse("2018-06-30"),
-                verdi = BigDecimal.valueOf(78300)
-            )
+                verdi = BigDecimal.valueOf(78300),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0028",
                 datoFom = LocalDate.parse("2018-07-01"),
                 datoTom = LocalDate.parse("2019-06-30"),
-                verdi = BigDecimal.valueOf(54750)
-            )
+                verdi = BigDecimal.valueOf(54750),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0028",
                 datoFom = LocalDate.parse("2019-07-01"),
                 datoTom = LocalDate.parse("2020-06-30"),
-                verdi = BigDecimal.valueOf(56550)
-            )
+                verdi = BigDecimal.valueOf(56550),
+            ),
         )
         sjablonSjablontallListe.add(
             Sjablontall(
                 typeSjablon = "0028",
                 datoFom = LocalDate.parse("2020-07-01"),
                 datoTom = LocalDate.parse("9999-12-31"),
-                verdi = BigDecimal.valueOf(51300)
-            )
+                verdi = BigDecimal.valueOf(51300),
+            ),
         )
 
         return sjablonSjablontallListe

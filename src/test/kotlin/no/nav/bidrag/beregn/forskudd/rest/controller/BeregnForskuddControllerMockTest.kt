@@ -77,7 +77,7 @@ internal class BeregnForskuddControllerMockTest {
                 assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode)
                     .isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT)
             },
-            { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel).isEqualTo("REGEL 1") }
+            { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel).isEqualTo("REGEL 1") },
         )
     }
 
@@ -93,7 +93,7 @@ internal class BeregnForskuddControllerMockTest {
         val forskuddResultat = responseEntity.body
         assertAll(
             { assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR) },
-            { assertThat(forskuddResultat).isEqualTo(BeregnetForskuddResultat()) }
+            { assertThat(forskuddResultat).isEqualTo(BeregnetForskuddResultat()) },
         )
     }
 

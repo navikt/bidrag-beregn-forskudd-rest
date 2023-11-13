@@ -22,11 +22,9 @@ import no.nav.bidrag.transport.behandling.beregning.forskudd.ResultatPeriode
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 @Service
 class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, private val forskuddCore: ForskuddCore) {
-
     fun beregn(grunnlag: BeregnGrunnlag): HttpResponse<BeregnetForskuddResultat> {
         if (SECURE_LOGGER.isDebugEnabled) {
             SECURE_LOGGER.debug("Mottatt følgende request: {}", grunnlag)
@@ -54,21 +52,23 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
         }
 
         // Lager input-grunnlag til core-modulen
-        val grunnlagTilCore = CoreMapper.mapGrunnlagTilCore(
-            beregnForskuddGrunnlag = grunnlag,
-            sjablontallListe = sjablonTallListe
-        )
+        val grunnlagTilCore =
+            CoreMapper.mapGrunnlagTilCore(
+                beregnForskuddGrunnlag = grunnlag,
+                sjablontallListe = sjablonTallListe,
+            )
 
         if (SECURE_LOGGER.isDebugEnabled) {
             SECURE_LOGGER.debug("Forskudd - grunnlag for beregning: {}", grunnlagTilCore)
         }
 
         // Kaller core-modulen for beregning av forskudd
-        val resultatFraCore = try {
-            forskuddCore.beregnForskudd(grunnlagTilCore)
-        } catch (e: Exception) {
-            throw UgyldigInputException("Ugyldig input ved beregning av forskudd: " + e.message)
-        }
+        val resultatFraCore =
+            try {
+                forskuddCore.beregnForskudd(grunnlagTilCore)
+            } catch (e: Exception) {
+                throw UgyldigInputException("Ugyldig input ved beregning av forskudd: " + e.message)
+            }
 
         if (resultatFraCore.avvikListe.isNotEmpty()) {
             val avvikTekst = resultatFraCore.avvikListe.joinToString("; ") { it.avvikTekst }
@@ -81,7 +81,7 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                     "soknadBarn= " + grunnlagTilCore.soknadBarn + System.lineSeparator() +
                     "barnIHusstandenPeriodeListe= " + grunnlagTilCore.barnIHusstandenPeriodeListe + System.lineSeparator() +
                     "inntektPeriodeListe= " + grunnlagTilCore.inntektPeriodeListe + System.lineSeparator() +
-                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator()
+                    "sivilstandPeriodeListe= " + grunnlagTilCore.sivilstandPeriodeListe + System.lineSeparator(),
             )
             throw UgyldigInputException("Ugyldig input ved beregning av forskudd. Følgende avvik ble funnet: $avvikTekst")
         }
@@ -92,10 +92,11 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
 
         val grunnlagReferanseListe = lagGrunnlagReferanseListe(forskuddGrunnlag = grunnlag, resultatFraCore = resultatFraCore)
 
-        val respons = BeregnetForskuddResultat(
-            beregnetForskuddPeriodeListe = mapFraResultatPeriodeCore(resultatFraCore.beregnetForskuddPeriodeListe),
-            grunnlagListe = grunnlagReferanseListe
-        )
+        val respons =
+            BeregnetForskuddResultat(
+                beregnetForskuddPeriodeListe = mapFraResultatPeriodeCore(resultatFraCore.beregnetForskuddPeriodeListe),
+                grunnlagListe = grunnlagReferanseListe,
+            )
 
         if (SECURE_LOGGER.isDebugEnabled) {
             SECURE_LOGGER.debug("Returnerer følgende respons: {}", respons)
@@ -108,30 +109,35 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
         resultatPeriodeCoreListe.map {
             ResultatPeriode(
                 periode = ÅrMånedsperiode(fom = it.periode.datoFom, til = it.periode.datoTil),
-                resultat = ResultatBeregning(
-                    belop = it.resultat.belop,
-                    kode = ResultatKodeForskudd.valueOf(it.resultat.kode),
-                    regel = it.resultat.regel
-                ),
-                grunnlagReferanseListe = it.grunnlagReferanseListe
+                resultat =
+                    ResultatBeregning(
+                        belop = it.resultat.belop,
+                        kode = ResultatKodeForskudd.valueOf(it.resultat.kode),
+                        regel = it.resultat.regel,
+                    ),
+                grunnlagReferanseListe = it.grunnlagReferanseListe,
             )
         }
 
     // Lager en liste over resultatgrunnlag som inneholder:
     //   - mottatte grunnlag som er brukt i beregningen
     //   - sjabloner som er brukt i beregningen
-    private fun lagGrunnlagReferanseListe(forskuddGrunnlag: BeregnGrunnlag, resultatFraCore: BeregnetForskuddResultatCore): List<Grunnlag> {
+    private fun lagGrunnlagReferanseListe(
+        forskuddGrunnlag: BeregnGrunnlag,
+        resultatFraCore: BeregnetForskuddResultatCore,
+    ): List<Grunnlag> {
         val mapper = ObjectMapper()
         val resultatGrunnlagListe = mutableListOf<Grunnlag>()
-        val grunnlagReferanseListe = resultatFraCore.beregnetForskuddPeriodeListe
-            .flatMap { it.grunnlagReferanseListe }
-            .distinct()
+        val grunnlagReferanseListe =
+            resultatFraCore.beregnetForskuddPeriodeListe
+                .flatMap { it.grunnlagReferanseListe }
+                .distinct()
 
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen
         resultatGrunnlagListe.addAll(
             forskuddGrunnlag.grunnlagListe!!
                 .filter { grunnlagReferanseListe.contains(it.referanse) }
-                .map { Grunnlag(referanse = it.referanse, type = it.type, innhold = it.innhold) }
+                .map { Grunnlag(referanse = it.referanse, type = it.type, innhold = it.innhold) },
         )
 
         // Danner grunnlag basert på liste over sjabloner som er brukt i beregningen
@@ -139,12 +145,12 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
             resultatFraCore.sjablonListe
                 .map {
                     val map = LinkedHashMap<String, Any>()
-                    map["datoFom"] = mapDato(it.periode.datoFom)
-                    map["datoTil"] = mapDato(it.periode.datoTil!!)
+                    map["datoFom"] = it.periode.datoFom.toString()
+                    map["datoTil"] = it.periode.datoTil.toString()
                     map["sjablonNavn"] = it.navn
                     map["sjablonVerdi"] = it.verdi.toInt()
                     Grunnlag(referanse = it.referanse, type = Grunnlagstype.SJABLON, innhold = mapper.valueToTree(map))
-                }
+                },
         )
 
         return resultatGrunnlagListe
@@ -152,10 +158,5 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(BeregnForskuddService::class.java)
-
-        // Unngå å legge ut datoer høyere enn 9999-12-31
-        private fun mapDato(dato: LocalDate): String {
-            return if (dato.isAfter(LocalDate.parse("9999-12-31"))) "9999-12-31" else dato.toString()
-        }
     }
 }
