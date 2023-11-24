@@ -29,17 +29,16 @@ const val LIVE_PROFILE = "live"
 @Configuration
 @OpenAPIDefinition(
     info = Info(title = "bidrag-beregn-forskudd-rest", version = "v1"),
-    security = [SecurityRequirement(name = "bearer-key")]
+    security = [SecurityRequirement(name = "bearer-key")],
 )
 @SecurityScheme(
     bearerFormat = "JWT",
     name = "bearer-key",
     scheme = "bearer",
-    type = SecuritySchemeType.HTTP
+    type = SecuritySchemeType.HTTP,
 )
 @Import(CorrelationIdFilter::class, UserMdcFilter::class, DefaultCorsFilter::class)
 class BeregnForskuddConfig {
-
     @Bean
     fun forskuddCore(): ForskuddCore {
         return ForskuddCore.getInstance()
@@ -56,7 +55,7 @@ class BeregnForskuddConfig {
     @Bean
     fun sjablonConsumer(
         @Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String,
-        restTemplate: RestTemplate
+        restTemplate: RestTemplate,
     ): SjablonConsumer {
         restTemplate.uriTemplateHandler = RootUriTemplateHandler(sjablonBaseUrl)
         return SjablonConsumer(restTemplate)

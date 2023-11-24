@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate
 private const val SJABLONTALL_URL = "/sjablontall/all"
 
 class SjablonConsumer(private val restTemplate: RestTemplate) {
-
     fun hentSjablonSjablontall(): HttpResponse<List<Sjablontall>> {
         try {
             val sjablonResponse = restTemplate.exchange(SJABLONTALL_URL, HttpMethod.GET, null, SJABLON_SJABLONTALL_LISTE)
@@ -19,7 +18,8 @@ class SjablonConsumer(private val restTemplate: RestTemplate) {
             return HttpResponse(sjablonResponse)
         } catch (exception: RestClientResponseException) {
             LOGGER.error(
-                "hentSjablonSjablontall fikk følgende feilkode fra bidrag-sjablon: ${exception.statusText}, med melding ${exception.message}"
+                "hentSjablonSjablontall fikk følgende feilkode fra bidrag-sjablon: ${exception.statusText}, med melding " +
+                    "${exception.message}",
             )
             throw SjablonConsumerException(exception)
         }

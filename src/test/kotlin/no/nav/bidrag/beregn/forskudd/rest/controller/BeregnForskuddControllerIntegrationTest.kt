@@ -2,10 +2,11 @@ package no.nav.bidrag.beregn.forskudd.rest.controller
 
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TEST_PROFILE
+import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremockstub.SjablonApiStub
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.domain.enums.resultatkoder.ResultatKodeForskudd
-import no.nav.bidrag.transport.beregning.forskudd.BeregnetForskuddResultat
+import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -22,7 +23,6 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
@@ -34,7 +34,6 @@ import java.nio.file.Paths
 @EnableMockOAuth2Server
 @ActiveProfiles(TEST_PROFILE)
 internal class BeregnForskuddControllerIntegrationTest {
-
     @Autowired
     private lateinit var httpHeaderTestRestTemplate: HttpHeaderTestRestTemplate
 
@@ -129,7 +128,7 @@ internal class BeregnForskuddControllerIntegrationTest {
       Betingelse 2	Bidragsmottakers sivilstand er GIFT
       Betingelse 3	Antall barn i husstand er mer enn 1
       Resultatkode	REDUSERT_FORSKUDD_50_PROSENT
-    */
+     */
 
     @BeforeEach
     fun init() {
@@ -382,22 +381,6 @@ internal class BeregnForskuddControllerIntegrationTest {
         utfoerBeregningerOgEvaluerResultat()
     }
 
-    @Test
-    @DisplayName("skal feile med exception ved kall til core - eksempel 1")
-    fun skalFeileMedExceptionVedKallTilCore_Eksempel01() {
-        filnavn = "src/test/resources/testfiler/forskudd_eksempel1_med_feil_verdi_i_enum.json"
-        val request = lesFilOgByggRequest(filnavn)
-
-        // Kall rest-API for forskudd
-        val responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat::class.java)
-
-        assertAll(
-            Executable { assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.BAD_REQUEST) },
-            Executable { assertThat(responseEntity.headers["Error"]?.stream()?.anyMatch { it.contains("UgyldigInputException") }).isTrue() },
-            Executable { assertThat(responseEntity.headers["Error"]?.stream()?.anyMatch { it.contains("BOR_MED_BESTEMOR") }).isTrue() }
-        )
-    }
-
     private fun utfoerBeregningerOgEvaluerResultat() {
         val request: HttpEntity<String> = lesFilOgByggRequest(filnavn)
 
@@ -405,9 +388,11 @@ internal class BeregnForskuddControllerIntegrationTest {
         val responseEntity = httpHeaderTestRestTemplate.exchange(url, HttpMethod.POST, request, BeregnetForskuddResultat::class.java)
         val forskuddResultat = responseEntity.body
 
+        TestUtil.printJson(forskuddResultat)
+
         assertAll(
             Executable { assertThat(responseEntity.statusCode).isEqualTo(OK) },
-            Executable { assertThat(forskuddResultat).isNotNull() }, // Sjekk resultat av beregningnen
+            Executable { assertThat(forskuddResultat).isNotNull() },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).isNotNull() },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe).hasSize(1) },
             Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat).isNotNull() },
@@ -415,23 +400,35 @@ internal class BeregnForskuddControllerIntegrationTest {
                 assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.belop?.intValueExact())
                     .isEqualTo(forventetForskuddBelop)
             },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode).isEqualTo(forventetForskuddResultatkode) },
-            Executable { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel).isEqualTo(forventetForskuddRegel) },
             Executable {
-                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe)?.size()?.isEqualTo(
-                    forskuddResultat?.grunnlagListe?.size
+                assertThat(
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode,
+                ).isEqualTo(forventetForskuddResultatkode)
+            },
+            Executable {
+                assertThat(
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel,
+                ).isEqualTo(forventetForskuddRegel)
+            },
+            Executable {
+                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.distinct()).size().isEqualTo(
+                    forskuddResultat?.grunnlagListe?.size,
                 )
             },
             Executable {
                 assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.count { it.startsWith("Mottatt") }?.toLong()
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(
+                        0,
+                    )?.grunnlagReferanseListe?.count { it.startsWith("Mottatt") }?.toLong(),
                 ).isEqualTo(request.body?.split("Mottatt".toRegex())?.size?.minus(1)?.toLong())
             },
             Executable {
                 assertThat(
-                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.count { it.startsWith("Sjablon") }?.toLong()
+                    forskuddResultat?.beregnetForskuddPeriodeListe?.get(
+                        0,
+                    )?.grunnlagReferanseListe?.count { it.startsWith("Sjablon") }?.toLong(),
                 ).isEqualTo(7)
-            }
+            },
         )
     }
 

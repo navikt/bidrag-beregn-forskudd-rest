@@ -23,11 +23,11 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>20230510130746_8b93e85</bidrag-commons.version>
-    <bidrag-commons-test.version>1.20230217164307_1ec9d3f</bidrag-commons-test.version>
-    <bidrag-beregn-felles.version>1.0.2</bidrag-beregn-felles.version>
-    <bidrag-beregn-forskudd-core.version>1.0.6</bidrag-beregn-forskudd-core.version>
-    <bidrag-transport.version>20230918144946_1e1bc33</bidrag-transport.version>
+    <bidrag-commons.version>20231103132440_edabbf8</bidrag-commons.version>
+    <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
+    <bidrag-beregn-forskudd-core.version>1.1.1</bidrag-beregn-forskudd-core.version>
+    <bidrag-domene.version>20231113135755_9632206</bidrag-domene.version>
+    <bidrag-transport.version>20231113083619_82c0dcc</bidrag-transport.version>
     <springdoc-openapi-ui.version>2.2.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.1</wiremock-standalone.version>
     <springframework-cloud.version>4.0.2</springframework-cloud.version>
@@ -38,8 +38,8 @@
     <kotest.version>5.6.2</kotest.version>
     <mockk.version>4.0.2</mockk.version>
     <!-- language -->
-    <java.version>17</java.version>
-    <kotlin.version>1.9.0</kotlin.version>
+    <java.version>21</java.version>
+    <kotlin.version>1.9.20</kotlin.version>
   </properties>
 
   <repositories>
@@ -67,12 +67,6 @@
   <dependencies>
     <dependency>
       <groupId>no.nav.bidrag</groupId>
-      <artifactId>bidrag-beregn-felles</artifactId>
-      <version>${bidrag-beregn-felles.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-beregn-forskudd-core</artifactId>
       <version>${bidrag-beregn-forskudd-core.version}</version>
     </dependency>
@@ -87,6 +81,12 @@
       <groupId>no.nav.bidrag</groupId>
       <artifactId>bidrag-transport</artifactId>
       <version>${bidrag-transport.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>no.nav.bidrag</groupId>
+      <artifactId>bidrag-domene</artifactId>
+      <version>${bidrag-domene.version}</version>
     </dependency>
 
     <dependency>
@@ -334,9 +334,9 @@
         </executions>
         <dependencies>
           <dependency>
-            <groupId>com.pinterest</groupId>
-            <artifactId>ktlint</artifactId>
-            <version>0.47.1</version>
+            <groupId>com.pinterest.ktlint</groupId>
+            <artifactId>ktlint-cli</artifactId>
+            <version>1.0.1</version>
           </dependency>
           <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>

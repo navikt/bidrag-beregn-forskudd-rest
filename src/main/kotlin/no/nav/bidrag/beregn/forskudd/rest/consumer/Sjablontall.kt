@@ -9,5 +9,5 @@ data class Sjablontall(
     var typeSjablon: String? = null,
     var datoFom: LocalDate? = null,
     var datoTom: LocalDate? = null,
-    var verdi: BigDecimal? = null
+    var verdi: BigDecimal? = null,
 )

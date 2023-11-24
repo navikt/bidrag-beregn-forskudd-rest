@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import
 @SpringBootApplication(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
 @Import(
-    DefaultCorsFilter::class
+    DefaultCorsFilter::class,
 )
 class BidragBeregnForskudd
 

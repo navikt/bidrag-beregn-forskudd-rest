@@ -26,7 +26,6 @@ import org.springframework.web.client.RestTemplate
 @SuppressWarnings("unchecked")
 @DisplayName("SjablonConsumerTest")
 internal class SjablonConsumerTest {
-
     @InjectMocks
     private lateinit var sjablonConsumer: SjablonConsumer
 
@@ -41,8 +40,8 @@ internal class SjablonConsumerTest {
                 anyString(),
                 eq(HttpMethod.GET),
                 eq(null),
-                any<ParameterizedTypeReference<List<Sjablontall>>>()
-            )
+                any<ParameterizedTypeReference<List<Sjablontall>>>(),
+            ),
         )
             .thenReturn(ResponseEntity(TestUtil.dummySjablonSjablontallListe(), HttpStatus.OK))
 
@@ -54,7 +53,11 @@ internal class SjablonConsumerTest {
             { assertThat(sjablonResponse.responseEntity.statusCode).isEqualTo(HttpStatus.OK) },
             { assertThat(sjablonResponse.responseEntity.body).isNotNull() },
             { assertThat(sjablonResponse.responseEntity.body?.size).isEqualTo(TestUtil.dummySjablonSjablontallListe().size) },
-            { assertThat(sjablonResponse.responseEntity.body?.get(0)?.typeSjablon).isEqualTo(TestUtil.dummySjablonSjablontallListe()[0].typeSjablon) }
+            {
+                assertThat(
+                    sjablonResponse.responseEntity.body?.get(0)?.typeSjablon,
+                ).isEqualTo(TestUtil.dummySjablonSjablontallListe()[0].typeSjablon)
+            },
         )
     }
 
