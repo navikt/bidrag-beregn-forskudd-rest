@@ -10,8 +10,8 @@ import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.HttpResponse.Companion.from
-import no.nav.bidrag.domene.enums.Grunnlagstype
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
@@ -112,10 +112,10 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
                 resultat =
                     ResultatBeregning(
                         belop = it.resultat.belop,
-                        kode = ResultatKodeForskudd.valueOf(it.resultat.kode),
+                        kode = ResultatkodeForskudd.valueOf(it.resultat.kode),
                         regel = it.resultat.regel,
                     ),
-                grunnlagReferanseListe = it.grunnlagReferanseListe,
+                grunnlagsreferanseListe = it.grunnlagsreferanseListe,
             )
         }
 
@@ -130,7 +130,7 @@ class BeregnForskuddService(private val sjablonConsumer: SjablonConsumer, privat
         val resultatGrunnlagListe = mutableListOf<Grunnlag>()
         val grunnlagReferanseListe =
             resultatFraCore.beregnetForskuddPeriodeListe
-                .flatMap { it.grunnlagReferanseListe }
+                .flatMap { it.grunnlagsreferanseListe }
                 .distinct()
 
         // Matcher mottatte grunnlag med grunnlag som er brukt i beregningen

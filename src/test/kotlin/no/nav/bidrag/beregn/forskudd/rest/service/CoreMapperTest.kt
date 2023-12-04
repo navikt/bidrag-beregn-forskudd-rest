@@ -2,7 +2,7 @@ package no.nav.bidrag.beregn.forskudd.rest.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.domene.enums.Grunnlagstype
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
@@ -175,13 +175,13 @@ internal class CoreMapperTest {
 
     private fun innholdInntektMedFeil(mapper: ObjectMapper) =
         mapper.readTree(
-            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," +
+            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektsrapportering\": \"AINNTEKT\"," +
                 "\"gjelderBarn\": null," + "\"beløp\": \"29x000\"," + "\"manueltRegistrert\": false," + "\"valgt\": true}",
         )
 
     private fun innholdInntektOK(mapper: ObjectMapper) =
         mapper.readTree(
-            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektRapportering\": \"AINNTEKT\"," +
+            "{\"periode\":{" + "\"fom\": \"2020-12\"," + "\"til\": \"2021-01\"}," + "\"inntektsrapportering\": \"AINNTEKT\"," +
                 "\"gjelderBarn\": null," + "\"beløp\": 290000," + "\"manueltRegistrert\": false," + "\"valgt\": true}",
         )
 

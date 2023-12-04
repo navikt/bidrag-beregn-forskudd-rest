@@ -51,7 +51,7 @@
           "fom": "2020-12",
           "til": "2021-01"
         },
-        "inntektRapportering": "AINNTEKT",
+        "inntektsrapportering": "AINNTEKT",
         "gjelderBarn": null,
         "beløp": 290000,
         "manueltRegistrert": false,
@@ -69,7 +69,7 @@
           "fom": "2020-12",
           "til": "2021-01"
         },
-        "inntektRapportering": "UTVIDET_BARNETRYGD",
+        "inntektsrapportering": "UTVIDET_BARNETRYGD",
         "gjelderBarn": null,
         "beløp": 13000,
         "manueltRegistrert": false,
