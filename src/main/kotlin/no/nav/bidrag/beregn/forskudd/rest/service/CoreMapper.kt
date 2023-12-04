@@ -11,8 +11,8 @@ import no.nav.bidrag.beregn.forskudd.core.dto.SivilstandPeriodeCore
 import no.nav.bidrag.beregn.forskudd.core.dto.SoknadBarnCore
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
 import no.nav.bidrag.beregn.forskudd.rest.exception.UgyldigInputException
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.Grunnlagstype
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.person.Bostatuskode
 import no.nav.bidrag.domene.enums.sjablon.SjablonInnholdNavn
 import no.nav.bidrag.domene.enums.sjablon.SjablonTallNavn
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
@@ -55,15 +55,15 @@ object CoreMapper {
 
         val sjablonPeriodeCoreListe =
             mapSjablonVerdier(
-                beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
-                beregnDatoTil = beregnForskuddGrunnlag.periode!!.tilDato!!.verdi,
+                beregnDatoFra = beregnForskuddGrunnlag.periode!!.fom.atDay(1),
+                beregnDatoTil = beregnForskuddGrunnlag.periode!!.til!!.atDay(1),
                 sjablonSjablontallListe = sjablontallListe,
                 sjablontallMap = sjablontallMap,
             )
 
         return BeregnForskuddGrunnlagCore(
-            beregnDatoFra = beregnForskuddGrunnlag.periode!!.fomDato.verdi,
-            beregnDatoTil = beregnForskuddGrunnlag.periode!!.tilDato!!.verdi,
+            beregnDatoFra = beregnForskuddGrunnlag.periode!!.fom.atDay(1),
+            beregnDatoTil = beregnForskuddGrunnlag.periode!!.til!!.atDay(1),
             soknadBarn = soknadbarnCore!!,
             bostatusPeriodeListe = bostatusPeriodeCoreListe,
             inntektPeriodeListe = inntektPeriodeCoreListe,
@@ -87,7 +87,7 @@ object CoreMapper {
             } else {
                 SoknadBarnCore(
                     referanse = soknadsbarnGrunnlag[0].referanse,
-                    fodselsdato = soknadsbarnGrunnlag[0].innhold.fødselsdato.verdi,
+                    fodselsdato = soknadsbarnGrunnlag[0].innhold.fødselsdato,
                 )
             }
         } catch (e: Exception) {
@@ -143,7 +143,7 @@ object CoreMapper {
                                 datoFom = it.innhold.periode.toDatoperiode().fom,
                                 datoTil = it.innhold.periode.toDatoperiode().til,
                             ),
-                        type = it.innhold.inntektRapportering.name,
+                        type = it.innhold.inntektsrapportering.name,
                         belop = it.innhold.beløp,
                     )
                 }

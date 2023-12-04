@@ -10,11 +10,11 @@ import no.nav.bidrag.beregn.forskudd.core.dto.BeregnetForskuddResultatCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatBeregningCore
 import no.nav.bidrag.beregn.forskudd.core.dto.ResultatPeriodeCore
 import no.nav.bidrag.beregn.forskudd.rest.consumer.Sjablontall
-import no.nav.bidrag.domene.enums.Bostatuskode
-import no.nav.bidrag.domene.enums.Grunnlagstype
-import no.nav.bidrag.domene.enums.InntektRapportering
-import no.nav.bidrag.domene.enums.SivilstandskodeBeregning
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
+import no.nav.bidrag.domene.enums.grunnlag.Grunnlagstype
+import no.nav.bidrag.domene.enums.inntekt.Inntektsrapportering
+import no.nav.bidrag.domene.enums.person.Bostatuskode
+import no.nav.bidrag.domene.enums.person.Sivilstandskode
 import no.nav.bidrag.domene.tid.ÅrMånedsperiode
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.felles.Grunnlag
@@ -73,7 +73,7 @@ object TestUtil {
                         "rolle" to "BM",
                         "datoFom" to "2017-01",
                         "datoTil" to "2020-01",
-                        "inntektRapportering" to "INNTEKT_RAPPORTERING",
+                        "inntektsrapportering" to "INNTEKT_RAPPORTERING",
                         "belop" to 290000,
                         "manueltRegistrert" to false,
                         "valgt" to true,
@@ -138,7 +138,7 @@ object TestUtil {
                             "fom" to periodeFom,
                             "til" to periodeTil,
                         ),
-                    "inntektRapportering" to InntektRapportering.AINNTEKT.name,
+                    "inntektsrapportering" to Inntektsrapportering.AINNTEKT.name,
                     "gjelderBarn" to null,
                     "beløp" to beløp,
                     "manueltRegistrert" to false,
@@ -153,7 +153,7 @@ object TestUtil {
                             "fom" to periodeFom,
                             "til" to periodeTil,
                         ),
-                    "sivilstand" to SivilstandskodeBeregning.GIFT_SAMBOER.name,
+                    "sivilstand" to Sivilstandskode.GIFT_SAMBOER.name,
                 ),
             )
 
@@ -210,10 +210,10 @@ object TestUtil {
                 resultat =
                     ResultatBeregningCore(
                         belop = BigDecimal.valueOf(100),
-                        kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT.name,
+                        kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT.name,
                         regel = "REGEL 1",
                     ),
-                grunnlagReferanseListe =
+                grunnlagsreferanseListe =
                     listOf(
                         INNTEKT_REFERANSE_1,
                         SIVILSTAND_REFERANSE_ENSLIG,
@@ -256,10 +256,10 @@ object TestUtil {
                 resultat =
                     ResultatBeregning(
                         belop = BigDecimal.valueOf(100),
-                        kode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT,
+                        kode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT,
                         regel = "REGEL 1",
                     ),
-                grunnlagReferanseListe =
+                grunnlagsreferanseListe =
                     listOf(
                         INNTEKT_REFERANSE_1,
                         SIVILSTAND_REFERANSE_ENSLIG,

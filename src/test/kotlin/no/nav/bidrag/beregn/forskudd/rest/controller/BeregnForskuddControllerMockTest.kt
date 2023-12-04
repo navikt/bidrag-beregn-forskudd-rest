@@ -6,7 +6,7 @@ import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.service.BeregnForskuddService
 import no.nav.bidrag.commons.web.HttpResponse
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.transport.behandling.beregning.felles.BeregnGrunnlag
 import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
@@ -75,7 +75,7 @@ internal class BeregnForskuddControllerMockTest {
             },
             {
                 assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.kode)
-                    .isEqualTo(ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT)
+                    .isEqualTo(ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT)
             },
             { assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.resultat?.regel).isEqualTo("REGEL 1") },
         )

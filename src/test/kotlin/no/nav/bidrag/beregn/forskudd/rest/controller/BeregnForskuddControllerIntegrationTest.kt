@@ -5,7 +5,7 @@ import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddTest.Companion.TES
 import no.nav.bidrag.beregn.forskudd.rest.TestUtil
 import no.nav.bidrag.beregn.forskudd.rest.consumer.wiremockstub.SjablonApiStub
 import no.nav.bidrag.commons.web.test.HttpHeaderTestRestTemplate
-import no.nav.bidrag.domene.enums.resultatkoder.ResultatKodeForskudd
+import no.nav.bidrag.domene.enums.beregning.ResultatkodeForskudd
 import no.nav.bidrag.transport.behandling.beregning.forskudd.BeregnetForskuddResultat
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
@@ -47,7 +47,7 @@ internal class BeregnForskuddControllerIntegrationTest {
     private lateinit var filnavn: String
 
     private var forventetForskuddBelop = 0
-    private lateinit var forventetForskuddResultatkode: ResultatKodeForskudd
+    private lateinit var forventetForskuddResultatkode: ResultatkodeForskudd
     private lateinit var forventetForskuddRegel: String
 
     /*
@@ -145,7 +145,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Forhøyet forskudd ved 11 år: SB alder > 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel1.json"
         forventetForskuddBelop = 2080
-        forventetForskuddResultatkode = ResultatKodeForskudd.FORHOYET_FORSKUDD_11_AAR_125_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.FORHØYET_FORSKUDD_11_ÅR_125_PROSENT
         forventetForskuddRegel = "REGEL 5"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -156,7 +156,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 300000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel2.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 11"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -167,7 +167,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel3.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 12"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -178,7 +178,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 370000; BM antall barn egen husstand 2; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel4.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 13"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -189,7 +189,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel5.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 12"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -200,7 +200,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel6.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 7"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -211,7 +211,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 3; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel7.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 13"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -222,7 +222,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder > 11 år; BM inntekt 460000; BM antall barn egen husstand 3; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel8.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 9"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -233,7 +233,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder > 11 år; BM inntekt 530000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel9.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 12"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -244,7 +244,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel10.json"
         forventetForskuddBelop = 0
-        forventetForskuddResultatkode = ResultatKodeForskudd.AVSLAG
+        forventetForskuddResultatkode = ResultatkodeForskudd.AVSLAG
         forventetForskuddRegel = "REGEL 4"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -255,7 +255,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Avslag: SB alder > 11 år; BM inntekt 540000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel11.json"
         forventetForskuddBelop = 0
-        forventetForskuddResultatkode = ResultatKodeForskudd.AVSLAG
+        forventetForskuddResultatkode = ResultatkodeForskudd.AVSLAG
         forventetForskuddRegel = "REGEL 4"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -266,7 +266,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Forhøyet forskudd: SB alder < 11 år; BM inntekt 290000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel12.json"
         forventetForskuddBelop = 1670
-        forventetForskuddResultatkode = ResultatKodeForskudd.FORHOYET_FORSKUDD_100_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.FORHØYET_FORSKUDD_100_PROSENT
         forventetForskuddRegel = "REGEL 6"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -277,7 +277,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 290000+13000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel13.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 7"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -288,7 +288,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel14.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 12"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -299,7 +299,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 361000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel15.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 7"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -310,7 +310,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel16.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 7"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -321,7 +321,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 468000; BM antall barn egen husstand 1; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel17.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 12"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -332,7 +332,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 429000; BM antall barn egen husstand 2; BM sivilstatus enslig
         filnavn = "src/test/resources/testfiler/forskudd_eksempel18.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 9"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -343,7 +343,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Ordinært forskudd: SB alder < 11 år; BM inntekt 429000; BM antall barn egen husstand 2; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel19.json"
         forventetForskuddBelop = 1250
-        forventetForskuddResultatkode = ResultatKodeForskudd.ORDINAERT_FORSKUDD_75_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.ORDINÆRT_FORSKUDD_75_PROSENT
         forventetForskuddRegel = "REGEL 13"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -354,7 +354,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 430000; BM antall barn egen husstand 2; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel20.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 14"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -365,7 +365,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Avslag: SB alder < 11 år; BM inntekt 489000+60000; BM antall barn egen husstand 2; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel22.json"
         forventetForskuddBelop = 0
-        forventetForskuddResultatkode = ResultatKodeForskudd.AVSLAG
+        forventetForskuddResultatkode = ResultatkodeForskudd.AVSLAG
         forventetForskuddRegel = "REGEL 4"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -376,7 +376,7 @@ internal class BeregnForskuddControllerIntegrationTest {
         // Redusert forskudd: SB alder < 11 år; BM inntekt 489000; BM antall barn egen husstand 2; BM sivilstatus gift
         filnavn = "src/test/resources/testfiler/forskudd_eksempel23.json"
         forventetForskuddBelop = 830
-        forventetForskuddResultatkode = ResultatKodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
+        forventetForskuddResultatkode = ResultatkodeForskudd.REDUSERT_FORSKUDD_50_PROSENT
         forventetForskuddRegel = "REGEL 14"
         utfoerBeregningerOgEvaluerResultat()
     }
@@ -411,7 +411,7 @@ internal class BeregnForskuddControllerIntegrationTest {
                 ).isEqualTo(forventetForskuddRegel)
             },
             Executable {
-                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagReferanseListe?.distinct()).size().isEqualTo(
+                assertThat(forskuddResultat?.beregnetForskuddPeriodeListe?.get(0)?.grunnlagsreferanseListe?.distinct()).size().isEqualTo(
                     forskuddResultat?.grunnlagListe?.size,
                 )
             },
@@ -419,14 +419,14 @@ internal class BeregnForskuddControllerIntegrationTest {
                 assertThat(
                     forskuddResultat?.beregnetForskuddPeriodeListe?.get(
                         0,
-                    )?.grunnlagReferanseListe?.count { it.startsWith("Mottatt") }?.toLong(),
+                    )?.grunnlagsreferanseListe?.count { it.startsWith("Mottatt") }?.toLong(),
                 ).isEqualTo(request.body?.split("Mottatt".toRegex())?.size?.minus(1)?.toLong())
             },
             Executable {
                 assertThat(
                     forskuddResultat?.beregnetForskuddPeriodeListe?.get(
                         0,
-                    )?.grunnlagReferanseListe?.count { it.startsWith("Sjablon") }?.toLong(),
+                    )?.grunnlagsreferanseListe?.count { it.startsWith("Sjablon") }?.toLong(),
                 ).isEqualTo(7)
             },
         )
