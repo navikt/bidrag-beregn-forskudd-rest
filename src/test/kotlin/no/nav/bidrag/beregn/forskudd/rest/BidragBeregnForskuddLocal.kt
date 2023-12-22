@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import no.nav.bidrag.beregn.forskudd.rest.BidragBeregnForskuddLocal.Companion.LOCAL_PROFILE
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -23,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles
         ),
     ],
 )
-@EnableMockOAuth2Server
 @ActiveProfiles(LOCAL_PROFILE)
 class BidragBeregnForskuddLocal {
     companion object {
