@@ -23,7 +23,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-commons.version>20231201131246_f719b2b</bidrag-commons.version>
+    <bidrag-commons.version>0.7.51</bidrag-commons.version>
     <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
     <bidrag-beregn-forskudd-core.version>1.2.1</bidrag-beregn-forskudd-core.version>
     <bidrag-transport.version>20231204085259_0d4f13d</bidrag-transport.version>
