@@ -29,7 +29,7 @@
     <bidrag-transport.version>20231221145650_4172b07</bidrag-transport.version>
     <springdoc-openapi-ui.version>2.2.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.1</wiremock-standalone.version>
-    <springframework-cloud.version>4.0.2</springframework-cloud.version>
+    <springframework-cloud.version>4.1.0</springframework-cloud.version>
     <token-support.version>3.2.0</token-support.version>
     <com.squareup.okhttp3.version>4.12.0</com.squareup.okhttp3.version>
     <okhttp3.version>4.9.2</okhttp3.version>
