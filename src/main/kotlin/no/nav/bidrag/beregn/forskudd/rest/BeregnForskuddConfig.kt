@@ -53,10 +53,7 @@ class BeregnForskuddConfig {
     }
 
     @Bean
-    fun sjablonConsumer(
-        @Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String,
-        restTemplate: RestTemplate,
-    ): SjablonConsumer {
+    fun sjablonConsumer(@Value("\${BIDRAGSJABLON_URL}") sjablonBaseUrl: String, restTemplate: RestTemplate): SjablonConsumer {
         restTemplate.uriTemplateHandler = RootUriTemplateHandler(sjablonBaseUrl)
         return SjablonConsumer(restTemplate)
     }

@@ -44,14 +44,14 @@ class BidragBeregnForskuddTestConfig {
                 issuerId = ISSUER,
                 clientId = "aud-localhost",
                 tokenCallback =
-                    DefaultOAuth2TokenCallback(
-                        issuerId = ISSUER,
-                        subject = "aud-localhost",
-                        typeHeader = JOSEObjectType.JWT.type,
-                        audience = listOf("aud-localhost"),
-                        claims = mapOf("iss" to newIssuer.toString()),
-                        expiry = 3600,
-                    ),
+                DefaultOAuth2TokenCallback(
+                    issuerId = ISSUER,
+                    subject = "aud-localhost",
+                    typeHeader = JOSEObjectType.JWT.type,
+                    audience = listOf("aud-localhost"),
+                    claims = mapOf("iss" to newIssuer.toString()),
+                    expiry = 3600,
+                ),
             )
         return "Bearer " + token.serialize()
     }
