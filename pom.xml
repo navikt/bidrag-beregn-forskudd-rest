@@ -25,7 +25,7 @@
     <!-- dependencies -->
     <bidrag-commons.version>20231201131246_f719b2b</bidrag-commons.version>
     <bidrag-commons-test.version>1.20230511093912_dc35d81</bidrag-commons-test.version>
-    <bidrag-beregn-forskudd-core.version>1.2.1</bidrag-beregn-forskudd-core.version>
+    <bidrag-beregn-forskudd-core.version>1.2.2</bidrag-beregn-forskudd-core.version>
     <bidrag-transport.version>20240103144324_9f5809f</bidrag-transport.version>
     <springdoc-openapi-ui.version>2.3.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.1</wiremock-standalone.version>
