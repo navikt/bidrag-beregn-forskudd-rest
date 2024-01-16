@@ -18,13 +18,19 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/beregn")
 @Protected
 class BeregnForskuddController(private val beregning: BeregnForskuddApi) {
-    @Bean
-    fun forskuddExample(): Example {
-        val example = Example()
-        example.value = BeregnForskuddController::class.java.getResource("/eksempler/beregn_request.json")?.readText() ?: ""
-        example.description = "Forskudd beregning"
-        return example
+
+    companion object {
+        val eksempelfiler = (1..23).map { "forskudd_eksempel$it" }
+        private fun createExample(filename: String): Example {
+            val example = Example()
+            example.value = BeregnForskuddController::class.java.getResource("/testfiler/$filename.json")?.readText() ?: ""
+            example.description = filename
+            return example
+        }
     }
+
+    @Bean
+    fun eksempel1(): List<Example> = eksempelfiler.map { createExample(it) }
 
     @PostMapping(path = ["/forskudd"])
     @Operation(summary = "Beregner forskudd")
@@ -33,11 +39,34 @@ class BeregnForskuddController(private val beregning: BeregnForskuddApi) {
         content =
         [
             Content(
-                examples =
-                [
+                examples = [
                     ExampleObject(
-                        ref = "#/components/examples/Forskudd beregning",
-                        name = "Forskudd",
+                        ref = "#/components/examples/forskudd_eksempel1",
+                        name = "forskudd_eksempel1",
+                    ),
+                    ExampleObject(
+                        ref = "#/components/examples/forskudd_eksempel2",
+                        name = "forskudd_eksempel2",
+                    ),
+                    ExampleObject(
+                        ref = "#/components/examples/forskudd_eksempel3",
+                        name = "forskudd_eksempel3",
+                    ),
+                    ExampleObject(
+                        ref = "#/components/examples/forskudd_eksempel4",
+                        name = "forskudd_eksempel4",
+                    ),
+                    ExampleObject(
+                        ref = "#/components/examples/forskudd_eksempel5",
+                        name = "forskudd_eksempel5",
+                    ),
+                    ExampleObject(
+                        ref = "#/components/examples/forskudd_eksempel6",
+                        name = "forskudd_eksempel6",
+                    ),
+                    ExampleObject(
+                        ref = "#/components/examples/forskudd_eksempel7",
+                        name = "forskudd_eksempel7",
                     ),
                 ],
             ),
