@@ -42,14 +42,12 @@ spec:
       cpu: 1000m
       memory: 1024Mi
     requests:
-      cpu: 500m
+      cpu: 50m
       memory: 512Mi
   ingresses:
     {{#each ingresses as |url|}}
        - {{url}}
     {{/each}}
   env:
-    - name: BIDRAGSJABLON_URL
+    - name: BIDRAG_SJABLON_URL
       value: https://{{ unsecured.bidragsjablon_url }}/bidrag-sjablon
-    - name: BIDRAGSJABLON_SCOPE
-      value: {{ unsecured.bidragsjablon_scope }}

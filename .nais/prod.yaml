@@ -16,5 +16,3 @@ azure_access_inbound:
     cluster: prod-gcp
 unsecured:
   bidragsjablon_url: bidrag-sjablon.prod-fss-pub.nais.io
-  bidragsjablon_scope: prod-fss.bidrag.bidrag-sjablon
-  
