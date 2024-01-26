@@ -23,8 +23,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- dependencies -->
-    <bidrag-beregn-felles.version>2024.01.16.101302</bidrag-beregn-felles.version>
-    <bidrag-felles.version>2024.01.17.131134</bidrag-felles.version>
+    <bidrag-beregn-felles.version>2024.01.26.151018</bidrag-beregn-felles.version>
+    <bidrag-felles.version>2024.01.26.145406</bidrag-felles.version>
     <springdoc-openapi-ui.version>2.3.0</springdoc-openapi-ui.version>
     <wiremock-standalone.version>2.35.1</wiremock-standalone.version>
     <springframework-cloud.version>4.1.0</springframework-cloud.version>
